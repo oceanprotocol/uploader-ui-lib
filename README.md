@@ -36,7 +36,8 @@ npm install
 # in case of dependency errors, rather use:
 # npm install --legacy-peer-deps
 
-npm run build:watch to build the library and watch for changes.
+npm run build:watch 
+# to build the library and watch for changes.
 ```
 
 Run `npm run build` from the root folder to build the library. This creates `dist` folder which contains everything that
