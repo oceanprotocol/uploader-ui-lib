@@ -1,5 +1,5 @@
 {
-  "name": "dbs-ui-lib",
+  "name": "@oceanprotocol/dbs-ui-lib",
   "version": "0.0.1",
   "description": "Ocean Protocol DBS component library",
   "repository": {
@@ -25,24 +25,16 @@
     "@testing-library/user-event": "^14.1.0",
     "@types/react": "^17.0.47",
     "@types/react-dom": "^17.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.59.5",
     "cpx": "^1.5.0",
-    "eslint": "^8.40.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-jest-dom": "^4.0.3",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-testing-library": "^5.10.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^2.7.1",
     "rollup": "2.77.1",
     "rollup-plugin-size-snapshot": "^0.12.0",
-    "rollup-plugin-styles": "^4.0.0",
+    "rollup-plugin-styles": "^3.14.1",
     "rollup-plugin-typescript2": "^0.32.1",
     "sass": "^1.54.0",
     "ts-jest": "^27.1.5",
@@ -56,15 +48,12 @@
     "scss:watch": "cpx \"src/scss/**\" dist/scss -v -w",
     "rollup:watch": "rollup -c -w",
     "build:watch": "npm run clean && npm-run-all -p scss:watch rollup:watch",
-    "lint": "eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx .",
-    "lint:fix": "eslint --ignore-path .gitignore --ext .ts,.tsx . --fix",
-    "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "clean": "rimraf dist",
-    "test": "npm run lint && npm run format && jest",
-    "test:watch": "jest --watch",
+    "test": "jest",
+    "testWatch": "jest --watch",
     "scss:build": "cpx \"src/scss/**\" dist/scss -v",
     "src:build": "cpx \"src/**\" dist/src -v",
-    "rollup:build": "export NODE_OPTIONS=--openssl-legacy-provider && rollup -c",
+    "rollup:build": "rollup -c",
     "build": "npm run test && npm run clean && npm-run-all -s clean scss:build rollup:build",
     "prepublishOnly": "npm run build"
   },
@@ -79,5 +68,8 @@
       "./setupTests.ts"
     ],
     "verbose": true
+  },
+  "engines": {
+    "node": "18"
   }
 }
