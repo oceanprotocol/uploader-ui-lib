@@ -18,17 +18,31 @@
     "dist"
   ],
   "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.5",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-node-resolve": "^13.2.0",
+    "@storybook/addon-essentials": "^7.0.10",
+    "@storybook/addon-interactions": "^7.0.10",
+    "@storybook/addon-links": "^7.0.10",
+    "@storybook/blocks": "^7.0.10",
+    "@storybook/react": "^7.0.10",
+    "@storybook/react-webpack5": "^7.0.10",
+    "@storybook/testing-library": "^0.0.14-next.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.1.0",
-    "@types/react": "^17.0.47",
-    "@types/react-dom": "^17.0.17",
+    "@types/react": "^17.0.59",
+    "@types/react-dom": "^17.0.20",
     "cpx": "^1.5.0",
+    "css-loader": "^6.7.3",
+    "i": "^0.3.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
+    "npm": "^9.6.6",
     "npm-run-all": "^4.1.5",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^2.7.1",
@@ -36,9 +50,13 @@
     "rollup-plugin-size-snapshot": "^0.12.0",
     "rollup-plugin-styles": "^3.14.1",
     "rollup-plugin-typescript2": "^0.32.1",
-    "sass": "^1.54.0",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
+    "storybook": "^7.0.10",
+    "style-loader": "^3.3.2",
     "ts-jest": "^27.1.5",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "webpack": "^5.82.1"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
@@ -55,7 +73,9 @@
     "src:build": "cpx \"src/**\" dist/src -v",
     "rollup:build": "rollup -c",
     "build": "npm run test && npm run clean && npm-run-all -s clean scss:build rollup:build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "jest": {
     "bail": true,
@@ -71,5 +91,8 @@
   },
   "engines": {
     "node": "18"
+  },
+  "dependencies": {
+    "@storybook/preset-scss": "^1.0.3"
   }
 }
