@@ -43,6 +43,34 @@ npm run build:watch
 Run `npm run build` from the root folder to build the library. This creates `dist` folder which contains everything that
 would be published to npm.
 
+## 👩‍🎤 Storybook
+
+Storybook helps us build UI components in isolation from our app's business logic, data, and context. That makes it easy to develop hard-to-reach states and save these UI states as stories to revisit during development, testing, or QA.
+
+To start adding stories, create a `index.stories.tsx` inside the component's folder:
+
+<pre>
+src
+└─── components
+│   └─── <your component>
+│            │   index.tsx
+│            │   index.module.css
+│            │   <b>index.stories.tsx</b>
+│            │   index.test.tsx
+</pre>
+
+Starting up the Storybook server with this command will make it accessible under `http://localhost:6006`:
+
+```bash
+npm run storybook
+```
+
+If you want to build a portable static version under `storybook-static/`:
+
+```bash
+npm run storybook:build
+```
+
 ## 🤖 Testing
 
 Test runs utilize [Jest](https://jestjs.io/) as test runner and [Testing Library](https://testing-library.com/docs/react-testing-library/intro) for writing tests.
