@@ -1,8 +1,9 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
+const path = require('path');
 module.exports = {
   stories: ['../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-essentials'],
+  addons: ['@storybook/addon-essentials', 'storybook-css-modules-preset'],
   framework: {
     name: '@storybook/react-webpack5',
     options: {}
@@ -11,6 +12,13 @@ module.exports = {
     config.resolve.plugins = [...(config.resolve.plugins || []), new TsconfigPathsPlugin({
       extensions: config.resolve.extensions
     })];
+
+    config.module.rules.push({
+      test: /\.module\.css$/,
+      exclude: /\.module\.css$/,
+      use: ['style-loader', 'css-loader'],
+      include: path.resolve(__dirname, './'),
+    });
 
     // Mimic next.config.js webpack config
     config.module.rules.push({

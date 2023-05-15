@@ -4,7 +4,7 @@ import DBSUploader from "./DBSUploader";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "ReactComponentLibrary/DBSUploader",
+  title: "DBS UI Library/DBSUploader",
   component: DBSUploader,
 } as Meta<typeof DBSUploader>;
 
@@ -13,5 +13,14 @@ const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} /
 
 export const dbsuploader = Template.bind({});
 dbsuploader.args = {
-  children: "This is a test",
+  dbs_settings: [
+    {
+      title: 'IPFS',
+      content: 'this is the content for the first tab'
+    },
+    {
+      title: 'Arware',
+      content: 'this is the content for the second tab'
+    }
+  ],
 };
