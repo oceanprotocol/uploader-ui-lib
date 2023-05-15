@@ -1,6 +1,6 @@
 import React from "react";
 import { StoryFn, Meta } from "@storybook/react";
-import DBSUploader from "../components/DBSUploader";
+import DBSUploader from "./DBSUploader";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -13,5 +13,5 @@ const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} /
 
 export const dbsuploader = Template.bind({});
 dbsuploader.args = {
-  children: "Click me!",
+  children: "This is a test",
 };
