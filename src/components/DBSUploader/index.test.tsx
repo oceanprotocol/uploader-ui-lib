@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { render, screen } from '@testing-library/react'
 
-import DBSUploader from './DBSUploader'
+import DBSUploader from './index'
 
 test('renders children', () => {
   const settings = [

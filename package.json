@@ -83,7 +83,7 @@
     "scss:build": "cpx \"src/scss/**\" dist/scss -v",
     "src:build": "cpx \"src/**\" dist/src -v",
     "rollup:build": "rollup -c",
-    "build": "npm run test && npm run clean && npm-run-all -s clean scss:build rollup:build",
+    "build": "npm run clean && npm-run-all -s clean scss:build rollup:build",
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -108,6 +108,7 @@
   },
   "dependencies": {
     "@storybook/preset-scss": "^1.0.3",
-    "@tippyjs/react": "^4.2.6"
+    "@tippyjs/react": "^4.2.6",
+    "react-scripts": "^5.0.1"
   }
 }

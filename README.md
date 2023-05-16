@@ -43,6 +43,9 @@ npm run build:watch
 Run `npm run build` from the root folder to build the library. This creates `dist` folder which contains everything that
 would be published to npm.
 
+# if you encounter this error: Error: error:0308010C:digital envelope routines::unsupported
+Run `export NODE_OPTIONS=--openssl-legacy-provider` before building.
+
 ## 👩‍🎤 Storybook
 
 Storybook helps us build UI components in isolation from our app's business logic, data, and context. That makes it easy to develop hard-to-reach states and save these UI states as stories to revisit during development, testing, or QA.

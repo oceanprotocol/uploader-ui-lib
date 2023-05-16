@@ -12,8 +12,8 @@ const animation = {
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
-const DefaultTrigger = React.forwardRef((props, ref: any) => {
-  return <Info className={stylesTooltip.icon} ref={ref} />
+const DefaultTrigger = React.forwardRef((ref: any) => {
+  return <Info className={stylesTooltip.icon} href={ref} />
 })
 
 export default function Tooltip(props: TippyProps): ReactElement {
@@ -24,7 +24,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
   function onMount() {
     api.start({
       ...animation.to,
-      onRest: (): void => null,
+      onRest: (): void => {},
       config: animation.config
     })
   }
@@ -45,7 +45,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
       interactiveBorder={5}
       zIndex={3}
       trigger={trigger || 'mouseenter focus'}
-      disabled={disabled || null}
+      disabled={disabled || undefined}
       placement={placement || 'auto'}
       render={(attrs) => (
         <animated.div style={styles}>
@@ -56,7 +56,7 @@ export default function Tooltip(props: TippyProps): ReactElement {
         </animated.div>
       )}
       appendTo={
-        typeof document !== 'undefined' && document.querySelector('body')
+        typeof document !== 'undefined' && document.querySelector('body') || undefined
       }
       onMount={onMount}
       onHide={onHide}

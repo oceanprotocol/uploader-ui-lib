@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import './DBSUploader.css'
-import TabsFile from '@components/TabsFile'
+import './index.module.css'
+import TabsFile from '../TabsFile'
 
 type dbs_setting = {
   title: string,

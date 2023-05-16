@@ -1,4 +1,4 @@
-import { markdownToHtml } from '@utils/markdown'
+import { markdownToHtml } from '../../@utils/markdown'
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 

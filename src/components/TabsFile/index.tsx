@@ -1,5 +1,5 @@
 import Markdown from '../Markdown'
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
@@ -64,7 +64,7 @@ export default function TabsFile({
                 }`}
                 key={`tab_${items[tabIndex].title}_${index}`}
                 onClick={
-                  handleTabChange ? () => handleTabChange(item.title) : null
+                  handleTabChange ? () => handleTabChange(item.title) : undefined
                 }
                 disabled={item.disabled}
               >
