@@ -1,5 +1,6 @@
 import React from 'react'
 
+import '../../stylesGlobal/styles.css'
 import './index.module.css'
 import TabsFile from '../TabsFile'
 

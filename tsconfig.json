@@ -30,6 +30,6 @@
       "@utils/*": ["./src/@utils/*"],
     }
   },
-  "include": ["custom.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["custom.d.ts", "**/*"],
   "exclude": ["node_modules", "*.js"]
 }

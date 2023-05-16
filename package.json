@@ -70,8 +70,8 @@
     "webpack": "^5.82.1"
   },
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "scripts": {
     "scss:watch": "cpx \"src/scss/**\" dist/scss -v -w",
@@ -109,6 +109,10 @@
   "dependencies": {
     "@storybook/preset-scss": "^1.0.3",
     "@tippyjs/react": "^4.2.6",
-    "react-scripts": "^5.0.1"
+    "autoprefixer": "^10.4.14",
+    "react-scripts": "^5.0.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

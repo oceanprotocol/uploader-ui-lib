@@ -1,145 +1,80 @@
-@import '_variables.css';
+:root {
+--brand-white: #ffffff;
+--brand-black: #141414;
+--brand-pink: #ff4092;
+--brand-purple: #7b1173;
+--brand-violet: #e000cf;
 
+--brand-grey-darker: #201f1f;
+--brand-grey-dark: #303030;
+--brand-grey: #41474e;
+--brand-grey-light: #8b98a9;
+--brand-grey-lighter: #e2e2e2;
+--brand-grey-dimmed: #f7f7f7;
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+--brand-gradient: linear-gradient(to right bottom, #7b1173, #ff4092);
+
+--brand-alert-green: #5fb359;
+--brand-alert-red: #d80606;
+--brand-alert-orange: #b35f36;
+--brand-alert-yellow: #eac146;
+
+--color-primary: #ff4092;
+--color-secondary: #8b98a9;
+
+/* Only use these vars for most color referencing for easy light/dark mode */
+--font-color-text: #41474e;
+--font-color-heading: #141414;
+--background-body: #fcfcfc;
+--background-body-transparent: rgba(255, 255, 255, 0.8);
+--background-content: #fff;
+--background-highlight: #f7f7f7;
+--border-color: #e2e2e2;
+--box-shadow-color: rgba(0, 0, 0, 0.05);
+
+--font-family-base: 'Sharp Sans', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+--font-family-heading: 'Sharp Sans Display', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+--font-family-monospace: 'Fira Code', 'Fira Mono', Menlo, Monaco, Consolas,
+    'Courier New', monospace;
+
+--font-size-root: 15px;
+--font-size-base: 1rem;
+--font-size-large: 1.2rem;
+--font-size-small: 0.85rem;
+--font-size-mini: 0.65rem;
+--font-size-text: 1rem;
+--font-size-label: 1rem;
+--font-size-title: 1.4rem;
+--font-size-h1: 3rem;
+--font-size-h2: 2.5rem;
+--font-size-h3: 1.7rem;
+--font-size-h4: 1.3rem;
+--font-size-h5: 1.1rem;
+--font-weight-base: 500;
+--font-weight-bold: 600;
+--line-height: 1.6;
+
+--spacer: 2rem;
+--border-radius: 0.2rem;
+
+--layout-max-width: 85rem;
+--checkbox-size: 1.6em;
+
+--break-point--small: 640px;
+--break-point--medium: 860px;
+--break-point--large: 1140px;
+--break-point--huge: 1400px;
 }
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: var(--font-size-root);
-  scroll-behavior: smooth;
-}
-
-@media screen and (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-body {
-  color: var(--font-color-text);
-  font-size: var(--font-size-base);
-  font-family: var(--font-family-base);
-  font-weight: var(--font-weight-base);
-  line-height: var(--line-height);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  position: relative;
-  background: var(--background-body);
-}
-
-a {
-  text-decoration: none;
-  color: var(--brand-pink);
-  transition: 0.2s ease-out;
-}
-
-p {
-  margin: 0;
-  margin-bottom: calc(var(--spacer) / var(--line-height));
-}
-
-strong {
-  font-weight: var(--font-weight-bold);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: var(--font-family-heading);
-  color: var(--font-color-heading);
-  line-height: 1.2;
-  font-weight: var(--font-weight-bold);
-  margin-top: 0;
-  margin-bottom: var(--spacer);
-}
-
-h1 {
-  font-size: var(--font-size-h2);
-}
-
-h2 {
-  font-size: var(--font-size-h3);
-}
-
-h3 {
-  font-size: var(--font-size-h4);
-}
-
-@media (min-width: 30rem) {
-  h1 {
-    font-size: var(--font-size-h1);
-  }
-
-  h2 {
-    font-size: var(--font-size-h2);
-  }
-
-  h3 {
-    font-size: var(--font-size-h3);
-  }
-}
-
-h4 {
-  font-size: var(--font-size-h4);
-}
-
-h5 {
-  font-size: var(--font-size-h5);
-}
-
-figure,
-img,
-svg,
-video,
-audio,
-embed,
-canvas,
-picture {
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
-  display: block;
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-}
-
-ul li {
-  display: block;
-}
-
-::selection {
-  background: var(--font-color-heading);
-  color: var(--background-body);
-}
-
-/* fix required for codemirror */
-.cm-scroller ::selection {
-  color: var(--font-color-heading);
-}
-
-form,
-fieldset {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-
-/* prevent background scrolling */
-.ReactModal__Body--open {
-  overflow: hidden;
+  
+.dark {
+--font-color-text: #e2e2e2;
+--font-color-heading: #f7f7f7;
+--background-body: rgb(10, 10, 10);
+--background-body-transparent: rgba(10, 10, 10, 0.9);
+--background-content: #141414;
+--background-highlight: #201f1f;
+--border-color: #303030;
+--box-shadow-color: rgba(0, 0, 0, 0.2);
 }
