@@ -3,7 +3,8 @@ import React, { ReactElement, ReactNode, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
-
+import Button from '../Button'
+import FileUploadSingle from '../FileUploadSingle'
 export interface TabsItem {
   field: any
   title: string
@@ -97,6 +98,10 @@ export default function TabsFile({
                   </label>
                 )}
                 {item.content}
+                <FileUploadSingle/>
+                <Button style="primary" size="small">
+                  Upload
+                </Button>
               </TabPanel>
             </>
           )

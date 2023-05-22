@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/oceanprotocol/dbs-ui-lib.git"
   },
+  "author": "Ocean Protocol Foundation <devops@oceanprotocol.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/oceanprotocol/dbs-ui-lib/issues"

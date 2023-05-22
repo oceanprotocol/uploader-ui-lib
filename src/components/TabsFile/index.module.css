@@ -67,6 +67,15 @@
   border-top: 0;
   text-align: left;
   background-color: var(--brand-white);
+  position: relative;
+}
+
+.tabContent button{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .tabPanel {
