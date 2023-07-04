@@ -67,6 +67,7 @@
   border-top: 0;
   text-align: left;
   background-color: var(--brand-white);
+  position: relative;
 }
 
 .tabPanel {
@@ -101,4 +102,28 @@
 
 .radio {
   composes: radio from '../Radio/index.module.css';
+}
+
+.connection{
+  position: absolute;
+  right: 0;
+  padding-right: var(--spacer);
+}
+
+.connected{
+  width: 10px;
+  height: 10px;
+  background-color: var(--brand-alert-red);
+  display: block;
+  border-radius: 25px;
+  margin-right: calc(var(--spacer) / 4);
+}
+
+.disconnected {
+  width: 10px;
+  height: 10px;
+  background-color: var(--brand-alert-green);
+  display: block;
+  border-radius: 25px;
+  margin-right: calc(var(--spacer) / 4);
 }

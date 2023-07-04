@@ -3,13 +3,21 @@ import React, { ReactElement, ReactNode, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
+import FileUploadSingle from '../FileUploadSingle'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import Button from '../Button'
 
 export interface TabsItem {
-  field: any
   title: string
   content: ReactNode
   disabled?: boolean
   props: any
+  field: {
+    value: string
+    label: string
+    placeholder: string
+  }
 }
 
 export interface TabsProps {
@@ -33,6 +41,12 @@ export default function TabsFile({
     return index < 0 ? 0 : index
   }
 
+  const { address, isConnected } = useAccount()
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  })
+  const { disconnect } = useDisconnect()
+
   const [tabIndex, setTabIndex] = useState(initialState)
   // hide tabs if are hidden
   console.log('items', items);
@@ -54,6 +68,33 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
+      {
+        isConnected &&
+        <div className={`${styles.connection}`}>
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => disconnect()}
+          >
+            <span className={styles.disconnected}></span>
+            Disconnect
+          </Button>
+        </div>
+      }
+
+      {
+        !isConnected &&
+        <div className={`${styles.connection}`}>
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => connect()}
+          >
+            <span className={styles.connected}></span>
+            Connect
+          </Button>
+        </div>
+      }
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => {
@@ -69,7 +110,7 @@ export default function TabsFile({
                 disabled={item.disabled}
               >
                 {item.title}
-              </Tab>
+              </Tab> 
             )
           })}
         </TabList>
@@ -96,11 +137,20 @@ export default function TabsFile({
                     )}
                   </label>
                 )}
+                
                 {item.content}
+                
+                <FileUploadSingle {...item.field} connected={isConnected} />
+
               </TabPanel>
             </>
           )
         })}
+        {
+          items.length === 0 && (
+            <p>DBS Not available</p>
+          )
+        }
       </div>
     </ReactTabs>
   )

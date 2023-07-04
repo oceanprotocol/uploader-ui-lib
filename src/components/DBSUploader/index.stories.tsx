@@ -2,25 +2,39 @@ import React from "react";
 import { StoryFn, Meta } from "@storybook/react";
 import DBSUploader from "./index";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "DBS UI Library/DBSUploader",
   component: DBSUploader,
 } as Meta<typeof DBSUploader>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} />;
 
 export const dbsuploader = Template.bind({});
 dbsuploader.args = {
   dbs_settings: [
     {
-      title: 'IPFS',
-      content: 'this is the content for the first tab'
+      title: 'Filecoin',
+      content: 'A microservice for uploading files to Lighthouse',
+      payment: {
+        chainId: 1,
+        tokenAddress: "0xWETH_on_ETHERUEM"
+      },
+      field: {
+        name: "filecoin",
+        className: "inputFilecoin"
+      }
     },
     {
       title: 'Arware',
-      content: 'this is the content for the second tab'
+      content: 'A microservice for uploading files to Arweave',
+      payment: {
+        chainId: 1,
+        tokenAddress: "0xUSDT_on_ETHERUEM"
+      },
+      field: {
+        name: "arweave",
+        className: "inputArweave"
+      }
     }
   ],
 };
