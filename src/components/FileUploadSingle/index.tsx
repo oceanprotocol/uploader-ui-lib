@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { ReactNode }  from 'react';
 import { ChangeEvent, useState } from 'react';
-import './index.module.css'
+import InputGroup from '../Input/InputGroup';
+import DefaultInput from '../Input';
+import Button from '../Button';
+import Loader from '../Loader';
+import styles from './index.module.css'
 
-function FileUploadSingle() {
+export interface InputField {
+  name?: string
+  label?: string | ReactNode
+  placeholder?: string
+  required?: boolean
+  size?: 'mini' | 'small' | 'large' | 'default'
+  className?: string
+  value?: string
+  file?: File
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+function FileUploadSingle({
+  ...props
+}: InputField) {
   const [file, setFile] = useState<File>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [hideButton, setHideButton] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [submitText, setSubmitText] = useState('Upload');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -11,34 +35,59 @@ function FileUploadSingle() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUpload = () => {
+    setIsLoading(true);
     if (!file) {
       return;
     }
 
-    // 👇 Uploading the file using the fetch API to the server
-    fetch('https://httpbin.org/post', {
-      method: 'POST',
-      body: file,
-      // 👇 Set headers manually for single file upload
-      headers: {
-        'content-type': file.type,
-        'content-length': `${file.size}`, // 👈 Headers need to be a string
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
+    console.log(file);
+
+    // TODO: rewmove after connect DBS.js
+    setTimeout(() => {
+      setIsLoading(false);
+      setErrorMessage("File uploaded failed!");
+      setError(true);
+
+      setTimeout(() => {
+        setError(false);
+        setErrorMessage("");
+      }, 3000);
+    }, 3000);
+    
   };
 
+  console.log(props);
+
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
+    <>
+      <InputGroup>
+        <DefaultInput
+          onChange={handleFileChange}
+          {...props}
+        />
 
-      <div>{file && `${file.name} - ${file.type}`}</div>
+        {!hideButton && (
+          <Button
+            style="primary"
+            size="small"
+            onClick={(e: React.SyntheticEvent) => {
+              e.preventDefault()
+              handleUpload()
+            }}
+            disabled={!file || isButtonDisabled}
+          >
+            {isLoading ? <Loader /> : submitText}
+          </Button>
+        )}
+      </InputGroup>
 
-      <button onClick={handleUploadClick}>Upload</button>
-    </div>
+      {error && (
+        <div className={styles.error}>
+          <p>{errorMessage}</p>
+        </div>
+      )}
+    </>
   );
 }
 

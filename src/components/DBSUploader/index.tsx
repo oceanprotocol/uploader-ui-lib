@@ -1,14 +1,33 @@
 import React from 'react'
+import { WagmiConfig, createConfig, mainnet } from 'wagmi'
+import { createPublicClient, http } from 'viem'
 
 import '../../stylesGlobal/styles.css'
 import './index.module.css'
 import TabsFile from '../TabsFile'
 
-import DBSClient from 'dbs/src/index';
+// TODO: connect to remote DBSclient
+// import DBSClient from 'dbs/src/index';
+
+const config = createConfig({
+  autoConnect: true,
+  publicClient: createPublicClient({
+    chain: mainnet,
+    transport: http()
+  }),
+})
 
 type dbs_setting = {
   title: string,
   content: string
+  payment: {
+    chainId: number
+    tokenAddress: string
+  }
+  field: {
+    name: string
+    className: string
+  }
 }
 
 type Props = {
@@ -32,9 +51,11 @@ const DBSUploader = ({ dbs_settings }: Props) => {
   */
   
   return (
-    <div className="DBSUploader"> 
-      <TabsFile items={dbs_settings as any} />
-    </div>
+    <WagmiConfig config={config}>
+      <div className="DBSUploader">  
+        <TabsFile items={dbs_settings as any} />
+      </div>
+    </WagmiConfig>
   )
 }
 
