@@ -26,7 +26,7 @@ dbsuploader.args = {
     },
     {
       title: 'Arware',
-      content: 'this is the content for the Arwave tab',
+      content: 'A microservice for uploading files to Arweave',
       payment: {
         chainId: 1,
         tokenAddress: "0xUSDT_on_ETHERUEM"

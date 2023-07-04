@@ -6,6 +6,7 @@ import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+import Button from '../Button'
 
 export interface TabsItem {
   title: string
@@ -67,6 +68,33 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
+      {
+        isConnected &&
+        <div className={`${styles.connection}`}>
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => disconnect()}
+          >
+            <span className={styles.disconnected}></span>
+            Disconnect
+          </Button>
+        </div>
+      }
+
+      {
+        !isConnected &&
+        <div className={`${styles.connection}`}>
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => connect()}
+          >
+            <span className={styles.connected}></span>
+            Connect
+          </Button>
+        </div>
+      }
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.map((item, index) => {
@@ -95,21 +123,6 @@ export default function TabsFile({
                 key={`tabpanel_${items[tabIndex].title}_${index}`}
                 className={styles.tabPanel}
               >
-                {
-                  isConnected &&
-                  <div className={styles.connection}>
-                    Connected to {address}
-                    <button onClick={() => disconnect()}>Disconnect</button>
-                  </div>
-                }
-
-                {
-                  !isConnected &&
-                  <div className={styles.connection}>
-                    <button onClick={() => connect()}>Connect Wallet</button>
-                  </div>
-                }
-
                 {!isHidden && (
                   <label className={styles.tabLabel}>
                     {item.title}
@@ -127,7 +140,7 @@ export default function TabsFile({
                 
                 {item.content}
                 
-                <FileUploadSingle {...item.field} />
+                <FileUploadSingle {...item.field} connected={isConnected} />
 
               </TabPanel>
             </>

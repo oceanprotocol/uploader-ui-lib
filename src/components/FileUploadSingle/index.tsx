@@ -12,6 +12,7 @@ export interface InputField {
   placeholder?: string
   required?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
+  connected?: boolean
   className?: string
   value?: string
   file?: File
@@ -75,7 +76,7 @@ function FileUploadSingle({
               e.preventDefault()
               handleUpload()
             }}
-            disabled={!file || isButtonDisabled}
+            disabled={!file || isButtonDisabled || !props.connected}
           >
             {isLoading ? <Loader /> : submitText}
           </Button>
