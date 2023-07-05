@@ -24,9 +24,9 @@ function FileUploadSingle({
 }: InputField) {
   const [file, setFile] = useState<File>();
   const [isLoading, setIsLoading] = useState(false);
-  const [hideButton, setHideButton] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [submitText, setSubmitText] = useState('Upload');
+  const [hideButton] = useState(false);
+  const [isButtonDisabled] = useState(false);
+  const [submitText] = useState('Upload');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

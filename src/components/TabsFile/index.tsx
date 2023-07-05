@@ -41,7 +41,7 @@ export default function TabsFile({
     return index < 0 ? 0 : index
   }
 
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })
