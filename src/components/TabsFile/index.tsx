@@ -1,5 +1,5 @@
 import Markdown from '../Markdown'
-import React, { ReactElement, ReactNode, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
@@ -7,21 +7,9 @@ import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
-
-export interface TabsItem {
-  title: string
-  content: ReactNode
-  disabled?: boolean
-  props: any
-  field: {
-    value: string
-    label: string
-    placeholder: string
-  }
-}
-
+import { dbs_setting } from '@components/DBSUploader'
 export interface TabsProps {
-  items: TabsItem[]
+  items: dbs_setting[]
   className?: string
 }
 
@@ -48,14 +36,12 @@ export default function TabsFile({
   const { disconnect } = useDisconnect()
 
   const [tabIndex, setTabIndex] = useState(initialState)
-  // hide tabs if are hidden
-  console.log('items', items);
   
   const isHidden = false
 
   const setIndex = (tabName: string) => {
     const index = items.findIndex((tab: any) => {
-      if (tab.title !== tabName) return false
+      if (tab.type !== tabName) return false
       return tab
     })
     setTabIndex(index)
@@ -66,6 +52,16 @@ export default function TabsFile({
     setIndex(tabName)
   }
 
+  const files = [
+    { name: 'File 1', status: 'Pending', link: 'https://google.com' },
+    { name: 'File 2', status: 'Complete', link: 'https://google.com' },
+    { name: 'File 3', status: 'Error', link: 'https://google.com' }
+  ];
+
+  const handleView = (link: string): void => {
+    window.open(link, "_blank");
+  }
+  
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       {
@@ -97,40 +93,40 @@ export default function TabsFile({
       }
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
-          {items.map((item, index) => {
+          {items.length > 0 && items.map((item, index) => {
             return (
               <Tab
                 className={`${styles.tab} ${
                   isHidden ? styles.tabHidden : null
                 }`}
-                key={`tab_${items[tabIndex].title}_${index}`}
+                key={`tab_${items[tabIndex].type}_${index}`}
                 onClick={
-                  handleTabChange ? () => handleTabChange(item.title) : undefined
+                  handleTabChange ? () => handleTabChange(item.type) : undefined
                 }
-                disabled={item.disabled}
               >
-                {item.title}
+                {item.type}
               </Tab> 
             )
           })}
         </TabList>
       </div>
       <div className={styles.tabContent}>
-        {items.map((item, index) => {
+        {items.length > 0 && items.map((item, index) => {
+          
           return (
             <>
               <TabPanel
-                key={`tabpanel_${items[tabIndex].title}_${index}`}
+                key={`tabpanel_${items[tabIndex].type}_${index}`}
                 className={styles.tabPanel}
               >
                 {!isHidden && (
                   <label className={styles.tabLabel}>
-                    {item.title}
-                    {item.content && (
+                    {item.type}
+                    {item.description && (
                       <Tooltip
                         content={
                           <Markdown
-                            text={`${item.content}`}
+                            text={`${item.description}`}
                           />
                         }
                       />
@@ -138,9 +134,32 @@ export default function TabsFile({
                   </label>
                 )}
                 
-                {item.content}
+                {item.description}
                 
-                <FileUploadSingle {...item.field} connected={isConnected} />
+                <FileUploadSingle {...item} name={item.type} connected={isConnected} key={`file_uploader_${items[tabIndex].type}_${index}`} />
+                
+                <br />
+
+                <table className={styles.tableAssets} key={`table_${items[tabIndex].type}_${index}`}>
+                  <thead>
+                    <tr>
+                      <th>Files</th>
+                      <th>Status</th>
+                      <th>View</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {files.map((file, index) => (
+                      <tr key={`table_files_${items[tabIndex].type}_${index}`}>
+                        <td>{file.name}</td>
+                        <td>{file.status}</td>
+                        <td>
+                          <button onClick={() => handleView(file.link)}>View</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
               </TabPanel>
             </>

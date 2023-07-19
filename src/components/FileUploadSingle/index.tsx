@@ -42,9 +42,7 @@ function FileUploadSingle({
       return;
     }
 
-    console.log(file);
-
-    // TODO: rewmove after connect DBS.js
+    // TODO: rewmove after connecting to DBS.js
     setTimeout(() => {
       setIsLoading(false);
       setErrorMessage("File uploaded failed!");
@@ -58,14 +56,13 @@ function FileUploadSingle({
     
   };
 
-  console.log(props);
-
   return (
     <>
       <InputGroup>
         <DefaultInput
           onChange={handleFileChange}
           {...props}
+          name={props.name}
         />
 
         {!hideButton && (
