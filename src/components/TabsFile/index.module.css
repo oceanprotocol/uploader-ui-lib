@@ -3,6 +3,7 @@
   margin-right: auto;
   border-bottom: 1px solid var(--border-color);
   max-width: 100%;
+  min-height: calc(var(--spacer) * 1.5);
   font-family: var(--font-family-base);
 }
 
@@ -86,6 +87,24 @@
 .tabLabel {
   display: block;
   margin-bottom: calc(var(--spacer) / 4);
+}
+
+.tableAssets {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableAssets tr {
+  display: flex;
+  flex-direction: row;
+}
+
+.tableAssets th, .tableAssets td  {
+  width: 33%;
+}
+
+.tableAssets th:last-child, .tableAssets td:last-child  {
+  text-align: right;
 }
 
 @media (min-width: 40rem) {

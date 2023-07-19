@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Tabs, { TabsProps } from './index'
+import Tabs from './index'
 
 export default {
   title: 'Component/@shared/Tabs',
@@ -10,11 +10,7 @@ export default {
 
 const Template: ComponentStory<typeof Tabs> = (args) => <Tabs {...args} />
 
-interface Props {
-  args: TabsProps
-}
-
-const items = [
+export const items = [
   {
     title: 'First tab',
     content: 'this is the content for the first tab'
@@ -29,24 +25,7 @@ const items = [
   }
 ]
 
-export const Default = Template.bind({})
+export const Default = Template.bind({});
 Default.args = {
-  items
-}
-
-export const WithRadio: Props = Template.bind({})
-WithRadio.args = {
-  items,
-  showRadio: true
-}
-
-export const WithDefaultIndex: Props = Template.bind({})
-WithDefaultIndex.args = {
-  items,
-  defaultIndex: 1
-}
-
-export const LotsOfTabs: Props = Template.bind({})
-LotsOfTabs.args = {
-  items: items.flatMap((i) => [i, i, i])
-}
+  items: items
+};

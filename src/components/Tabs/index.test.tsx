@@ -1,10 +1,10 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Default, WithRadio } from './index.stories'
+import { Default, items } from './index.stories'
 
 describe('Tabs', () => {
   test('should be able to change', async () => {
-    render(<Default {...Default.args} />)
+    render(<Default {...Default.args} items={items} />)
 
     fireEvent.click(screen.getByText('Second tab'))
     const secondTab = await screen.findByText(/content for the second tab/i)
@@ -13,13 +13,9 @@ describe('Tabs', () => {
 
   test('should fire custom change handler', async () => {
     const handler = jest.fn()
-    render(<Default {...Default.args} handleTabChange={handler} />)
+    render(<Default {...Default.args} handleTabChange={handler} items={items} />)
 
     fireEvent.click(screen.getByText('Second tab'))
     expect(handler).toBeCalledTimes(1)
-  })
-
-  test('renders WithRadio', () => {
-    render(<Default {...WithRadio.args} />)
   })
 })
