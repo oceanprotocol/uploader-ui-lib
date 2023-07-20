@@ -1,3 +1,4 @@
+require('dotenv').config()
 import React from "react";
 import { StoryFn, Meta } from "@storybook/react";
 import DBSUploader from "./index";
@@ -11,30 +12,7 @@ const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} /
 
 export const dbsuploader = Template.bind({});
 dbsuploader.args = {
-  dbs_settings: [
-    {
-      title: 'Filecoin',
-      content: 'A microservice for uploading files to Lighthouse',
-      payment: {
-        chainId: 1,
-        tokenAddress: "0xWETH_on_ETHERUEM"
-      },
-      field: {
-        name: "filecoin",
-        className: "inputFilecoin"
-      }
-    },
-    {
-      title: 'Arware',
-      content: 'A microservice for uploading files to Arweave',
-      payment: {
-        chainId: 1,
-        tokenAddress: "0xUSDT_on_ETHERUEM"
-      },
-      field: {
-        name: "arweave",
-        className: "inputArweave"
-      }
-    }
-  ],
+    dbs_url: process.env.DBS_URL,
+    infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
+    walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID,
 };
