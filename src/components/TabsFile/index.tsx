@@ -1,21 +1,23 @@
 import Markdown from '../Markdown'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
 import { dbs_setting } from '@components/DBSUploader'
 export interface TabsProps {
   items: dbs_setting[]
   className?: string
+  availableNetworks?: number[]
 }
 
 export default function TabsFile({
   items,
-  className
+  className,
+  availableNetworks
 }: TabsProps): ReactElement {
   const [values, setFieldValue] = useState() as any;
   const initialState = () => {
@@ -28,8 +30,14 @@ export default function TabsFile({
 
     return index < 0 ? 0 : index
   }
+  const { chain } = useNetwork()
+  const { chains, error, isLoading, pendingChainId, switchNetwork } =
+    useSwitchNetwork()
 
   const { isConnected } = useAccount()
+  const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
+  const [selectedNetwork, setSelectedNetwork] = useState(0);
+
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })
@@ -61,6 +69,19 @@ export default function TabsFile({
   const handleView = (link: string): void => {
     window.open(link, "_blank");
   }
+
+  useEffect(() => {
+    const isNetworkSupported = availableNetworks?.includes(chain?.id || 0) || false
+    setIsNetworkSupported(isNetworkSupported)
+    isNetworkSupported && setSelectedNetwork(chain?.id || 0)
+    console.log(chains);
+  }, [chain, chains])
+
+  const handleChangeNetwork = (event: { target: { value: any } }) => {
+    setSelectedNetwork(event.target.value);
+    switchNetwork?.(parseInt(event.target.value))
+    console.log(event.target.value);
+  };
   
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
@@ -91,6 +112,19 @@ export default function TabsFile({
           </Button>
         </div>
       }
+
+      {
+        availableNetworks && availableNetworks.length > 0 && 
+        <select value={selectedNetwork} onChange={handleChangeNetwork}>
+          <option value="">Select a Network</option>
+          {availableNetworks.map((networkId: number, index: number) => (
+            <option key={index} value={networkId}>
+              {chains.find((item) => item.id === networkId)?.name || "Network not supported"}
+            </option>
+          ))}
+        </select>
+      }
+
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items.length > 0 && items.map((item, index) => {
@@ -165,11 +199,6 @@ export default function TabsFile({
             </>
           )
         })}
-        {
-          items.length === 0 && (
-            <p>DBS Not available</p>
-          )
-        }
       </div>
     </ReactTabs>
   )
