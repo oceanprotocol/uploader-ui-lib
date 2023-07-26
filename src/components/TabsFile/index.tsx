@@ -1,23 +1,33 @@
 import Markdown from '../Markdown'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
+import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
 import { dbs_setting } from '@components/DBSUploader'
+import {
+  DBSClient,
+  GetQuoteArgs,
+  File
+} from '@oceanprotocol/dbs'
+import Networks from '../Networks'
+
 export interface TabsProps {
   items: dbs_setting[]
   className?: string
   availableNetworks?: number[]
+  dbsClient: DBSClient
 }
 
 export default function TabsFile({
   items,
   className,
-  availableNetworks
+  availableNetworks,
+  dbsClient
 }: TabsProps): ReactElement {
   const [values, setFieldValue] = useState() as any;
   const initialState = () => {
@@ -31,17 +41,25 @@ export default function TabsFile({
     return index < 0 ? 0 : index
   }
   const { chain } = useNetwork()
-  const { chains, error, isLoading, pendingChainId, switchNetwork } =
+  
+  const { chains, error, isLoading, pendingChainId } =
     useSwitchNetwork()
-
-  const { isConnected } = useAccount()
-  const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
-  const [selectedNetwork, setSelectedNetwork] = useState(0);
-
+  const { address, isConnected } = useAccount()
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })
   const { disconnect } = useDisconnect()
+
+  const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
+  const [paymentSelected, setPaymentSelected] = useState('');
+  const [selectedNetwork, setSelectedNetwork] = useState(chain?.id || 0);
+  
+  const [uploadIsLoading, setUploadIsLoading] = useState(false);
+  const [errorUpload, setErrorUpload] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  const [file, setFile] = useState<File>();
+  const [submitText] = useState('Get Quote');
 
   const [tabIndex, setTabIndex] = useState(initialState)
   
@@ -71,59 +89,137 @@ export default function TabsFile({
   }
 
   useEffect(() => {
-    const isNetworkSupported = availableNetworks?.includes(chain?.id || 0) || false
+    const availableNetworksByService = items[tabIndex].payment.map((item: any) => item.chainId)
+    const isNetworkSupported = availableNetworksByService?.includes(chain?.id.toString() || 0) || false
     setIsNetworkSupported(isNetworkSupported)
     isNetworkSupported && setSelectedNetwork(chain?.id || 0)
-    console.log(chains);
-  }, [chain, chains])
+  }, [chain, chains, items[tabIndex]])
 
-  const handleChangeNetwork = (event: { target: { value: any } }) => {
-    setSelectedNetwork(event.target.value);
-    switchNetwork?.(parseInt(event.target.value))
-    console.log(event.target.value);
+  const switchNetworks = async (chainId: number) => {
+    try {
+      const network = await switchNetwork({chainId})
+      return network
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error switching network");
+    }
+  }
+
+  const handleChangeNetwork = async (event: any) => {
+    event.preventDefault();
+    await switchNetworks(parseInt(event.target.value)).then((switchNetwork) => {
+      setSelectedNetwork(parseInt(event.target.value));
+    })
+    .catch((error) => {
+      setSelectedNetwork(selectedNetwork);
+      console.log(error);
+    });
   };
-  
+
+  const handleChangePayment = (event: { target: { value: any } }) => {
+    setPaymentSelected(event.target.value);
+  };
+
+
+  const handleUpload = async () => {
+    setUploadIsLoading(true);
+    if (!file) {
+      return;
+    }
+
+    /*
+    // TODO: rewmove after connecting to DBS.js
+    setTimeout(() => {
+      setUploadIsLoading(false);
+      setErrorMessage("File uploaded failed!");
+      setErrorUpload(true);
+
+      setTimeout(() => {
+        setErrorUpload(false);
+        setErrorMessage("");
+      }, 3000);
+    }, 3000);
+    */
+
+    // TODO: fix example in dbs.js docs (wrong payment type)
+    // Construct an example quote request
+    const quoteArgs: GetQuoteArgs = {
+      type: items[tabIndex].type,
+      files: [file],
+      duration: 4353545453,
+      payment: {
+        chainId: selectedNetwork, 
+        tokenAddress: paymentSelected
+      },
+      userAddress: address || ''
+    }
+
+    // TODO: fix files property as file object is not being accepted
+    console.log(quoteArgs);
+
+    // Fetch a quote
+    /*
+    try {
+      const quoteResult: GetQuoteResult = await dbsClient.getQuote(quoteArgs)
+      console.log('Quote result:', quoteResult)  
+    } catch (error) {
+      console.log(error);
+    }
+    */
+
+    setUploadIsLoading(false);
+    
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
-      {
-        isConnected &&
-        <div className={`${styles.connection}`}>
-          <Button
-            style="primary"
-            size="small"
-            onClick={() => disconnect()}
-          >
-            <span className={styles.disconnected}></span>
-            Disconnect
-          </Button>
-        </div>
-      }
+      <div className={styles.headerContainer}>
+        {
+          isConnected &&
+          <div className={`${styles.connection}`}>
+            <Button
+              style="primary"
+              size="small"
+              onClick={() => disconnect()}
+            >
+              <span className={styles.disconnected}></span>
+              Disconnect
+            </Button>
+          </div>
+        }
 
-      {
-        !isConnected &&
-        <div className={`${styles.connection}`}>
-          <Button
-            style="primary"
-            size="small"
-            onClick={() => connect()}
-          >
-            <span className={styles.connected}></span>
-            Connect
-          </Button>
-        </div>
-      }
+        {
+          !isConnected &&
+          <div className={`${styles.connection}`}>
+            <Button
+              style="primary"
+              size="small"
+              onClick={() => connect()}
+            >
+              <span className={styles.connected}></span>
+              Connect
+            </Button>
+          </div>
+        }
 
-      {
-        availableNetworks && availableNetworks.length > 0 && 
-        <select value={selectedNetwork} onChange={handleChangeNetwork}>
-          <option value="">Select a Network</option>
-          {availableNetworks.map((networkId: number, index: number) => (
-            <option key={index} value={networkId}>
-              {chains.find((item) => item.id === networkId)?.name || "Network not supported"}
-            </option>
-          ))}
-        </select>
-      }
+        {
+          availableNetworks && availableNetworks.length > 0 && 
+          <Networks 
+            chainIds={availableNetworks} 
+            networkSelected={selectedNetwork} 
+            paymentSelected={paymentSelected} 
+            payments={items[tabIndex].payment.find((item: any) => item.chainId === selectedNetwork.toString())?.acceptedTokens}
+            handleChangeNetwork={handleChangeNetwork}
+            handleChangePayment={handleChangePayment}
+          />
+        }    
+      </div> 
 
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
@@ -170,7 +266,18 @@ export default function TabsFile({
                 
                 {item.description}
                 
-                <FileUploadSingle {...item} name={item.type} connected={isConnected} key={`file_uploader_${items[tabIndex].type}_${index}`} />
+                <FileUploadSingle {...item} 
+                  name={item.type} 
+                  key={`file_uploader_${items[tabIndex].type}_${index}`} 
+                  error={isNetworkSupported === false || errorUpload}
+                  errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
+                  handleUpload={handleUpload}
+                  isLoading={uploadIsLoading}
+                  isButtonDisabled={!isConnected || !file || !isNetworkSupported}
+                  inputDisabled={!isConnected || !isNetworkSupported}
+                  handleFileChange={handleFileChange}
+                  submitText={submitText}
+                />
                 
                 <br />
 

@@ -14,7 +14,7 @@ const DefaultInput = ({
   <>
     <input
       className={cx({ input: true, size: size, className: className })}
-      disabled={!props.connected}
+      disabled={props.inputDisabled}
       id={props.name}
       {...props}
       type='file'

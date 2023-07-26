@@ -26,12 +26,12 @@ export const connectKitTheme = {
   '--ck-body-color-muted': 'var(--font-color-text)'
 }
 
-type acceptedTokens = {
+export type acceptedTokens = {
   title: string
   value: string
 }
 
-type payment = {
+export type payment = {
   chainId: string
   acceptedTokens: acceptedTokens[]
 }
@@ -53,7 +53,8 @@ const DBSUploader = ({ dbs_url, infuraId, walletConnectProjectId }: dbsParams) =
   const [ networksChainIds, setNetworksChainIds ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   // Initialize the DBSClient with the API base URL
-  const client = new DBSClient(dbs_url || '');
+  console.log('dbs_url: ', dbs_url);
+  const client = new DBSClient(dbs_url);
   // Initialize the Wagmi client
   const wagmiClient = createClient(
     getDefaultClient({
@@ -72,6 +73,7 @@ const DBSUploader = ({ dbs_url, infuraId, walletConnectProjectId }: dbsParams) =
         return storageInfo;  
       } catch (error) {
         console.log(error);
+        setLoading(false)
         return error;
       }
     }
@@ -106,7 +108,7 @@ const DBSUploader = ({ dbs_url, infuraId, walletConnectProjectId }: dbsParams) =
       <div className="DBSUploader">  
         { DBSsettings.length === 0 && loading && <div>Loading...</div> }
         { DBSsettings.length > 0 && 
-          <TabsFile items={DBSsettings as dbs_setting[]} availableNetworks={networksChainIds} />
+          <TabsFile items={DBSsettings as dbs_setting[]} availableNetworks={networksChainIds} dbsClient={client} />
         }
         {
           DBSsettings.length === 0 && !loading && (
