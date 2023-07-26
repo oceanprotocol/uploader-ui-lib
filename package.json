@@ -111,7 +111,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@oceanprotocol/dbs": "^0.0.2-alpha.9",
+    "@oceanprotocol/dbs": "^0.0.2-alpha.15",
     "@storybook/preset-scss": "^1.0.3",
     "@tippyjs/react": "^4.2.6",
     "autoprefixer": "^10.4.14",
