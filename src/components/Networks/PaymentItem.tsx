@@ -21,7 +21,7 @@ export default function PaymentItem({
           name="paymentMethods"
           value={payment.value}
           onChange={handleChanged}
-          defaultChecked={selected}
+          checked={selected}
         />
         <p>{payment.title}</p>
       </label>

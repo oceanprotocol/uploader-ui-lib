@@ -12,7 +12,8 @@ import { dbs_setting } from '@components/DBSUploader'
 import {
   DBSClient,
   GetQuoteArgs,
-  File
+  File,
+  GetQuoteResult
 } from '@oceanprotocol/dbs'
 import Networks from '../Networks'
 
@@ -40,8 +41,9 @@ export default function TabsFile({
 
     return index < 0 ? 0 : index
   }
-  const { chain } = useNetwork()
+  const [tabIndex, setTabIndex] = useState(initialState)
   
+  const { chain } = useNetwork()
   const { chains, error, isLoading, pendingChainId } =
     useSwitchNetwork()
   const { address, isConnected } = useAccount()
@@ -51,6 +53,7 @@ export default function TabsFile({
   const { disconnect } = useDisconnect()
 
   const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
+  
   const [paymentSelected, setPaymentSelected] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState(chain?.id || 0);
   
@@ -60,8 +63,6 @@ export default function TabsFile({
   
   const [file, setFile] = useState<File>();
   const [submitText] = useState('Get Quote');
-
-  const [tabIndex, setTabIndex] = useState(initialState)
   
   const isHidden = false
 
@@ -93,6 +94,7 @@ export default function TabsFile({
     const isNetworkSupported = availableNetworksByService?.includes(chain?.id.toString() || 0) || false
     setIsNetworkSupported(isNetworkSupported)
     isNetworkSupported && setSelectedNetwork(chain?.id || 0)
+    isNetworkSupported && setPaymentSelected(items[tabIndex].payment.find((item: any) => item.chainId === chain?.id.toString())?.acceptedTokens[0].value || '')
   }, [chain, chains, items[tabIndex]])
 
   const switchNetworks = async (chainId: number) => {
@@ -145,10 +147,10 @@ export default function TabsFile({
     // Construct an example quote request
     const quoteArgs: GetQuoteArgs = {
       type: items[tabIndex].type,
-      files: [file],
+      files: [{ length: file.size }],
       duration: 4353545453,
       payment: {
-        chainId: selectedNetwork, 
+        chainId: selectedNetwork.toString(), 
         tokenAddress: paymentSelected
       },
       userAddress: address || ''
@@ -158,15 +160,15 @@ export default function TabsFile({
     console.log(quoteArgs);
 
     // Fetch a quote
-    /*
     try {
       const quoteResult: GetQuoteResult = await dbsClient.getQuote(quoteArgs)
       console.log('Quote result:', quoteResult)  
     } catch (error) {
       console.log(error);
+      setErrorUpload(true);
+      setErrorMessage("File uploaded failed!");
     }
-    */
-
+    
     setUploadIsLoading(false);
     
   };

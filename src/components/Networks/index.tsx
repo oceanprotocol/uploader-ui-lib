@@ -16,7 +16,7 @@ export default function Networks({ chainIds, payments, networkSelected, paymentS
         <ul className={stylesIndex.preferencesDetails}>
           <li>
             <Label htmlFor="chains">Networks</Label>
-            <FormHelp>Switch the data source for the interface.</FormHelp>
+            <FormHelp>Select the network you would like to use.</FormHelp>
 
             <NetworksList 
               title="Network" 
@@ -28,7 +28,7 @@ export default function Networks({ chainIds, payments, networkSelected, paymentS
             <NetworksList 
               title="Payment" 
               payments={payments} 
-              paymentSelected={paymentSelected || 0} 
+              paymentSelected={paymentSelected} 
               handleChanged={handleChangePayment}
             />
           </li>

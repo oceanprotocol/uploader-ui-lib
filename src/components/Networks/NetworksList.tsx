@@ -17,7 +17,7 @@ export default function NetworksList({
   networkSelected?: number
   paymentSelected?: number
   handleChanged: (e: ChangeEvent<HTMLInputElement>) => void
-}): ReactElement {
+}) {
   
   const networksAvailable = networks?.map((chainId: number, index: number) => (
     <NetworkItem 
@@ -28,10 +28,11 @@ export default function NetworksList({
     />
   ))
   
+  
   const paymentsAvailable = payments?.map((payment: any, index) => (
     <PaymentItem 
       key={index} 
-      selected={index === paymentSelected} 
+      selected={payment.value === paymentSelected} 
       payment={payment} 
       handleChanged={handleChanged}
     />
