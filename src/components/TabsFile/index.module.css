@@ -4,10 +4,6 @@
   align-items: center;
 }
 
-.connection{
-  
-}
-
 .connected{
   width: 10px;
   height: 10px;
@@ -106,6 +102,7 @@
   line-height: 1.2;
   display: block;
   margin-bottom: 0;
+  margin-top: 1rem;
 }
 
 .tabPanel label {
@@ -133,6 +130,16 @@
 
 .tableAssets th:last-child, .tableAssets td:last-child  {
   text-align: right;
+}
+
+.priceLabel {
+  position: absolute;
+  right: -1px;
+  top: 0.8rem;
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  cursor: auto;
+  transform: none !important;
 }
 
 @media (min-width: 40rem) {

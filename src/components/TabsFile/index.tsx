@@ -4,18 +4,20 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork, useSigner } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
 import { dbs_setting } from '@components/DBSUploader'
 import {
   DBSClient,
+  GetLinkResult,
   GetQuoteArgs,
-  File,
-  GetQuoteResult
+  GetQuoteResult,
+  GetStatusResult
 } from '@oceanprotocol/dbs'
 import Networks from '../Networks'
+import { formatEther } from "@ethersproject/units";
 
 export interface TabsProps {
   items: dbs_setting[]
@@ -60,11 +62,32 @@ export default function TabsFile({
   const [uploadIsLoading, setUploadIsLoading] = useState(false);
   const [errorUpload, setErrorUpload] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [quote, setQuote] = useState<any>({
+    "quoteId": "78959b7f49f848ca99a1a31aa4d16830",
+    "tokenAmount": 21825,
+    "approveAddress": "0x0ff9092e55d9f6CCB0DD4C490754811bc0839866",
+    "chainId": 80001,
+    "tokenAddress": "0x21c561e551638401b937b03fe5a0a0652b99b7dd"
+  });
+  const [uploadResponse, setUploadResponse] = useState<any>({});
+  const [statusResponse, setStatusResponse] = useState<any>({});
+  const [ddoResponse, setDDOResponse] = useState<any>({});
+
+  const [step, setStep] = useState('quote');
   
   const [file, setFile] = useState<File>();
-  const [submitText] = useState('Get Quote');
+  const [submitText, setSubmitText] = useState('Get Quote');
   
   const isHidden = false
+
+  // TODO: use after Upload
+  const resetTabs = () => {
+    setTabIndex(initialState)
+    setStep('quote');
+    setSubmitText('Get Quote');
+    setFile(undefined);
+  }
 
   const setIndex = (tabName: string) => {
     const index = items.findIndex((tab: any) => {
@@ -73,6 +96,10 @@ export default function TabsFile({
     })
     setTabIndex(index)
     setFieldValue(items[index])
+    setStep('quote');
+    setFile(undefined);
+    setErrorUpload(false);
+    setErrorMessage('');
   }
 
   const handleTabChange = (tabName: string) => {
@@ -109,7 +136,7 @@ export default function TabsFile({
 
   const handleChangeNetwork = async (event: any) => {
     event.preventDefault();
-    await switchNetworks(parseInt(event.target.value)).then((switchNetwork) => {
+    await switchNetworks(parseInt(event.target.value)).then(() => {
       setSelectedNetwork(parseInt(event.target.value));
     })
     .catch((error) => {
@@ -122,6 +149,73 @@ export default function TabsFile({
     setPaymentSelected(event.target.value);
   };
 
+  const getQuote = async ({ type, duration, payment, userAddress, filePath, fileInfo}: GetQuoteArgs) => {
+    try {
+      console.log('quoting: ', { type, duration, payment, userAddress, filePath, fileInfo });
+      const quoteResult: GetQuoteResult = await dbsClient.getQuote({
+        type,
+        duration,
+        payment,
+        userAddress,
+        filePath,
+        fileInfo
+      })
+      console.log('Quote result:', quoteResult) 
+      setQuote(quoteResult); 
+      setStep('upload');
+    } catch (error) {
+      console.log(error);
+      setErrorUpload(true);
+      setErrorMessage("File quote failed!");
+    }
+  }
+
+  const getUpload = async ({ quoteId, files}: any) => {
+    try {
+      console.log('uploading: ', { quoteId, files });
+      const quoteAndUploadResult: GetQuoteResult = await dbsClient.upload(
+        quoteId,
+        files
+      )
+      console.log('Upload result:', quoteAndUploadResult) 
+      setUploadResponse(quoteAndUploadResult);
+      setStep('status');
+    } catch (error) {
+      console.log(error);
+      setErrorUpload(true);
+      setErrorMessage("File uploaded failed!");
+    }
+  }
+
+  const getStatus = async ({ quoteId}: any) => {
+    try {
+      console.log('get status: ', { quoteId });
+      const statusResult: GetStatusResult = await dbsClient.getStatus(
+        quoteId
+      )
+      console.log('status result:', statusResult) 
+      setStatusResponse(statusResult);
+      setStep('ddo');
+    } catch (error) {
+      console.log(error);
+      setErrorUpload(true);
+      setErrorMessage("File status failed!");
+    }
+  }
+
+  const getDDOlink = async ({ quoteId}: any) => {
+    try {
+      console.log('get DDO link: ', { quoteId });
+      const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
+      console.log('status result:', linkResult)
+      setDDOResponse(linkResult);
+      setStep('done');
+    } catch (error) {
+      console.log(error);
+      setErrorUpload(true);
+      setErrorMessage("DDO link status failed!");
+    }
+  }
 
   const handleUpload = async () => {
     setUploadIsLoading(true);
@@ -129,48 +223,45 @@ export default function TabsFile({
       return;
     }
 
-    /*
-    // TODO: rewmove after connecting to DBS.js
-    setTimeout(() => {
-      setUploadIsLoading(false);
-      setErrorMessage("File uploaded failed!");
-      setErrorUpload(true);
-
-      setTimeout(() => {
-        setErrorUpload(false);
-        setErrorMessage("");
-      }, 3000);
-    }, 3000);
-    */
-
-    // TODO: fix example in dbs.js docs (wrong payment type)
-    // Construct an example quote request
-    const quoteArgs: GetQuoteArgs = {
-      type: items[tabIndex].type,
-      files: [{ length: file.size }],
-      duration: 4353545453,
-      payment: {
-        chainId: selectedNetwork.toString(), 
-        tokenAddress: paymentSelected
-      },
-      userAddress: address || ''
-    }
-
-    // TODO: fix files property as file object is not being accepted
-    console.log(quoteArgs);
-
-    // Fetch a quote
-    try {
-      const quoteResult: GetQuoteResult = await dbsClient.getQuote(quoteArgs)
-      console.log('Quote result:', quoteResult)  
-    } catch (error) {
-      console.log(error);
-      setErrorUpload(true);
-      setErrorMessage("File uploaded failed!");
+    switch (step) {
+      case 'quote':
+        // Fetch a quote
+        await getQuote({
+          type: items[tabIndex].type,
+          duration: 4353545453,
+          payment: {
+            chainId: selectedNetwork.toString(), 
+            tokenAddress: paymentSelected
+          },
+          userAddress: address || '',
+          filePath: undefined,
+          fileInfo: [{ length: file.size }]
+        })
+        break;
+      case 'upload':
+        // Upload File
+        await getUpload({
+          quoteId: quote.quoteId,
+          files: [file]
+        })
+        break;
+      case 'status':
+        // Get Status file
+        await getStatus({
+          quoteId: quote.quoteId
+        })
+        break;
+      case 'ddo':
+        // Fetch the DDO files object for a job
+        await getDDOlink({
+          quoteId: quote.quoteId
+        })
+        break;
+      default:
+        break;
     }
     
     setUploadIsLoading(false);
-    
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -178,6 +269,25 @@ export default function TabsFile({
       setFile(e.target.files[0]);
     }
   };
+  
+  useEffect(() => {
+    switch (step) {
+      case 'quote':
+        setSubmitText('Get Quote');
+        break;
+      case 'upload':
+        setSubmitText('Upload File');
+        break;
+      case 'status':
+        setSubmitText('Status File');
+        break;
+      case 'ddo':
+        setSubmitText('DDO Link');
+        break;
+      default:
+        break;
+    }
+  }, [step])
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
@@ -251,22 +361,32 @@ export default function TabsFile({
                 key={`tabpanel_${items[tabIndex].type}_${index}`}
                 className={styles.tabPanel}
               >
-                {!isHidden && (
-                  <label className={styles.tabLabel}>
-                    {item.type}
-                    {item.description && (
-                      <Tooltip
-                        content={
-                          <Markdown
-                            text={`${item.description}`}
-                          />
-                        }
-                      />
-                    )}
-                  </label>
-                )}
+                {item.description} 
                 
-                {item.description}
+                { 
+                  <Tooltip
+                    content={
+                      <Markdown
+                        text={`${item.description}`}
+                      />
+                    }
+                  />
+                }
+
+                {
+                  step === 'upload' &&
+                  <Button
+                    style="primary"
+                    className={styles.priceLabel}
+                    size="small"
+                    onClick={(e: React.SyntheticEvent) => {
+                      e.preventDefault()
+                    }}
+                    disabled={false}
+                  >
+                    {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
+                  </Button>
+                }
                 
                 <FileUploadSingle {...item} 
                   name={item.type} 
