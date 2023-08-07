@@ -1,33 +1,32 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent } from 'react'
 import NetworkItem from './NetworkItem'
 import PaymentItem from './PaymentItem'
 import styles from './NetworksList.module.css'
+import { useNetwork } from 'wagmi'
 
 export default function NetworksList({
   title,
   networks,
   payments,
-  networkSelected,
   paymentSelected,
   handleChanged
 }: {
   title: string
   networks?: number[]
   payments?: number[]
-  networkSelected?: number
   paymentSelected?: number
   handleChanged: (e: ChangeEvent<HTMLInputElement>) => void
 }) {
+  const { chain } = useNetwork()
   
   const networksAvailable = networks?.map((chainId: number, index: number) => (
     <NetworkItem 
       key={index} 
       chainId={chainId} 
-      selected={chainId === networkSelected}
+      selected={chainId === chain?.id}
       handleChanged={handleChanged}
     />
   ))
-  
   
   const paymentsAvailable = payments?.map((payment: any, index) => (
     <PaymentItem 

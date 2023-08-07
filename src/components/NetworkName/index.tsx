@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import { NetworkIcon } from './NetworkIcon'
 import { useSwitchNetwork } from 'wagmi'
+import { getNetworkDisplayName } from './NetworkName'
 
 export default function NetworkName({
   networkId,
@@ -12,9 +13,9 @@ export default function NetworkName({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { chains } = useSwitchNetwork()
-
-  const networkName = chains.find((item) => item.id === networkId)?.name || "Network not supported"
+  
+  const networkName = getNetworkDisplayName(networkId)
+  
   return (
     <span
       className={`${styles.network} ${minimal ? styles.minimal : null} ${

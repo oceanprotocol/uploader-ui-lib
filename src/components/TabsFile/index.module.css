@@ -125,11 +125,28 @@
 }
 
 .tableAssets th, .tableAssets td  {
-  width: 33%;
+  width: 50%;
+}
+
+.tableAssets th:nth-child(3), .tableAssets td:nth-child(3) {
+  width: 15%;
+  text-align: center;
+}
+
+.tableAssets th:first-child, .tableAssets td:first-child  {
+  width: 25%;
 }
 
 .tableAssets th:last-child, .tableAssets td:last-child  {
-  text-align: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10%;
+}
+
+.tableButton {
+  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 2) !important;
+  height: 1.7rem;
 }
 
 .priceLabel {
@@ -138,7 +155,7 @@
   top: 0.8rem;
   border-bottom-right-radius: 0 !important;
   border-top-right-radius: 0 !important;
-  cursor: auto;
+  cursor: auto !important;
   transform: none !important;
 }
 

@@ -30,12 +30,12 @@ type dbsParams = {
 
 const DBSUploader = ({ dbs_url }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
-  const [ networksChainIds, setNetworksChainIds ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   const {data: signer} = useSigner()
   // Initialize the DBSClient with the API base URL
   console.log('dbs_url: ', dbs_url);
-  const client = new DBSClient(dbs_url, signer);
+  // TODO: fix any type
+  const client = new DBSClient(dbs_url, signer as any);
   console.log(signer);
   
   // Fetch storage info
@@ -66,7 +66,6 @@ const DBSUploader = ({ dbs_url }: dbsParams) => {
       const chainIds: any = getChainIds(storageInfo);
       // TODO: fix error on DBS.js when endpoint is empty / unavailable / wrong
       setDBSsettings(storageInfo)
-      setNetworksChainIds(chainIds)
       setLoading(false)
     }).catch((err) => {
       console.log(err);
@@ -77,7 +76,7 @@ const DBSUploader = ({ dbs_url }: dbsParams) => {
     <div className="DBSUploader">  
       { DBSsettings.length === 0 && loading && <div>Loading...</div> }
       { DBSsettings.length > 0 && 
-        <TabsFile items={DBSsettings as dbs_setting[]} availableNetworks={networksChainIds} dbsClient={client} />
+        <TabsFile items={DBSsettings as dbs_setting[]} dbsClient={client} />
       }
       {
         DBSsettings.length === 0 && !loading && (

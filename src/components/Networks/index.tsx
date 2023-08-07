@@ -8,7 +8,7 @@ import NetworksList from './NetworksList'
 import stylesIndex from './preferences.module.css'
 import styles from './index.module.css'
 
-export default function Networks({ chainIds, payments, networkSelected, paymentSelected, handleChangeNetwork, handleChangePayment }: any): ReactElement {
+export default function Networks({ chainIds, payments, paymentSelected, handleChangeNetwork, handleChangePayment }: any): ReactElement {
   
   return (
     <Tooltip
@@ -21,16 +21,18 @@ export default function Networks({ chainIds, payments, networkSelected, paymentS
             <NetworksList 
               title="Network" 
               networks={chainIds} 
-              networkSelected={networkSelected} 
               handleChanged={handleChangeNetwork}
             />
 
-            <NetworksList 
-              title="Payment" 
-              payments={payments} 
-              paymentSelected={paymentSelected} 
-              handleChanged={handleChangePayment}
-            />
+            {
+              payments && payments.length > 0 &&
+              <NetworksList 
+                title="Payment" 
+                payments={payments} 
+                paymentSelected={paymentSelected} 
+                handleChanged={handleChangePayment}
+              />
+            }
           </li>
         </ul>
       }
