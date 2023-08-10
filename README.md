@@ -51,6 +51,7 @@ Run `export NODE_OPTIONS=--openssl-legacy-provider` before building.
 
 Import and use the DBS UI components in your app:
 
+```bash
 import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
 
 <DBSUploader 
@@ -59,6 +60,18 @@ import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
    infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
    walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID
 />
+```
+
+To enable the functionality of the DBSUploader, the following setting variables need to be set:
+
+| Variable                | Description                                           |
+|-------------------------|-------------------------------------------------------|
+| `dbs_url`               | URL for DBS service communication                    |
+| `dbs_account`           | Account info for DBS authentication                  |
+| `infuraId`              | Project ID for Ethereum access via Infura            |
+| `walletConnectProjectId`| Project ID for WalletConnect integration             |
+
+These variables are needed to interact with the DBS service, provide authentication credentials, access the Ethereum network through Infura, and enable integration with WalletConnect. 
 
 ## 👩‍🎤 Storybook
 
