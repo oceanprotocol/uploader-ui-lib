@@ -8,7 +8,7 @@ import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
-import { dbs_setting } from '../DBSUploader'
+import { dbs_setting } from '../DBSComponent'
 import {
   DBSClient,
   GetQuoteArgs,

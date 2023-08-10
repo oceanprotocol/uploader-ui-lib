@@ -1,79 +1,53 @@
 require('dotenv').config()
-import React, { useEffect } from 'react'
-import { useSigner } from 'wagmi'
+import React from 'react'
+import { WagmiConfig, createClient } from 'wagmi'
+import { mainnet, polygon, goerli, polygonMumbai } from 'wagmi/chains'
+import { ConnectKitProvider, getDefaultClient } from 'connectkit'
+import DBSComponent from '../DBSComponent'
 
-import '../../stylesGlobal/styles.css'
-import './index.module.css'
-import TabsFile from '../TabsFile'
-
-import {DBSClient} from '@oceanprotocol/dbs';
-
-export type acceptedTokens = {
-  title: string
-  value: string
+// ConnectKit CSS overrides
+// https://docs.family.co/connectkit/theming#theme-variables
+export const connectKitTheme = {
+  '--ck-font-family': 'var(--font-family-base)',
+  '--ck-border-radius': 'var(--border-radius)',
+  '--ck-overlay-background': 'var(--background-body-transparent)',
+  '--ck-modal-box-shadow': '0 0 20px 20px var(--box-shadow-color)',
+  '--ck-body-background': 'var(--background-body)',
+  '--ck-body-color': 'var(--font-color-text)',
+  '--ck-primary-button-border-radius': 'var(--border-radius)',
+  '--ck-primary-button-color': 'var(--font-color-heading)',
+  '--ck-primary-button-background': 'var(--background-content)',
+  '--ck-secondary-button-border-radius': 'var(--border-radius)',
+  '--ck-body-color-muted': 'var(--font-color-text)'
 }
 
-export type payment = {
-  chainId: string
-  acceptedTokens: acceptedTokens[]
+type web3Params = {
+    infuraId: string
+    walletConnectProjectId: string
+    dbs_url: string
+    dbs_account: string
 }
 
-export type dbs_setting = {
-  type: string,
-  description: string
-  payment: payment[]
-}
-
-type dbsParams = {
-  dbs_url: string
-  dbs_account: string
-}
-
-const DBSUploader = ({ dbs_url, dbs_account }: dbsParams) => {
-  const [ DBSsettings, setDBSsettings ] = React.useState([])
-  const [ loading, setLoading ] = React.useState(true)
-  const {data: signer} = useSigner()
-  // Initialize the DBSClient with the API base URL
-  console.log('dbs_url: ', dbs_url);
-  // TODO: fix any type
-  const client = new DBSClient(dbs_url, dbs_account, signer as any);
-  console.log(signer);
-  
-  // Fetch storage info
-  useEffect(() => {
-    // Fetch storage info from DBS endpoint
-    const getStorageInfo = async () => {
-      try {
-        const storageInfo = await client.getStorageInfo();
-        return storageInfo;  
-      } catch (error) {
-        console.log(error);
-        setLoading(false)
-        return error;
-      }
-    }
-    // Fetch storage info
-    getStorageInfo().then((storageInfo: any) => {
-      // TODO: fix error on DBS.js when endpoint is empty / unavailable / wrong
-      setDBSsettings(storageInfo)
-      setLoading(false)
-    }).catch((err) => {
-      console.log(err);
+const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }: web3Params) => {
+  // Initialize the Wagmi client
+  const wagmiClient = createClient(
+    getDefaultClient({
+      appName: 'Ocean DBS UI',
+      infuraId: infuraId,
+      chains: [mainnet, polygon, goerli, polygonMumbai],
+      walletConnectProjectId: walletConnectProjectId || ''
     })
-  }, [signer])
+  )
   
   return (
-    <div className="DBSUploader">  
-      { DBSsettings.length === 0 && loading && <div>Loading...</div> }
-      { DBSsettings.length > 0 && 
-        <TabsFile items={DBSsettings as dbs_setting[]} dbsClient={client} />
-      }
-      {
-        DBSsettings.length === 0 && !loading && (
-          <p>DBS Not available</p>
-        )
-      }
-    </div>
+    <WagmiConfig client={wagmiClient}>
+        <ConnectKitProvider
+            options={{ initialChainId: 0 }}
+            customTheme={connectKitTheme}
+        >
+            <DBSComponent dbs_url={dbs_url} dbs_account={dbs_account}/>
+      </ConnectKitProvider>
+    </WagmiConfig>
   )
 }
 
