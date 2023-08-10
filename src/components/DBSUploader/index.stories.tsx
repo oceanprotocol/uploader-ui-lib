@@ -1,17 +1,17 @@
 require('dotenv').config()
 import React from "react";
 import { StoryFn, Meta } from "@storybook/react";
-import Web3Connection from "./index";
+import DBSUploader from "./index";
 
 export default {
-  title: "DBS UI Library/DBSComponent",
-  component: Web3Connection,
-} as Meta<typeof Web3Connection>;
+  title: "DBS UI Library/DBSUploader",
+  component: DBSUploader,
+} as Meta<typeof DBSUploader>;
 
-const Template: StoryFn<typeof Web3Connection> = (args) => <Web3Connection {...args} />;
+const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} />;
 
-export const web3Connection = Template.bind({});
-web3Connection.args = {
+export const dbsUploader = Template.bind({});
+dbsUploader.args = {
     dbs_url: process.env.DBS_URL,
     dbs_account: process.env.DBS_ACCOUNT,
     infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
