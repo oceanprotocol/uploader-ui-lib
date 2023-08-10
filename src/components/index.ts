@@ -1,3 +1,3 @@
-import DBSUploader from './DBSUploader'
+import Web3Connection from './Web3Connection'
 
-export { DBSUploader }
+export { Web3Connection }

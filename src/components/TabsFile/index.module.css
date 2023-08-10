@@ -1,3 +1,27 @@
+.headerContainer{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.connected{
+  width: 10px;
+  height: 10px;
+  background-color: var(--brand-alert-red);
+  display: block;
+  border-radius: 25px;
+  margin-right: calc(var(--spacer) / 4);
+}
+
+.disconnected {
+  width: 10px;
+  height: 10px;
+  background-color: var(--brand-alert-green);
+  display: block;
+  border-radius: 25px;
+  margin-right: calc(var(--spacer) / 4);
+}
+
 .tabListContainer {
   margin-left: auto;
   margin-right: auto;
@@ -26,6 +50,7 @@
   margin-right: -1px;
   background: none;
   border: 0;
+  white-space: nowrap;
 }
 
 .tabHidden {
@@ -78,6 +103,7 @@
   line-height: 1.2;
   display: block;
   margin-bottom: 0;
+  margin-top: 1rem;
 }
 
 .tabPanel label {
@@ -89,22 +115,14 @@
   margin-bottom: calc(var(--spacer) / 4);
 }
 
-.tableAssets {
-  display: flex;
-  flex-direction: column;
-}
-
-.tableAssets tr {
-  display: flex;
-  flex-direction: row;
-}
-
-.tableAssets th, .tableAssets td  {
-  width: 33%;
-}
-
-.tableAssets th:last-child, .tableAssets td:last-child  {
-  text-align: right;
+.priceLabel {
+  position: absolute;
+  right: -1px;
+  top: 0.8rem;
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  cursor: auto !important;
+  transform: none !important;
 }
 
 @media (min-width: 40rem) {
@@ -121,28 +139,4 @@
 
 .radio {
   composes: radio from '../Radio/index.module.css';
-}
-
-.connection{
-  position: absolute;
-  right: 0;
-  padding-right: var(--spacer);
-}
-
-.connected{
-  width: 10px;
-  height: 10px;
-  background-color: var(--brand-alert-red);
-  display: block;
-  border-radius: 25px;
-  margin-right: calc(var(--spacer) / 4);
-}
-
-.disconnected {
-  width: 10px;
-  height: 10px;
-  background-color: var(--brand-alert-green);
-  display: block;
-  border-radius: 25px;
-  margin-right: calc(var(--spacer) / 4);
 }

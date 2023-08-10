@@ -12,55 +12,33 @@ export interface InputField {
   placeholder?: string
   required?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
-  connected?: boolean
   className?: string
   value?: string
   file?: File
+  error?: boolean
+  errorMessage?: string
+  success?: boolean
+  successMessage?: string
+  isLoading?: boolean
+  isButtonDisabled?: boolean
+  inputDisabled?: boolean
+  submitText?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  handleUpload: () => void
+  handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 function FileUploadSingle({
   ...props
 }: InputField) {
-  const [file, setFile] = useState<File>();
-  const [isLoading, setIsLoading] = useState(false);
+  
   const [hideButton] = useState(false);
-  const [isButtonDisabled] = useState(false);
-  const [submitText] = useState('Upload');
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = () => {
-    setIsLoading(true);
-    if (!file) {
-      return;
-    }
-
-    // TODO: rewmove after connecting to DBS.js
-    setTimeout(() => {
-      setIsLoading(false);
-      setErrorMessage("File uploaded failed!");
-      setError(true);
-
-      setTimeout(() => {
-        setError(false);
-        setErrorMessage("");
-      }, 3000);
-    }, 3000);
-    
-  };
 
   return (
     <>
       <InputGroup>
         <DefaultInput
-          onChange={handleFileChange}
+          onChange={props.handleFileChange}
           {...props}
           name={props.name}
         />
@@ -71,18 +49,24 @@ function FileUploadSingle({
             size="small"
             onClick={(e: React.SyntheticEvent) => {
               e.preventDefault()
-              handleUpload()
+              props.handleUpload()
             }}
-            disabled={!file || isButtonDisabled || !props.connected}
+            disabled={props.isButtonDisabled}
           >
-            {isLoading ? <Loader /> : submitText}
+            {props.isLoading ? <Loader /> : props.submitText}
           </Button>
         )}
       </InputGroup>
 
-      {error && (
+      {props.error && (
         <div className={styles.error}>
-          <p>{errorMessage}</p>
+          <p>{props.errorMessage}</p>
+        </div>
+      )}
+
+      {props.success && (
+        <div className={styles.success}>
+          <p>{props.successMessage}</p>
         </div>
       )}
     </>

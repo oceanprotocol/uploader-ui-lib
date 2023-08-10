@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import { InputField } from '@components/FileUploadSingle'
@@ -10,16 +10,25 @@ const DefaultInput = ({
   className,
   file,
   ...props
-}: InputField) => (
-  <>
+}: InputField) => {
+  const ref = useRef() as any;
+
+  useEffect(() => {
+    if (!file) {
+      ref.current.value = ''
+    }
+  }, [file])
+  
+  return (
     <input
       className={cx({ input: true, size: size, className: className })}
-      disabled={!props.connected}
+      disabled={props.inputDisabled}
       id={props.name}
       {...props}
+      ref={ref} 
       type='file'
     />
-  </>
-)
+  )
+}
 
 export default DefaultInput
