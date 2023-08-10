@@ -5,6 +5,7 @@
 **Table of Contents**
 
 - [🏄 Get Started](#-get-started)
+- [🚀 Usage](#-usage)
 - [👩‍🎤 Storybook](#-storybook)
 - [🤖 Testing](#-testing)
 - [✨ Code Style](#-code-style)
@@ -45,6 +46,19 @@ would be published to npm.
 
 # if you encounter this error: Error: error:0308010C:digital envelope routines::unsupported
 Run `export NODE_OPTIONS=--openssl-legacy-provider` before building.
+
+## 🚀 Usage
+
+Import and use the DBS UI components in your app:
+
+import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
+
+<DBSUploader 
+   dbs_url: process.env.DBS_URL,
+   dbs_account: process.env.DBS_ACCOUNT,
+   infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
+   walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID
+/>
 
 ## 👩‍🎤 Storybook
 
