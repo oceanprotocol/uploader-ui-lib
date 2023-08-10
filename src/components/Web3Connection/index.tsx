@@ -25,9 +25,10 @@ type web3Params = {
     infuraId: string
     walletConnectProjectId: string
     dbs_url: string
+    dbs_account: string
 }
 
-const Web3Connection = ({ infuraId, walletConnectProjectId, dbs_url }: web3Params) => {
+const Web3Connection = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }: web3Params) => {
   // Initialize the Wagmi client
   const wagmiClient = createClient(
     getDefaultClient({
@@ -44,7 +45,7 @@ const Web3Connection = ({ infuraId, walletConnectProjectId, dbs_url }: web3Param
             options={{ initialChainId: 0 }}
             customTheme={connectKitTheme}
         >
-            <DBSUploader dbs_url={dbs_url} />
+            <DBSUploader dbs_url={dbs_url} dbs_account={dbs_account}/>
       </ConnectKitProvider>
     </WagmiConfig>
   )

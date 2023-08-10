@@ -4,20 +4,21 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork, useSigner } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
-import { dbs_setting } from '@components/DBSUploader'
+import { dbs_setting } from '../DBSUploader'
 import {
   DBSClient,
-  GetLinkResult,
   GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult
 } from '@oceanprotocol/dbs'
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
+import HistoryList from '../HistoryList'
+import { addEllipsesToText } from '../../@utils/textFormat'
 
 export interface TabsProps {
   items: dbs_setting[]
@@ -44,8 +45,6 @@ export default function TabsFile({
   const [tabIndex, setTabIndex] = useState(initialState)
   
   const { chain } = useNetwork()
-  const { chains } =
-    useSwitchNetwork()
   const { address, isConnected } = useAccount()
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -61,7 +60,10 @@ export default function TabsFile({
   const [uploadIsLoading, setUploadIsLoading] = useState(false);
   const [errorUpload, setErrorUpload] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successUpload, setSuccessUpload] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
+  // Mocked data quote
   const [quote, setQuote] = useState<any>({
     "quoteId": "78959b7f49f848ca99a1a31aa4d16830",
     "tokenAmount": 21825,
@@ -70,8 +72,8 @@ export default function TabsFile({
     "tokenAddress": "0x21c561e551638401b937b03fe5a0a0652b99b7dd"
   });
   const [uploadResponse, setUploadResponse] = useState<any>({});
-  const [statusResponse, setStatusResponse] = useState<any>({});
-  const [ddoResponse, setDDOResponse] = useState<any>({});
+
+  const [historyList, setHistoryList] = useState<any>([]);
 
   const [step, setStep] = useState('quote');
   
@@ -86,6 +88,13 @@ export default function TabsFile({
     setStep('quote');
     setSubmitText('Get Quote');
     setFile(undefined);
+    
+    setTimeout(() => {
+      setSuccessUpload(false)
+      setSuccessMessage('')
+      setErrorUpload(false)
+      setErrorMessage('')
+    }, 3000);
   }
 
   const setIndex = (tabName: string) => {
@@ -107,64 +116,20 @@ export default function TabsFile({
 
   const uploads = [
     {
-      "quoteId": "example-quote-id-1",
-      "statusCode": 0,
-      "statusMessage": "No such quote",
-      "link": "https://example.com/quote1"
-    },
-    {
-      "quoteId": "example-quote-id-2",
-      "statusCode": 99,
-      "statusMessage": "Waiting for files to be uploaded by the user",
-      "link": "https://example.com/quote2"
-    },
-    {
-      "quoteId": "example-quote-id-3",
-      "statusCode": 199,
-      "statusMessage": "Inadequate Balance or token Allowance given",
-      "link": "https://example.com/quote3"
-    },
-    {
-      "quoteId": "example-quote-id-4",
-      "statusCode": 300,
-      "statusMessage": "Uploading files to storage",
-      "link": "https://example.com/quote4"
-    },
-    {
-      "quoteId": "example-quote-id-5",
-      "statusCode": 399,
-      "statusMessage": "CID migrated to lighthouse node, creating filecoin deal",
-      "link": "https://example.com/quote5"
-    },
-    {
-      "quoteId": "example-quote-id-6",
-      "statusCode": 400,
-      "statusMessage": "Deal created on filecoin network",
-      "link": "https://example.com/quote6"
-    },
-    {
-      "quoteId": "example-quote-id-7",
-      "statusCode": 401,
-      "statusMessage": "Upload failure",
-      "link": "https://example.com/quote7"
+      "quoteId": "412f2539b845c4bc58442b2ee1323d3e"
     }
   ];
 
-  const handleView = (link: string): void => {
-    window.open(link, "_blank");
-  }
-
   useEffect(() => {
     const availableNetworksByService = items[tabIndex].payment.map((item: any) => parseInt(item.chainId))
-    console.log(availableNetworksByService);
     // TODO: fix any type
     setAvailableNetworks(availableNetworksByService as any)
     const isNetworkSupported = availableNetworksByService?.includes(chain?.id || 0) || false
     setIsNetworkSupported(isNetworkSupported)
     isNetworkSupported && setSelectedNetwork(chain?.id || 0)
-    isNetworkSupported && setPaymentSelected(items[tabIndex].payment.find((item: any) => item.chainId === chain?.id.toString())?.acceptedTokens[0].value || '')
+    isNetworkSupported && setPaymentSelected(items[tabIndex].payment.find((item: any) => item.chainId === chain?.id.toString())?.acceptedTokens[0]?.value || '')
     setUploadIsLoading(false);
-  }, [chain, chains, items[tabIndex]])
+  }, [chain, items[tabIndex]])
 
   const switchNetworks = async (chainId: number) => {
     try {
@@ -214,49 +179,29 @@ export default function TabsFile({
 
   const getUpload = async ({ quoteId, payment, files}: any) => {
     try {
-      console.log('uploading: ', { quoteId, payment, files });
-      const quoteAndUploadResult: GetQuoteResult = await dbsClient.uploadBrowser(
+      console.log('uploading: ', typeof files);
+      const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
-        files
+        files as FileList
       )
-      console.log('Upload result:', quoteAndUploadResult) 
-      setUploadResponse(quoteAndUploadResult);
-      setStep('status');
+      console.log('Upload result:', quoteAndUploadResult);
+      if (quoteAndUploadResult?.status === 200) {
+        setUploadResponse(quoteAndUploadResult);
+        // TODO: merge this into HistoryList once integrated
+        console.log(uploadResponse);
+        
+        setSuccessUpload(true);
+        setSuccessMessage(quoteAndUploadResult?.data || "File uploaded successfully!");
+        resetTabs();
+      } else {
+        throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!');
+      }
     } catch (error) {
       console.log(error);
       setErrorUpload(true);
       setErrorMessage("File uploaded failed!");
-    }
-  }
-
-  const getStatus = async ({ quoteId}: any) => {
-    try {
-      console.log('get status: ', { quoteId });
-      const statusResult: GetStatusResult = await dbsClient.getStatus(
-        quoteId
-      )
-      console.log('status result:', statusResult) 
-      setStatusResponse(statusResult);
-      setStep('ddo');
-    } catch (error) {
-      console.log(error);
-      setErrorUpload(true);
-      setErrorMessage("File status failed!");
-    }
-  }
-
-  const getDDOlink = async ({ quoteId}: any) => {
-    try {
-      console.log('get DDO link: ', { quoteId });
-      const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
-      console.log('status result:', linkResult)
-      setDDOResponse(linkResult);
-      setStep('done');
-    } catch (error) {
-      console.log(error);
-      setErrorUpload(true);
-      setErrorMessage("DDO link status failed!");
+      resetTabs();
     }
   }
 
@@ -286,19 +231,7 @@ export default function TabsFile({
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
-          files: [file]
-        })
-        break;
-      case 'status':
-        // Get Status file
-        await getStatus({
-          quoteId: quote.quoteId
-        })
-        break;
-      case 'ddo':
-        // Fetch the DDO files object for a job
-        await getDDOlink({
-          quoteId: quote.quoteId
+          files: [file] as unknown as FileList
         })
         break;
       default:
@@ -322,16 +255,70 @@ export default function TabsFile({
       case 'upload':
         setSubmitText('Upload File');
         break;
-      case 'status':
-        setSubmitText('Status File');
-        break;
-      case 'ddo':
-        setSubmitText('DDO Link');
-        break;
       default:
         break;
     }
   }, [step])
+
+  async function getStatus(quoteId: string){
+    try {
+      console.log('get status: ', { quoteId });
+      const statusResult: GetStatusResult = await dbsClient.getStatus(
+        quoteId
+      )
+      console.log('status result:', statusResult)
+      return statusResult.status 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getStatusMessage = (statusCode: number, storage: string) => {
+    let statusMessages: any;
+    switch (storage) {
+      case 'filecoin':
+        statusMessages = {
+          0: "No such quote",
+          99: "Waiting for files to be uploaded by the user",
+          199: "Inadequate Balance or token Allowance given",
+          300: "Uploading files to storage",
+          399: "CID migrated to lighthouse node, creating filecoin deal",
+          400: "Deal created on filecoin network",
+          401: "Upload failure"
+        };   
+        break;
+      case 'arweave':
+        statusMessages = {
+          0: "No such quote",
+          99: "Waiting for files to be uploaded by the user",
+          100: "Processing payment",
+          200: "Processing payment failure modes",
+          300: "Uploading files to storage",
+          400: "Upload done",
+          401: "Upload failure modes"
+        };   
+        break;
+    }
+    return statusMessages[statusCode];
+  }
+
+  const getStatusFiles = async () => {
+    await uploads.map(async (upload: any) => {
+      const stausCode = await getStatus(upload.quoteId).then((status: any) => status)
+      console.log('status code: ', stausCode);
+      const infoFile = {
+        quoteId: upload.quoteId,
+        statusMessage: getStatusMessage(stausCode, items[tabIndex].type),
+        link: 'test',
+        statusCode: stausCode
+      }
+      setHistoryList([infoFile])
+    })
+  }
+
+  useEffect(() => {
+    getStatusFiles()
+  }, [items[tabIndex].type])
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
@@ -389,7 +376,7 @@ export default function TabsFile({
                   handleTabChange ? () => handleTabChange(item.type) : undefined
                 }
               >
-                {item.type}
+                {addEllipsesToText(item.type, 10)}
               </Tab> 
             )
           })}
@@ -436,48 +423,25 @@ export default function TabsFile({
                   key={`file_uploader_${items[tabIndex].type}_${index}`} 
                   error={isNetworkSupported === false || errorUpload}
                   errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
+                  success={successUpload}
+                  successMessage={successMessage}
                   handleUpload={handleUpload}
                   isLoading={uploadIsLoading}
                   isButtonDisabled={!isConnected || !file || !isNetworkSupported}
                   inputDisabled={!isConnected || !isNetworkSupported}
                   handleFileChange={handleFileChange}
+                  file={file}
                   submitText={submitText}
                 />
                 
                 <br />
 
-                <table className={styles.tableAssets} key={`table_${items[tabIndex].type}_${index}`}>
-                  <thead>
-                    <tr>
-                      <th>Quote ID</th>
-                      <th>Status Message</th>
-                      <th>Status Code</th>
-                      <th>{'Preview'}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {uploads.map((upload, index) => (
-                      <tr key={`table_uploads_${items[tabIndex].type}_${index}`}>
-                        <td>{upload.quoteId}</td>
-                        <td>{upload.statusMessage}</td>
-                        <td>{upload.statusCode}</td>
-                        <td>
-                          <Button
-                            style="primary"
-                            className={styles.tableButton}
-                            size="small"
-                            onClick={(e: React.SyntheticEvent) => {
-                              e.preventDefault()
-                              handleView(upload.link)
-                            }}
-                          >
-                            {`View`}
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <HistoryList 
+                  items={items}
+                  tabIndex={index}
+                  uploads={historyList}
+                  dbsClient={dbsClient}
+                />
 
               </TabPanel>
             </>

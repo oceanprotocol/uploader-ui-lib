@@ -112,7 +112,7 @@
   },
   "dependencies": {
     "@ethersproject/units": "^5.7.0",
-    "@oceanprotocol/dbs": "^0.0.2-alpha.20",
+    "@oceanprotocol/dbs": "^0.0.2-alpha.24",
     "@storybook/preset-scss": "^1.0.3",
     "@tippyjs/react": "^4.2.6",
     "autoprefixer": "^10.4.14",

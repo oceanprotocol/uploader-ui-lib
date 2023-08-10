@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import { NetworkIcon } from './NetworkIcon'
-import { useSwitchNetwork } from 'wagmi'
 import { getNetworkDisplayName } from './NetworkName'
 
 export default function NetworkName({

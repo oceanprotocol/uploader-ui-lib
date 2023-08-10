@@ -50,6 +50,7 @@
   margin-right: -1px;
   background: none;
   border: 0;
+  white-space: nowrap;
 }
 
 .tabHidden {
@@ -112,41 +113,6 @@
 .tabLabel {
   display: block;
   margin-bottom: calc(var(--spacer) / 4);
-}
-
-.tableAssets {
-  display: flex;
-  flex-direction: column;
-}
-
-.tableAssets tr {
-  display: flex;
-  flex-direction: row;
-}
-
-.tableAssets th, .tableAssets td  {
-  width: 50%;
-}
-
-.tableAssets th:nth-child(3), .tableAssets td:nth-child(3) {
-  width: 15%;
-  text-align: center;
-}
-
-.tableAssets th:first-child, .tableAssets td:first-child  {
-  width: 25%;
-}
-
-.tableAssets th:last-child, .tableAssets td:last-child  {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 10%;
-}
-
-.tableButton {
-  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 2) !important;
-  height: 1.7rem;
 }
 
 .priceLabel {

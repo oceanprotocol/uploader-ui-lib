@@ -13,6 +13,7 @@ const Template: StoryFn<typeof Web3Connection> = (args) => <Web3Connection {...a
 export const web3Connection = Template.bind({});
 web3Connection.args = {
     dbs_url: process.env.DBS_URL,
+    dbs_account: process.env.DBS_ACCOUNT,
     infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
     walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID,
 };

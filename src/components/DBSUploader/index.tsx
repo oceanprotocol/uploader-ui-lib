@@ -26,16 +26,17 @@ export type dbs_setting = {
 
 type dbsParams = {
   dbs_url: string
+  dbs_account: string
 }
 
-const DBSUploader = ({ dbs_url }: dbsParams) => {
+const DBSUploader = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   const {data: signer} = useSigner()
   // Initialize the DBSClient with the API base URL
   console.log('dbs_url: ', dbs_url);
   // TODO: fix any type
-  const client = new DBSClient(dbs_url, signer as any);
+  const client = new DBSClient(dbs_url, dbs_account, signer as any);
   console.log(signer);
   
   // Fetch storage info
@@ -51,19 +52,8 @@ const DBSUploader = ({ dbs_url }: dbsParams) => {
         return error;
       }
     }
-    // Get chainIds from DBS settings
-    const getChainIds = (DBSsettings: any) => {
-      const chainIds = new Set();
-      DBSsettings.forEach((item: dbs_setting) => {
-        (item.payment || []).forEach((paymentItem: payment) => {
-          chainIds.add(parseInt(paymentItem.chainId));
-        });
-      });
-      return Array.from(chainIds);
-    }
     // Fetch storage info
     getStorageInfo().then((storageInfo: any) => {
-      const chainIds: any = getChainIds(storageInfo);
       // TODO: fix error on DBS.js when endpoint is empty / unavailable / wrong
       setDBSsettings(storageInfo)
       setLoading(false)
