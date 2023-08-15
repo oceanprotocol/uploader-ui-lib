@@ -11,6 +11,7 @@ import Button from '../Button'
 import { dbs_setting } from '../DBSComponent'
 import {
   DBSClient,
+  GetLinkResult,
   GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult
@@ -19,7 +20,7 @@ import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
-
+import { getStatusMessage } from '../../@utils/statusCode'
 export interface TabsProps {
   items: dbs_setting[]
   className?: string
@@ -34,12 +35,9 @@ export default function TabsFile({
   const [values, setFieldValue] = useState() as any;
   const initialState = () => {
     const index = items.findIndex((tab: any) => {
-      // fallback for edit mode (starts at index 0 with hidden element)
-      if (!values?.services) return 0
-
-      return tab.field.value === values.services[0].files[0].type
+      if (!values?.type) return 0
+      return tab.type === values.type
     })
-
     return index < 0 ? 0 : index
   }
   const [tabIndex, setTabIndex] = useState(initialState)
@@ -64,16 +62,32 @@ export default function TabsFile({
   const [successMessage, setSuccessMessage] = useState('');
 
   // Mocked data quote
-  const [quote, setQuote] = useState<any>({
-    "quoteId": "78959b7f49f848ca99a1a31aa4d16830",
-    "tokenAmount": 21825,
-    "approveAddress": "0x0ff9092e55d9f6CCB0DD4C490754811bc0839866",
-    "chainId": 80001,
-    "tokenAddress": "0x21c561e551638401b937b03fe5a0a0652b99b7dd"
-  });
+  const [quote, setQuote] = useState<any>();
   const [uploadResponse, setUploadResponse] = useState<any>({});
+  const [ddoLink, setDDOLink] = useState('');
 
+  const mockedDataHistory = [
+    {
+      quoteId: "93254d6a389ca6eb07ff548810b27eb1",
+      statusMessage: getStatusMessage(400, items[tabIndex].type),
+      link: 'test',
+      statusCode: 400
+    },
+    {
+      quoteId: "0a9a28828bc06b8e2feb901782726539",
+      statusMessage: getStatusMessage(400, items[tabIndex].type),
+      link: 'test',
+      statusCode: 400
+    },
+    {
+      quoteId: "93254d6a389ca6eb07ff548810b27eb3",
+      statusMessage: getStatusMessage(400, items[tabIndex].type),
+      link: 'test',
+      statusCode: 400
+    }
+  ];
   const [historyList, setHistoryList] = useState<any>([]);
+  const [historyUnlocked, setHistoryUnlocked] = useState(false);
 
   const [step, setStep] = useState('quote');
   
@@ -88,13 +102,7 @@ export default function TabsFile({
     setStep('quote');
     setSubmitText('Get Quote');
     setFile(undefined);
-    
-    setTimeout(() => {
-      setSuccessUpload(false)
-      setSuccessMessage('')
-      setErrorUpload(false)
-      setErrorMessage('')
-    }, 3000);
+    setDDOLink('');
   }
 
   const setIndex = (tabName: string) => {
@@ -114,12 +122,6 @@ export default function TabsFile({
     setIndex(tabName)
   }
 
-  const uploads = [
-    {
-      "quoteId": "412f2539b845c4bc58442b2ee1323d3e"
-    }
-  ];
-
   useEffect(() => {
     const availableNetworksByService = items[tabIndex].payment.map((item: any) => parseInt(item.chainId))
     // TODO: fix any type
@@ -129,7 +131,19 @@ export default function TabsFile({
     isNetworkSupported && setSelectedNetwork(chain?.id || 0)
     isNetworkSupported && setPaymentSelected(items[tabIndex].payment.find((item: any) => item.chainId === chain?.id.toString())?.acceptedTokens[0]?.value || '')
     setUploadIsLoading(false);
+    // TODO: check logic after historyList implementation
+    setHistoryUnlocked(false);
+    setHistoryList(mockedDataHistory);
   }, [chain, items[tabIndex]])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSuccessUpload(false)
+      setSuccessMessage('')
+      setErrorUpload(false)
+      setErrorMessage('')
+    }, 3000);
+  }, [successUpload, errorUpload])
 
   const switchNetworks = async (chainId: number) => {
     try {
@@ -188,12 +202,12 @@ export default function TabsFile({
       console.log('Upload result:', quoteAndUploadResult);
       if (quoteAndUploadResult?.status === 200) {
         setUploadResponse(quoteAndUploadResult);
-        // TODO: merge this into HistoryList once integrated
+        // TODO: merge this with HistoryList once integrated
         console.log(uploadResponse);
-        
         setSuccessUpload(true);
         setSuccessMessage(quoteAndUploadResult?.data || "File uploaded successfully!");
-        resetTabs();
+        // resetTabs();
+        setStep('ddoLink');
       } else {
         throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!');
       }
@@ -202,6 +216,21 @@ export default function TabsFile({
       setErrorUpload(true);
       setErrorMessage("File uploaded failed!");
       resetTabs();
+    }
+  }
+
+  const getDDOlink = async (quoteId: any) => {
+    try {
+      console.log('get DDO link: ', quoteId);
+      const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
+      console.log('ddo link result:', linkResult)
+      setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '');
+    } catch (error) {
+      console.log(error);
+      setErrorUpload(true);
+      // TODO: fix any type
+      const message = error as any;
+      setErrorMessage(message?.response?.data?.message || "File uploaded failed!");
     }
   }
 
@@ -234,6 +263,10 @@ export default function TabsFile({
           files: [file] as unknown as FileList
         })
         break;
+      case 'ddoLink':
+        // Get DDO Link
+        await getDDOlink(quote.quoteId)
+        break;
       default:
         break;
     }
@@ -242,6 +275,7 @@ export default function TabsFile({
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    resetTabs();
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
@@ -255,11 +289,16 @@ export default function TabsFile({
       case 'upload':
         setSubmitText('Upload File');
         break;
+      case 'ddoLink':
+        setSubmitText('Get DDO Link');
+        break;
       default:
         break;
     }
   }, [step])
 
+  /*
+  TODO: remove if it's not necessary after integrating historyList endpoint
   async function getStatus(quoteId: string){
     try {
       console.log('get status: ', { quoteId });
@@ -272,37 +311,11 @@ export default function TabsFile({
       console.log(error);
     }
   }
+  */
 
-  const getStatusMessage = (statusCode: number, storage: string) => {
-    let statusMessages: any;
-    switch (storage) {
-      case 'filecoin':
-        statusMessages = {
-          0: "No such quote",
-          99: "Waiting for files to be uploaded by the user",
-          199: "Inadequate Balance or token Allowance given",
-          300: "Uploading files to storage",
-          399: "CID migrated to lighthouse node, creating filecoin deal",
-          400: "Deal created on filecoin network",
-          401: "Upload failure"
-        };   
-        break;
-      case 'arweave':
-        statusMessages = {
-          0: "No such quote",
-          99: "Waiting for files to be uploaded by the user",
-          100: "Processing payment",
-          200: "Processing payment failure modes",
-          300: "Uploading files to storage",
-          400: "Upload done",
-          401: "Upload failure modes"
-        };   
-        break;
-    }
-    return statusMessages[statusCode];
-  }
-
+  /*
   const getStatusFiles = async () => {
+    TODO: add historyList endpoint
     await uploads.map(async (upload: any) => {
       const stausCode = await getStatus(upload.quoteId).then((status: any) => status)
       console.log('status code: ', stausCode);
@@ -315,9 +328,16 @@ export default function TabsFile({
       setHistoryList([infoFile])
     })
   }
+  */
+
+  const getHistoryList = async () => {
+    setHistoryUnlocked(true);
+    // TODO: add historyList endpoint from dbsjs
+    // waiting for release
+  }
 
   useEffect(() => {
-    getStatusFiles()
+    setHistoryList(mockedDataHistory);
   }, [items[tabIndex].type])
 
   return (
@@ -417,6 +437,21 @@ export default function TabsFile({
                     {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
                   </Button>
                 }
+
+                {
+                  step === 'ddoLink' && ddoLink &&
+                  <Button
+                    style="primary"
+                    className={styles.ddoLinkLabel}
+                    size="small"
+                    onClick={(e: React.SyntheticEvent) => {
+                      e.preventDefault()
+                    }}
+                    disabled={false}
+                  >
+                    {ddoLink}
+                  </Button>
+                }
                 
                 <FileUploadSingle {...item} 
                   name={item.type} 
@@ -441,6 +476,8 @@ export default function TabsFile({
                   tabIndex={index}
                   uploads={historyList}
                   dbsClient={dbsClient}
+                  historyUnlocked={historyUnlocked}
+                  getHistoryList={getHistoryList}
                 />
 
               </TabPanel>

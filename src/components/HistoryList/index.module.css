@@ -1,35 +1,47 @@
 
+.historyListTable {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
 .tableAssets {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  border-collapse: collapse;
+  display: table;
+  border-style: hidden;
 }
 
-.tableAssets tr {
-  display: flex;
-  flex-direction: row;
-}
-
-.tableAssets th, .tableAssets td  {
-  width: 50%;
-}
-
-.tableAssets th:nth-child(3), .tableAssets td:nth-child(3) {
-  width: 15%;
+.tableAssets td, .tableAssets th {
+  border: 1px solid var(--border-color);
+  padding: 8px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.tableAssets th:first-child, .tableAssets td:first-child  {
-  width: 25%;
-}
-
-.tableAssets th:last-child, .tableAssets td:last-child  {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 10%;
+.tableAssets tbody td:last-child button {
+  margin: auto;
 }
 
 .tableButton {
   padding: calc(var(--spacer) / 8) calc(var(--spacer) / 2) !important;
   height: 1.7rem;
+}
+
+
+.historyLocked {
+  filter: blur(2px);
+}
+
+.historyUnlocked {
+  filter: blur(0px);
+}
+
+.unlockButton {
+  position: absolute;
+  top: 60%;
+  left: 50%;
 }

@@ -115,7 +115,7 @@
   margin-bottom: calc(var(--spacer) / 4);
 }
 
-.priceLabel {
+.priceLabel, .ddoLinkLabel {
   position: absolute;
   right: -1px;
   top: 0.8rem;
@@ -123,6 +123,11 @@
   border-top-right-radius: 0 !important;
   cursor: auto !important;
   transform: none !important;
+}
+
+.ddoLinkLabel {
+  text-transform: inherit !important;
+  user-select: text !important;
 }
 
 @media (min-width: 40rem) {
