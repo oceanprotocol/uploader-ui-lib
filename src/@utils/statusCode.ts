@@ -16,12 +16,12 @@ export function getStatusMessage(statusCode: number, storage: string) {
         statusMessages = {
           0: "No such quote",
           99: "Waiting for files to be uploaded by the user",
-          100: "Processing payment",
-          101: "Processing payment",
-          102: "Processing payment",
+          100: "Processing payment...",
+          101: "Processing payment...",
+          102: "Processing payment...",
           200: "Processing payment failure modes",
-          300: "Uploading files to storage",
-          400: "Upload done",
+          300: "Uploading file to storage",
+          400: "Upload done!",
           401: "Upload failure modes"
         };   
         break;

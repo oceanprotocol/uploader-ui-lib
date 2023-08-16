@@ -94,6 +94,7 @@ export default function TabsFile({
     setSubmitText('Get Quote');
     setFile(undefined);
     setDDOLink('');
+    setUploadStatusResponse('');
   }
 
   const setIndex = (tabName: string) => {
@@ -107,6 +108,7 @@ export default function TabsFile({
     setFile(undefined);
     setErrorUpload(false);
     setErrorMessage('');
+    setUploadStatusResponse('');
   }
 
   const handleTabChange = (tabName: string) => {
@@ -204,6 +206,11 @@ export default function TabsFile({
         keepLoading = false;
         setStep('ddoLink');
         setUploadIsLoading(false);
+      }
+      // check if there's any failure
+      if (status == 200 || status == 401) {
+        keepLoading = false;
+        throw new Error('File uploaded failed!');
       }
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
