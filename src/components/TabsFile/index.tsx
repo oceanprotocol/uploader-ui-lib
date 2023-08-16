@@ -296,43 +296,15 @@ export default function TabsFile({
     }
   }, [step])
 
-  /*
-  TODO: remove if it's not necessary after integrating historyList endpoint
-  async function getStatus(quoteId: string){
+  const getHistoryList = async () => {
     try {
-      console.log('get status: ', { quoteId });
-      const statusResult: GetStatusResult = await dbsClient.getStatus(
-        quoteId
-      )
-      console.log('status result:', statusResult)
-      return statusResult.status 
+      const historyList = await dbsClient.getHistory()
+      console.log('history result:', historyList) 
+      setHistoryList(historyList);
+      setHistoryUnlocked(true);
     } catch (error) {
       console.log(error);
     }
-  }
-  */
-
-  /*
-  const getStatusFiles = async () => {
-    TODO: add historyList endpoint
-    await uploads.map(async (upload: any) => {
-      const stausCode = await getStatus(upload.quoteId).then((status: any) => status)
-      console.log('status code: ', stausCode);
-      const infoFile = {
-        quoteId: upload.quoteId,
-        statusMessage: getStatusMessage(stausCode, items[tabIndex].type),
-        link: 'test',
-        statusCode: stausCode
-      }
-      setHistoryList([infoFile])
-    })
-  }
-  */
-
-  const getHistoryList = async () => {
-    setHistoryUnlocked(true);
-    // TODO: add historyList endpoint from dbsjs
-    // waiting for release
   }
 
   useEffect(() => {
