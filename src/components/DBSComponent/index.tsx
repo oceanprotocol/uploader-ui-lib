@@ -8,27 +8,6 @@ import TabsFile from '../TabsFile'
 
 import {DBSClient} from '@oceanprotocol/dbs';
 
-export type acceptedTokens = {
-  title: string
-  value: string
-}
-
-export type payment = {
-  chainId: string
-  acceptedTokens: acceptedTokens[]
-}
-
-export type dbs_setting = {
-  type: string,
-  description: string
-  payment: payment[]
-}
-
-type dbsParams = {
-  dbs_url: string
-  dbs_account: string
-}
-
 const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)

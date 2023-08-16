@@ -8,9 +8,7 @@ import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
-import { dbs_setting } from '../DBSComponent'
 import {
-  DBSClient,
   GetLinkResult,
   GetQuoteArgs,
   GetQuoteResult
@@ -20,11 +18,6 @@ import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
-export interface TabsProps {
-  items: dbs_setting[]
-  className?: string
-  dbsClient: DBSClient
-}
 
 export default function TabsFile({
   items,
@@ -405,82 +398,80 @@ export default function TabsFile({
         {items.length > 0 && items.map((item, index) => {
           
           return (
-            <>
-              <TabPanel
-                key={`tabpanel_${items[tabIndex].type}_${index}`}
-                className={styles.tabPanel}
-              >
-                {item.description} 
-                
-                { 
-                  <Tooltip
-                    content={
-                      <Markdown
-                        text={`${item.description}`}
-                      />
-                    }
-                  />
-                }
-
-                {
-                  step === 'upload' &&
-                  <Button
-                    style="primary"
-                    className={styles.priceLabel}
-                    size="small"
-                    onClick={(e: React.SyntheticEvent) => {
-                      e.preventDefault()
-                    }}
-                    disabled={false}
-                  >
-                    {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
-                  </Button>
-                }
-
-                {
-                  step === 'ddoLink' && ddoLink &&
-                  <Button
-                    style="primary"
-                    className={styles.ddoLinkLabel}
-                    size="small"
-                    onClick={(e: React.SyntheticEvent) => {
-                      e.preventDefault()
-                    }}
-                    disabled={false}
-                  >
-                    {ddoLink}
-                  </Button>
-                }
-                
-                <FileUploadSingle {...item} 
-                  name={item.type} 
-                  key={`file_uploader_${items[tabIndex].type}_${index}`} 
-                  error={isNetworkSupported === false || errorUpload}
-                  errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
-                  success={successUpload}
-                  successMessage={successMessage}
-                  handleUpload={handleUpload}
-                  isLoading={uploadIsLoading}
-                  isButtonDisabled={!isConnected || !file || !isNetworkSupported}
-                  inputDisabled={!isConnected || !isNetworkSupported}
-                  handleFileChange={handleFileChange}
-                  file={file}
-                  submitText={submitText}
+            <TabPanel
+              key={`tabpanel_${items[tabIndex].type}_${index}`}
+              className={styles.tabPanel}
+            >
+              {item.description} 
+              
+              { 
+                <Tooltip
+                  content={
+                    <Markdown
+                      text={`${item.description}`}
+                    />
+                  }
                 />
-                
-                <br />
+              }
 
-                <HistoryList 
-                  items={items}
-                  tabIndex={index}
-                  uploads={historyList}
-                  dbsClient={dbsClient}
-                  historyUnlocked={historyUnlocked}
-                  getHistoryList={getHistoryList}
-                />
+              {
+                step === 'upload' &&
+                <Button
+                  style="primary"
+                  className={styles.priceLabel}
+                  size="small"
+                  onClick={(e: React.SyntheticEvent) => {
+                    e.preventDefault()
+                  }}
+                  disabled={false}
+                >
+                  {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
+                </Button>
+              }
 
-              </TabPanel>
-            </>
+              {
+                step === 'ddoLink' && ddoLink &&
+                <Button
+                  style="primary"
+                  className={styles.ddoLinkLabel}
+                  size="small"
+                  onClick={(e: React.SyntheticEvent) => {
+                    e.preventDefault()
+                  }}
+                  disabled={false}
+                >
+                  {ddoLink}
+                </Button>
+              }
+              
+              <FileUploadSingle {...item} 
+                name={item.type} 
+                key={`file_uploader_${items[tabIndex].type}_${index}`} 
+                error={isNetworkSupported === false || errorUpload}
+                errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
+                success={successUpload}
+                successMessage={successMessage}
+                handleUpload={handleUpload}
+                isLoading={uploadIsLoading}
+                isButtonDisabled={!isConnected || !file || !isNetworkSupported}
+                inputDisabled={!isConnected || !isNetworkSupported}
+                handleFileChange={handleFileChange}
+                file={file}
+                submitText={submitText}
+              />
+              
+              <br />
+
+              <HistoryList 
+                items={items}
+                tabIndex={index}
+                uploads={historyList}
+                dbsClient={dbsClient}
+                historyUnlocked={historyUnlocked}
+                getHistoryList={getHistoryList}
+              />
+
+            </TabPanel>
           )
         })}
       </div>

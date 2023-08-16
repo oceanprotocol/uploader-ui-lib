@@ -24,7 +24,8 @@ const DefaultInput = ({
       className={cx({ input: true, size: size, className: className })}
       disabled={props.inputDisabled}
       id={props.name}
-      {...props}
+      onChange={props.handleFileChange}
+      name={props.name}
       ref={ref} 
       type='file'
     />
