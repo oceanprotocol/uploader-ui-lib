@@ -17,8 +17,6 @@ export interface InputField {
   file?: File
   error?: boolean
   errorMessage?: string
-  success?: boolean
-  successMessage?: string
   isLoading?: boolean
   isButtonDisabled?: boolean
   inputDisabled?: boolean
@@ -61,12 +59,6 @@ function FileUploadSingle({
       {props.error && (
         <div className={styles.error}>
           <p>{props.errorMessage}</p>
-        </div>
-      )}
-
-      {props.success && (
-        <div className={styles.success}>
-          <p>{props.successMessage}</p>
         </div>
       )}
     </>

@@ -11,7 +11,8 @@ import Button from '../Button'
 import {
   GetLinkResult,
   GetQuoteArgs,
-  GetQuoteResult
+  GetQuoteResult,
+  GetStatusResult
 } from '@oceanprotocol/dbs'
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
@@ -50,12 +51,10 @@ export default function TabsFile({
   const [uploadIsLoading, setUploadIsLoading] = useState(false);
   const [errorUpload, setErrorUpload] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successUpload, setSuccessUpload] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-
+  
   // Mocked data quote
   const [quote, setQuote] = useState<any>();
-  const [uploadResponse, setUploadResponse] = useState<any>({});
+  const [uploadStatusResponse, setUploadStatusResponse] = useState<any>('');
   const [ddoLink, setDDOLink] = useState('');
 
   const mockedDataHistory = [
@@ -130,12 +129,10 @@ export default function TabsFile({
 
   useEffect(() => {
     setTimeout(() => {
-      setSuccessUpload(false)
-      setSuccessMessage('')
       setErrorUpload(false)
       setErrorMessage('')
     }, 3000);
-  }, [successUpload, errorUpload])
+  }, [errorUpload])
 
   const switchNetworks = async (chainId: number) => {
     try {
@@ -181,6 +178,35 @@ export default function TabsFile({
       setErrorUpload(true);
       setErrorMessage("Quote failed!");
     }
+    setUploadIsLoading(false);
+  }
+
+  async function getStatus(quoteId: string){
+    try {
+      console.log('get status: ', { quoteId });
+      const statusResult: GetStatusResult = await dbsClient.getStatus(
+        quoteId
+      )
+      console.log('status result:', statusResult)
+      return statusResult.status 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function completeUpload(quoteId:string) {
+    var keepLoading = true;
+    while (keepLoading) {
+      const status = await getStatus(quoteId);
+      setUploadStatusResponse(getStatusMessage(status || 0, items[tabIndex].type))
+      console.log('status: ', status, uploadStatusResponse, getStatusMessage(status || 0, items[tabIndex].type));
+      if (status == 400) {
+        keepLoading = false;
+        setStep('ddoLink');
+        setUploadIsLoading(false);
+      }
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
   }
 
   const getUpload = async ({ quoteId, payment, files}: any) => {
@@ -193,14 +219,11 @@ export default function TabsFile({
       )
       console.log('Upload result:', quoteAndUploadResult);
       if (quoteAndUploadResult?.status === 200) {
-        setUploadResponse(quoteAndUploadResult);
-        // TODO: merge this with HistoryList once integrated
-        console.log(uploadResponse);
-        setSuccessUpload(true);
-        setSuccessMessage(quoteAndUploadResult?.data || "File uploaded successfully!");
-        // resetTabs();
-        setStep('ddoLink');
+        // setUploadResponse(quoteAndUploadResult);
+        // CHECK status until it's 400 (upload completed)
+        completeUpload(quoteId);
       } else {
+        setUploadIsLoading(false);
         throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!');
       }
     } catch (error) {
@@ -217,12 +240,14 @@ export default function TabsFile({
       const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
       console.log('ddo link result:', linkResult)
       setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '');
+      setUploadIsLoading(false);
     } catch (error) {
       console.log(error);
       setErrorUpload(true);
       // TODO: fix any type
       const message = error as any;
       setErrorMessage(message?.response?.data?.message || "File uploaded failed!");
+      setUploadIsLoading(false);
     }
   }
 
@@ -262,8 +287,6 @@ export default function TabsFile({
       default:
         break;
     }
-    
-    setUploadIsLoading(false);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -387,7 +410,7 @@ export default function TabsFile({
               }
 
               {
-                step === 'upload' &&
+                step === 'upload' && !uploadStatusResponse &&
                 <Button
                   style="primary"
                   className={styles.priceLabel}
@@ -398,6 +421,21 @@ export default function TabsFile({
                   disabled={false}
                 >
                   {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
+                </Button>
+              }
+
+              {
+                uploadStatusResponse &&
+                <Button
+                  style="primary"
+                  className={styles.ddoLinkLabel}
+                  size="small"
+                  onClick={(e: React.SyntheticEvent) => {
+                    e.preventDefault()
+                  }}
+                  disabled={false}
+                >
+                  {uploadStatusResponse}
                 </Button>
               }
 
@@ -421,8 +459,6 @@ export default function TabsFile({
                 key={`file_uploader_${items[tabIndex].type}_${index}`} 
                 error={isNetworkSupported === false || errorUpload}
                 errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
-                success={successUpload}
-                successMessage={successMessage}
                 handleUpload={handleUpload}
                 isLoading={uploadIsLoading}
                 isButtonDisabled={!isConnected || !file || !isNetworkSupported}
