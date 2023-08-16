@@ -13,8 +13,7 @@ import {
   DBSClient,
   GetLinkResult,
   GetQuoteArgs,
-  GetQuoteResult,
-  GetStatusResult
+  GetQuoteResult
 } from '@oceanprotocol/dbs'
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";

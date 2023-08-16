@@ -37,8 +37,6 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   console.log('dbs_url: ', dbs_url);
   // TODO: fix any type
   const client = new DBSClient(dbs_url, dbs_account, signer as any);
-  console.log(signer);
-  
   // Fetch storage info
   useEffect(() => {
     // Fetch storage info from DBS endpoint
