@@ -22,7 +22,9 @@ export function getStatusMessage(statusCode: number, storage: string) {
           200: "Processing payment failure modes",
           300: "Uploading file to storage",
           400: "Upload done!",
-          401: "Upload failure modes"
+          401: "Upload failure modes",
+          402: "File length exceeds quote",
+          404: "Upload failed!",
         };   
         break;
     }
