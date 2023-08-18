@@ -6,6 +6,11 @@ import DBSUploader from "./index";
 export default {
   title: "DBS UI Library/DBSUploader",
   component: DBSUploader,
+  parameters:{
+    controls:{
+      exclude:/.*/g
+    }
+  }
 } as Meta<typeof DBSUploader>;
 
 const Template: StoryFn<typeof DBSUploader> = (args) => <DBSUploader {...args} />;
