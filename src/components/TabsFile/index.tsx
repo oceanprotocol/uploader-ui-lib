@@ -218,7 +218,7 @@ export default function TabsFile({
 
   const getUpload = async ({ quoteId, payment, files}: any) => {
     try {
-      console.log('uploading: ', typeof files);
+      console.log('uploading: ', { quoteId, payment, files});
       const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
@@ -322,8 +322,12 @@ export default function TabsFile({
   const getHistoryList = async () => {
     try {
       const historyList = await dbsClient.getHistory()
-      console.log('history result:', historyList) 
-      setHistoryList(historyList);
+      console.log('history result:', historyList[0])
+      /*
+      arweave: historyList[0][0]
+      filecoin: historyList[0][1]
+      */
+      setHistoryList(items[tabIndex].type === "arweave" ? historyList[0] : historyList[1]);
       setHistoryUnlocked(true);
     } catch (error) {
       console.log(error);
@@ -427,7 +431,7 @@ export default function TabsFile({
                   }}
                   disabled={false}
                 >
-                  {`${formatEther(quote.tokenAmount)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
+                  {`${formatEther(`${quote.tokenAmount}`)} ${items[tabIndex].payment.filter((item: any) => item.chainId === chain?.id.toString())[0].acceptedTokens.filter((item: any) => item.value === paymentSelected)[0].title}`}
                 </Button>
               }
 
