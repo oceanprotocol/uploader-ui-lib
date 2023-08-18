@@ -15,6 +15,7 @@ export function getStatusMessage(statusCode: number, storage: string) {
       case 'arweave':
         statusMessages = {
           0: "No such quote",
+          1: "Waiting for files to be uploaded by the user",
           99: "Waiting for files to be uploaded by the user",
           100: "Processing payment...",
           101: "Processing payment...",

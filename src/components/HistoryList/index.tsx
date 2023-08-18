@@ -1,42 +1,27 @@
 import React, { ReactElement, useEffect } from 'react'
 import Button from '../Button'
 import styles from './index.module.css'
-import { GetLinkResult } from '@oceanprotocol/dbs'
 import { addEllipsesToText } from '../../@utils/textFormat'
+import Loader from '../Loader';
+import { getStatusMessage } from '../../@utils/statusCode'
+import { getLink } from '../../@utils/linkAsset'
 
 const HistoryList = ({
   items,
   tabIndex,
   uploads,
-  dbsClient,
   historyUnlocked,
-  getHistoryList
+  getHistoryList,
+  historyLoading
 }: {
   items: any
   tabIndex: number
   uploads: any
-  dbsClient: any
   historyUnlocked: boolean
   getHistoryList: any
+  historyLoading: boolean
 }): ReactElement => {
   const [files, setFiles] = React.useState<any>({})
-
-  const getDDOlink = async (quoteId: any) => {
-    try {
-      console.log('get DDO link: ', quoteId);
-      const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
-      console.log('ddo link result:', linkResult)
-      const newFile = files.map((file: any) => {
-        if (file.quoteId === quoteId) {
-          file.ddo = linkResult[0]
-        }
-        return file
-      })
-      setFiles(newFile)
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   useEffect(() => {
     setFiles(uploads)
@@ -58,9 +43,9 @@ const HistoryList = ({
           {files.length > 0 && files.map((file: any, index: number) => (
             <tr key={`table_uploads_${items[tabIndex].type}_${index}`}>
               <td>{addEllipsesToText(file.quoteId, 15)}</td>
-              <td>{file.statusMessage}</td>
-              <td>{file.statusCode}</td>
-              <td>{file?.ddo?.transactionHash}</td>
+              <td>{getStatusMessage(file.status, items[tabIndex].type)}</td>
+              <td>{file.status}</td>
+              <td>{file?.transactionHash || file?.cid}</td>
               <td>
                 <Button
                   style="primary"
@@ -68,10 +53,11 @@ const HistoryList = ({
                   size="small"
                   onClick={(e: React.SyntheticEvent) => {
                     e.preventDefault()
-                    getDDOlink(file.quoteId)
+                    getLink(items[tabIndex].type, file?.transactionHash || file?.cid)
                   }}
+                  disabled={file.status !== 400}
                 >
-                  {file.statusCode === 400 ? 'Get Link' : 'Not available'}
+                  {file.status === 400 ? 'Open Asset' : 'Not available'}
                 </Button>
               </td>
             </tr>
@@ -84,12 +70,13 @@ const HistoryList = ({
             style="primary"
             size="small"
             onClick={(e: React.SyntheticEvent) => {
+              if (historyLoading) return
               e.preventDefault()
               getHistoryList()
             }}
             disabled={false}
           >
-            {`Unlock`}
+            {historyLoading ? <Loader /> : `Unlock`}
           </Button>
         }
       </table>
