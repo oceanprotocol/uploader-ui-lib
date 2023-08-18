@@ -51,6 +51,8 @@ export default function TabsFile({
   const [uploadIsLoading, setUploadIsLoading] = useState(false);
   const [errorUpload, setErrorUpload] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [historyLoading, setHistoryLoading] = useState(false);
   
   // Mocked data quote
   const [quote, setQuote] = useState<any>();
@@ -320,17 +322,25 @@ export default function TabsFile({
   }, [step])
 
   const getHistoryList = async () => {
+    setHistoryLoading(true);
     try {
       const historyList = await dbsClient.getHistory()
-      console.log('history result:', historyList[0])
+      console.log('history result:', historyList)
       /*
-      arweave: historyList[0][0]
-      filecoin: historyList[0][1]
+      arweave: historyList[0]
+      filecoin: historyList[1]
       */
-      setHistoryList(items[tabIndex].type === "arweave" ? historyList[0] : historyList[1]);
-      setHistoryUnlocked(true);
+      historyList.forEach((item: any) => {
+        console.log('item: ', item[items[tabIndex].type]);
+        if (item[items[tabIndex].type]) {
+          setHistoryList(item[items[tabIndex].type]);
+          setHistoryUnlocked(true);
+          setHistoryLoading(false);
+        }
+      })
     } catch (error) {
       console.log(error);
+      setHistoryLoading(false);
     }
   }
 
@@ -485,9 +495,9 @@ export default function TabsFile({
                 items={items}
                 tabIndex={index}
                 uploads={historyList}
-                dbsClient={dbsClient}
                 historyUnlocked={historyUnlocked}
                 getHistoryList={getHistoryList}
+                historyLoading={historyLoading}
               />
 
             </TabPanel>
