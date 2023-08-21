@@ -14,6 +14,15 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const {data: signer} = useSigner()
   // Initialize the DBSClient with the API base URL
   console.log('dbs_url: ', dbs_url);
+
+  /*
+  TODO: remove after fix
+  test env variables vercel
+  */
+  dbs_url = process.env.DBS_URL as any;
+  dbs_account = process.env.DBS_ACCOUNT as any;
+
+
   // TODO: fix any type
   const client = new DBSClient(dbs_url, dbs_account, signer as any);
   // Fetch storage info
