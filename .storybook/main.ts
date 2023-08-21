@@ -1,9 +1,17 @@
+require('dotenv').config()
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 module.exports = {
   stories: ['../src/**/*.stories.tsx'],
   addons: ['@storybook/addon-essentials', 'storybook-css-modules-preset'],
+  env: (config) => ({
+    ...config,
+    DBS_URL: process.env.DBS_URL,
+    DBS_ACCOUNT: process.env.DBS_ACCOUNT,
+    PUBLIC_INFURA_PROJECT_ID: process.env.PUBLIC_INFURA_PROJECT_ID,
+    PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID,
+  }),
   framework: {
     name: '@storybook/react-webpack5',
     options: {}
