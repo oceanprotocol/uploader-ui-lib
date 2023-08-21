@@ -12,19 +12,6 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   const {data: signer} = useSigner()
-  // Initialize the DBSClient with the API base URL
-  /*
-  TODO: remove after fix
-  test env variables vercel
-  */
-  dbs_url = process.env.DBS_URL as any;
-  dbs_account = process.env.DBS_ACCOUNT as any;
-
-  console.log('dbs_url: ', dbs_url);
-  console.log('dbs_account: ', dbs_account);
-
-  console.log('dbs_url: ', process.env.STORYBOOK_DBS_URL);
-
 
   // TODO: fix any type
   const client = new DBSClient(dbs_url, dbs_account, signer as any);

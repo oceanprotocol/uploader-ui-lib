@@ -29,16 +29,7 @@ type web3Params = {
 }
 
 const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }: web3Params) => {
-  /*
-  TODO: remove after fix
-  test env variables vercel
-  */
-  infuraId = process.env.PUBLIC_INFURA_PROJECT_ID as any;
-  walletConnectProjectId = process.env.PUBLIC_WALLETCONNECT_PROJECT_ID as any;
-
-  console.log('infuraId', infuraId);
-  console.log('walletConnectProjectId', walletConnectProjectId);
-
+  
   // Initialize the Wagmi client
   const wagmiClient = createClient(
     getDefaultClient({
