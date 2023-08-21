@@ -23,6 +23,8 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   console.log('dbs_url: ', dbs_url);
   console.log('dbs_account: ', dbs_account);
 
+  console.log('dbs_url: ', process.env.STORYBOOK_DBS_URL);
+
 
   // TODO: fix any type
   const client = new DBSClient(dbs_url, dbs_account, signer as any);
