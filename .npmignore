@@ -1,0 +1,15 @@
+node_modules/
+coverage/
+.github
+test/
+src/
+tsconfig.json
+tslint.json
+.prettierrc
+.editorconfig
+.eslintrc
+.vscode/
+.husky/
+dist/
+storybook-static/
+.storybook
