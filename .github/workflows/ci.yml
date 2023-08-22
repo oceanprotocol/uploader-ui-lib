@@ -12,7 +12,7 @@ on:
       - '**'
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,8 +25,8 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-lint-${{ env.cache-name }}-
+          key: ${{ runner.os }}-ci-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-ci-${{ env.cache-name }}-
       - run: npm ci --legacy-peer-deps
 
   build:
