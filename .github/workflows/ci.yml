@@ -27,7 +27,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-lint-${{ env.cache-name }}-
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
   build:
     runs-on: ${{ matrix.os }}
@@ -51,5 +51,5 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run build
