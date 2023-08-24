@@ -55,10 +55,10 @@ Import and use the DBS UI components in your app:
 import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
 
 <DBSUploader 
-   dbs_url: process.env.DBS_URL,
-   dbs_account: process.env.DBS_ACCOUNT,
-   infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
-   walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID
+   dbs_url={process.env.DBS_URL}
+   dbs_account={process.env.DBS_ACCOUNT}
+   infuraId={process.env.PUBLIC_INFURA_PROJECT_ID}
+   walletConnectProjectId={process.env.PUBLIC_WALLETCONNECT_PROJECT_ID}
 />
 ```
 
