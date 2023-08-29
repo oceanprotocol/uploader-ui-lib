@@ -1,4 +1,3 @@
-require('dotenv').config()
 import React, { useEffect } from 'react'
 import { useSigner } from 'wagmi'
 
