@@ -7,7 +7,7 @@ import EnergywebIcon from '../../@images/energyweb.svg'
 import styles from './index.module.css'
 
 export function NetworkIcon({ name }: { name: string }): ReactElement {
-  const IconMapped = name.includes('ETH')
+  const IconMapped: any = name.includes('ETH')
     ? EthIcon
     : name.includes('Polygon') || name.includes('Mumbai')
     ? PolygonIcon

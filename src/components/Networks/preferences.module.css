@@ -31,8 +31,8 @@ svg.caret {
 .icon {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
-  width: 1em;
-  height: 1em;
+  width: auto;
+  height: auto;
 }
 
 .preferences:hover .icon,

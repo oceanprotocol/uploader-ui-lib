@@ -1,4 +1,3 @@
-require('dotenv').config()
 import React from 'react'
 import { WagmiConfig, createClient } from 'wagmi'
 import { mainnet, polygon, goerli, polygonMumbai } from 'wagmi/chains'
