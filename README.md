@@ -147,9 +147,9 @@ TBD
 
 We welcome contributions in form of bug reports, feature requests, code changes, or documentation improvements. Have a look at our contribution documentation for instructions and workflows:
 
-- [**Ways to Contribute →**](https://docs.oceanprotocol.com/concepts/contributing/)
-- [Code of Conduct →](https://docs.oceanprotocol.com/concepts/code-of-conduct/)
-- [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/concepts/vulnerabilities/)
+- [**Ways to Contribute →**](https://docs.oceanprotocol.com/contribute)
+- [Code of Conduct →](https://docs.oceanprotocol.com/contribute/code-of-conduct)
+- [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/contribute#report-vulnerabilities)
 
 ## 🏛 License
 
