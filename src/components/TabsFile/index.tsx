@@ -88,7 +88,8 @@ export default function TabsFile({
   const [submitText, setSubmitText] = useState('Get Quote');
 
   const [pageHistory, setPageHistory] = useState(1);
-  const [pageSizeHistory] = useState(25);
+  const [pageSizeHistory] = useState(5);
+  const [totalPagesHistory, setTotalPagesHistory] = useState(1);
   
   const isHidden = false
 
@@ -324,23 +325,16 @@ export default function TabsFile({
     }
   }, [step])
 
-  const getHistoryList = async () => {
+  const getHistoryList = async (pageNumber = 1, pageSize = pageSizeHistory, service = items[tabIndex].type) => {
     setHistoryLoading(true);
     try {
-      const historyList = await dbsClient.getHistory(pageHistory, pageSizeHistory)
-      console.log('history result:', historyList)
-      /*
-      arweave: historyList[0]
-      filecoin: historyList[1]
-      */
-      historyList.forEach((item: any) => {
-        console.log('item: ', item[items[tabIndex].type]);
-        if (item[items[tabIndex].type]) {
-          setHistoryList(item[items[tabIndex].type]);
-          setHistoryUnlocked(true);
-          setHistoryLoading(false);
-        }
-      })
+      const historyList = await dbsClient.getHistory(pageNumber, pageSize, service)
+      console.log('history result: ', historyList)
+      setTotalPagesHistory(historyList?.maxPages);
+      setHistoryList(historyList?.data);
+      setHistoryUnlocked(true);
+      setHistoryLoading(false);
+      setPageHistory(pageNumber);
     } catch (error) {
       console.log(error);
       setHistoryLoading(false);
@@ -349,8 +343,7 @@ export default function TabsFile({
 
   const changeHistoryPage = (page: number) => {
     console.log('requesting history page: ', page);
-    setPageHistory(page);
-    getHistoryList();
+    getHistoryList(page, pageSizeHistory, items[tabIndex].type);
   }
 
   useEffect(() => {
@@ -508,6 +501,7 @@ export default function TabsFile({
                 getHistoryList={getHistoryList}
                 historyLoading={historyLoading}
                 historyPage={pageHistory}
+                historyTotalPages={totalPagesHistory}
                 changeHistoryPage={(page: number) => changeHistoryPage(page)}
               />
 

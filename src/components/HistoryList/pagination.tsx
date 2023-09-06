@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './pagination.module.css';
 
 interface PaginationProps {
@@ -8,7 +8,7 @@ interface PaginationProps {
 }
 
 const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) => {
-    // Define the number of pages to show at the beginning and end
+  // Define the number of pages to show at the beginning and end
   const pagesToShow = 3;
 
   // Calculate the start and end range of pages to display
@@ -81,7 +81,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) 
         <li
           className={`${
             currentPage === totalPages ? styles.prevNextDisabled : ''
-          }${styles.next}`}
+          } ${styles.next}`}
         >
           <a
             className={`${styles.next}`}
