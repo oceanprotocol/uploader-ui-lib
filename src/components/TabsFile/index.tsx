@@ -86,6 +86,9 @@ export default function TabsFile({
   
   const [file, setFile] = useState<File>();
   const [submitText, setSubmitText] = useState('Get Quote');
+
+  const [pageHistory, setPageHistory] = useState(1);
+  const [pageSizeHistory] = useState(25);
   
   const isHidden = false
 
@@ -210,7 +213,7 @@ export default function TabsFile({
         setUploadIsLoading(false);
       }
       // check if there's any failure
-      if (status == 200 || status == 401) {
+      if (status == 200 || status == 401 || status == 404) {
         keepLoading = false;
         throw new Error('File uploaded failed!');
       }
@@ -324,7 +327,7 @@ export default function TabsFile({
   const getHistoryList = async () => {
     setHistoryLoading(true);
     try {
-      const historyList = await dbsClient.getHistory()
+      const historyList = await dbsClient.getHistory(pageHistory, pageSizeHistory)
       console.log('history result:', historyList)
       /*
       arweave: historyList[0]
@@ -342,6 +345,12 @@ export default function TabsFile({
       console.log(error);
       setHistoryLoading(false);
     }
+  }
+
+  const changeHistoryPage = (page: number) => {
+    console.log('requesting history page: ', page);
+    setPageHistory(page);
+    getHistoryList();
   }
 
   useEffect(() => {
@@ -498,6 +507,8 @@ export default function TabsFile({
                 historyUnlocked={historyUnlocked}
                 getHistoryList={getHistoryList}
                 historyLoading={historyLoading}
+                historyPage={pageHistory}
+                changeHistoryPage={(page: number) => changeHistoryPage(page)}
               />
 
             </TabPanel>

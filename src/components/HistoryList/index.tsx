@@ -5,6 +5,7 @@ import { addEllipsesToText } from '../../@utils/textFormat'
 import Loader from '../Loader';
 import { getStatusMessage } from '../../@utils/statusCode'
 import { getLink } from '../../@utils/linkAsset'
+import Pagination from './pagination';
 
 const HistoryList = ({
   items,
@@ -12,7 +13,9 @@ const HistoryList = ({
   uploads,
   historyUnlocked,
   getHistoryList,
-  historyLoading
+  historyLoading,
+  historyPage,
+  changeHistoryPage
 }: {
   items: any
   tabIndex: number
@@ -20,6 +23,8 @@ const HistoryList = ({
   historyUnlocked: boolean
   getHistoryList: any
   historyLoading: boolean
+  historyPage: number
+  changeHistoryPage: any
 }): ReactElement => {
   const [files, setFiles] = React.useState<any>({})
 
@@ -80,6 +85,14 @@ const HistoryList = ({
           </Button>
         }
       </table>
+      {
+        historyUnlocked && 
+        <Pagination 
+          totalPages={25}
+          currentPage={historyPage}
+          onPageChange={(page: number) => { changeHistoryPage(page)}}
+        />
+      }
     </div>
   )
 }
