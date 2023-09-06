@@ -11,7 +11,8 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   const {data: signer} = useSigner()
-
+  console.log(signer);
+  
   // TODO: fix any type
   const client = new DBSClient(dbs_url, dbs_account, signer as any);
   // Fetch storage info
@@ -20,6 +21,8 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
     const getStorageInfo = async () => {
       try {
         const storageInfo = await client.getStorageInfo();
+        console.log(storageInfo);
+        
         return storageInfo;  
       } catch (error) {
         console.log(error);
