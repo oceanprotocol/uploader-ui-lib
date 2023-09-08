@@ -7,7 +7,8 @@ const cx = classNames.bind(styles)
 
 interface InputRadioProps extends InputHTMLAttributes<HTMLInputElement> {
   options: string[]
-  inputSize?: string
+  inputSize?: any
+  type: 'radio' | 'checkbox'
 }
 
 export default function InputRadio({
