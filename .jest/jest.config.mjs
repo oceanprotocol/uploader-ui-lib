@@ -2,9 +2,9 @@ export default async () => ({
   rootDir: '../',
   bail: true,
   preset: "ts-jest",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
-    "^.+\\.[t|j]sx?$": "babel-jest"
+    '^.+\\.(js|jsx|ts|tsx|mjs)$': 'ts-jest',
   },
   verbose: true,
   // Add more setup options before each test is run
@@ -30,7 +30,7 @@ export default async () => ({
   ],
   // Add ignores so ESM packages are not transformed by Jest
   transformIgnorePatterns: [
-    '.*/node_modules/(?!(remark)/)',
+    'node_modules/(?!(remark|unified)/)',
     '^.+\\.module\\.(css|sass|scss)$',
   ]
 });
