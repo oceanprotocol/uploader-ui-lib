@@ -94,29 +94,14 @@
     "rollup:watch": "rollup -c -w",
     "build:watch": "npm run clean && npm-run-all -p rollup:watch",
     "clean": "rimraf dist",
-    "jest": "jest -c .jest/jest.config.js",
-    "jest:watch": "jest -c .jest/jest.config.js --watch",
+    "jest": "jest -c .jest/jest.config.mjs",
+    "jest:watch": "jest -c .jest/jest.config.mjs --watch",
     "src:build": "cpx \"src/**\" dist/src -v",
     "rollup:build": "rollup -c",
     "build": "npm run clean && npm-run-all -s clean rollup:build",
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
-  },
-  "jest": {
-    "bail": true,
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "moduleNameMapper": {
-      "\\.(css|less)$": "identity-obj-proxy"
-    },
-    "setupFilesAfterEnv": [
-      "./setupTests.ts"
-    ],
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    },
-    "verbose": true
   },
   "engines": {
     "node": ">=18"
