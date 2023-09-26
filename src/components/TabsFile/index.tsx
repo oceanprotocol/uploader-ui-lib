@@ -13,7 +13,7 @@ import {
   GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult
-} from '@oceanprotocol/dbs'
+} from '@oceanprotocol/uploader'
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
