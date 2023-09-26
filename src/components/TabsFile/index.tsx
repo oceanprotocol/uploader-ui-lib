@@ -222,13 +222,15 @@ export default function TabsFile({
     }
   }
 
-  const getUpload = async ({ quoteId, payment, files}: any) => {
+  const getUpload = async ({ quoteId, payment, quoteFee, files, type}: any) => {
     try {
       console.log('uploading: ', { quoteId, payment, files});
       const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
-        files as FileList
+        quoteFee,
+        files as FileList,
+        type
       )
       console.log('Upload result:', quoteAndUploadResult);
       if (quoteAndUploadResult?.status === 200) {
@@ -290,7 +292,9 @@ export default function TabsFile({
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
-          files: [file] as unknown as FileList
+          quoteFee: quote.tokenAmount,
+          files: [file] as unknown as FileList,
+          type: items[tabIndex].type
         })
         break;
       case 'ddoLink':
