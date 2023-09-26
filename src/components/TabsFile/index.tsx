@@ -224,7 +224,7 @@ export default function TabsFile({
 
   const getUpload = async ({ quoteId, payment, quoteFee, files, type}: any) => {
     try {
-      console.log('uploading: ', { quoteId, payment, files});
+      console.log('uploading: ', { quoteId, payment, quoteFee, files, type});
       const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
@@ -242,7 +242,7 @@ export default function TabsFile({
         throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!');
       }
     } catch (error) {
-      console.log(error);
+      console.log('Upload Error: ', error);
       setErrorUpload(true);
       setErrorMessage("File uploaded failed!");
       resetTabs();
