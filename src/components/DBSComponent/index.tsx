@@ -5,7 +5,7 @@ import '../../stylesGlobal/styles.css'
 import './index.module.css'
 import TabsFile from '../TabsFile'
 
-import {DBSClient} from '@oceanprotocol/dbs';
+import {UploaderClient} from '@oceanprotocol/uploader';
 
 const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
@@ -13,7 +13,7 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const {data: signer} = useSigner()
 
   // TODO: fix any type
-  const client = new DBSClient(dbs_url, dbs_account, signer as any);
+  const client = new UploaderClient(dbs_url, dbs_account, signer as any);
   // Fetch storage info
   useEffect(() => {
     // Fetch storage info from DBS endpoint

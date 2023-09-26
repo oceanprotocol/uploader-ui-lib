@@ -13,7 +13,7 @@ import {
   GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult
-} from '@oceanprotocol/dbs'
+} from '@oceanprotocol/uploader'
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
@@ -222,13 +222,15 @@ export default function TabsFile({
     }
   }
 
-  const getUpload = async ({ quoteId, payment, files}: any) => {
+  const getUpload = async ({ quoteId, payment, quoteFee, files, type}: any) => {
     try {
-      console.log('uploading: ', { quoteId, payment, files});
+      console.log('uploading: ', { quoteId, payment, quoteFee, files, type});
       const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
-        files as FileList
+        String(quoteFee),
+        files as FileList,
+        type
       )
       console.log('Upload result:', quoteAndUploadResult);
       if (quoteAndUploadResult?.status === 200) {
@@ -240,7 +242,7 @@ export default function TabsFile({
         throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!');
       }
     } catch (error) {
-      console.log(error);
+      console.log('Upload Error: ', error);
       setErrorUpload(true);
       setErrorMessage("File uploaded failed!");
       resetTabs();
@@ -290,7 +292,9 @@ export default function TabsFile({
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
-          files: [file] as unknown as FileList
+          quoteFee: String(quote.tokenAmount),
+          files: [file] as unknown as FileList,
+          type: items[tabIndex].type
         })
         break;
       case 'ddoLink':
