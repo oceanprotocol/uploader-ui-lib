@@ -228,7 +228,7 @@ export default function TabsFile({
       const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
         quoteId,
         payment,
-        quoteFee,
+        String(quoteFee),
         files as FileList,
         type
       )
@@ -292,7 +292,7 @@ export default function TabsFile({
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
-          quoteFee: quote.tokenAmount,
+          quoteFee: String(quote.tokenAmount),
           files: [file] as unknown as FileList,
           type: items[tabIndex].type
         })
