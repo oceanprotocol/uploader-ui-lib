@@ -1,6 +1,6 @@
 import React from 'react'
 import { WagmiConfig, createClient } from 'wagmi'
-import { mainnet, polygon, goerli, polygonMumbai } from 'wagmi/chains'
+import { polygon } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import DBSComponent from '../DBSComponent'
 
@@ -42,7 +42,6 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
   return (
     <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider
-            options={{ initialChainId: 0 }}
             customTheme={connectKitTheme}
         >
             <DBSComponent dbs_url={dbs_url} dbs_account={dbs_account}/>
