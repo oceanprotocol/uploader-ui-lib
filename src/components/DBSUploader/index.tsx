@@ -34,7 +34,7 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
     getDefaultClient({
       appName: 'Ocean DBS UI',
       infuraId: infuraId,
-      chains: [mainnet, polygon, goerli, polygonMumbai],
+      chains: [polygon],
       walletConnectProjectId: walletConnectProjectId || ''
     })
   )
