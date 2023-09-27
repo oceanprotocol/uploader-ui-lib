@@ -26,7 +26,7 @@ const HistoryList = ({
   changeHistoryPage: any
 }): ReactElement => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [files, setFiles] = React.useState<any>({})
+  const [files, setFiles] = React.useState<any[]>([]);
 
   const ITEMS_PER_PAGE = 2;
 
@@ -36,8 +36,8 @@ const HistoryList = ({
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentFiles = files.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
+  const currentFiles = Array.isArray(files) ? files.slice(startIndex, endIndex) : [];
+  const totalPages = Array.isArray(files) ? Math.ceil(files.length / ITEMS_PER_PAGE) : 0;
   
   return (
     <>
