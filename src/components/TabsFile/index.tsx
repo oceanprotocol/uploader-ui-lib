@@ -329,7 +329,7 @@ export default function TabsFile({
     }
   }, [step])
 
-  const getHistoryList = async (pageNumber = 1, pageSize = pageSizeHistory, service = items[tabIndex].type) => {
+  const getHistoryList = async (pageNumber = 1, pageSize = 1000, service = items[tabIndex].type) => {
     setHistoryLoading(true);
     try {
       const historyList = await dbsClient.getHistory(pageNumber, pageSize, service)
