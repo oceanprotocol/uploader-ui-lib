@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../Button'
 import styles from './index.module.css'
 import { addEllipsesToText } from '../../@utils/textFormat'
@@ -13,10 +13,7 @@ const HistoryList = ({
   uploads,
   historyUnlocked,
   getHistoryList,
-  historyLoading,
-  historyPage,
-  historyTotalPages,
-  changeHistoryPage
+  historyLoading
 }: {
   items: any
   tabIndex: number
@@ -28,11 +25,19 @@ const HistoryList = ({
   historyTotalPages: number
   changeHistoryPage: any
 }): ReactElement => {
-  const [files, setFiles] = React.useState<any>({})
+  const [currentPage, setCurrentPage] = useState(1);
+  const [files, setFiles] = React.useState<any[]>([]);
+
+  const ITEMS_PER_PAGE = 25;
 
   useEffect(() => {
     setFiles(uploads)
   }, [uploads])
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentFiles = Array.isArray(files) ? files.slice(startIndex, endIndex) : [];
+  const totalPages = Array.isArray(files) ? Math.ceil(files.length / ITEMS_PER_PAGE) : 0;
   
   return (
     <>
@@ -48,7 +53,7 @@ const HistoryList = ({
             </tr>
           </thead>
           <tbody className={historyUnlocked ? styles.historyUnlocked : styles.historyLocked}>
-            {files.length > 0 && files.map((file: any, index: number) => (
+            {currentFiles.map((file: any, index: number) => (
               <tr key={`table_uploads_${items[tabIndex].type}_${index}`}>
                 <td>{addEllipsesToText(file.quoteId, 15)}</td>
                 <td>{getStatusMessage(file.status, items[tabIndex].type)}</td>
@@ -90,13 +95,13 @@ const HistoryList = ({
         </table>
       </div>
       {
-        historyUnlocked && historyTotalPages > 1 &&
-        <Pagination 
-          totalPages={historyTotalPages}
-          currentPage={historyPage}
-          onPageChange={(page: number) => { changeHistoryPage(page)}}
-        />
-      }
+            historyUnlocked && totalPages > 1 &&
+            <Pagination 
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={(page: number) => { setCurrentPage(page); }}
+            />
+        }
     </>
   )
 }
