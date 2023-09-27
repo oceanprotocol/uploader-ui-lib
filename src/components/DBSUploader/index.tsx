@@ -42,6 +42,7 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
   return (
     <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider
+            options={{ initialChainId: 137 }}
             customTheme={connectKitTheme}
         >
             <DBSComponent dbs_url={dbs_url} dbs_account={dbs_account}/>
