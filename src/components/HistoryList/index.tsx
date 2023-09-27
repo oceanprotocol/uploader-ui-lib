@@ -28,7 +28,7 @@ const HistoryList = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [files, setFiles] = React.useState<any[]>([]);
 
-  const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = 25;
 
   useEffect(() => {
     setFiles(uploads)
