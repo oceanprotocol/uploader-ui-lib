@@ -1,4 +1,6 @@
 @import '_variables.css';
+@import '_code.css';
+@import '_emojipicker.css';
 
 *,
 *:before,
@@ -160,5 +162,3 @@ table th {
   font-weight: var(--font-weight-bold);
 }
 
-@import '_code.css';
-@import '_emojipicker.css';
