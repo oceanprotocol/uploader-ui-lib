@@ -17,9 +17,9 @@ import {
 import Networks from '../Networks'
 import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
-import { addEllipsesToText } from '@utils/textFormat'
-import { getStatusMessage } from '@utils/statusCode'
-import { truncateAddress } from '@utils/truncateAddress'
+import { addEllipsesToText } from '../../@utils/textFormat'
+import { getStatusMessage } from '../../@utils/statusCode'
+import { truncateAddress } from '../../@utils/truncateAddress'
 
 export default function TabsFile({
   items,
