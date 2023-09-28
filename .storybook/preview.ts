@@ -14,14 +14,5 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /date$/
     }
-  },
-  options: {
-    showRoots: false, // Hides the root in the sidebar
-    showPanel: false, // Hides the addon panel at the bottom
-  },
-  toolbars: {
-    previewActions: {
-      hidden: true, // Hides the top toolbar (with the 'show code' button, etc.)
-    },
   }
 }
