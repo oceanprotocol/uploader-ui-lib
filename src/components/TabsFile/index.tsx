@@ -5,6 +5,7 @@ import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
+import { ConnectKitButton } from "connectkit";
 import { switchNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
@@ -356,6 +357,15 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
+    <ConnectKitButton.Custom>
+      {({ isConnected, isConnecting, show, hide, address, ensName, chain }) => {
+        return (
+          <button onClick={show} >
+            {isConnected ? address : "Custom Connect"}
+          </button>
+        );
+      }}
+    </ConnectKitButton.Custom>
       <div className={styles.headerContainer}>
         {
           isConnected &&

@@ -32,7 +32,7 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
   // Initialize the Wagmi client
   const wagmiConfig = createConfig(
     getDefaultConfig({
-      appName: 'Ocean DBS UI',
+      appName: 'Ocean Uploader UI',
       infuraId: infuraId,
       chains: [polygon],
       walletConnectProjectId: walletConnectProjectId || ''
