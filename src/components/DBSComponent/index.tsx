@@ -38,7 +38,8 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   }, [signer])
   
   return (
-    <div className="DBSComponent">  
+    <div className="DBSComponent">
+      <h1>Ocean Uploader</h1>  
       { DBSsettings.length === 0 && loading && <div>Loading...</div> }
       { DBSsettings.length > 0 && 
         <TabsFile items={DBSsettings as dbs_setting[]} dbsClient={client} />
