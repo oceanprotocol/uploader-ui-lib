@@ -4,10 +4,9 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import { ConnectKitButton } from "connectkit";
 import { switchNetwork } from '@wagmi/core'
-import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
 import {
   GetLinkResult,
@@ -38,10 +37,6 @@ export default function TabsFile({
   
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  })
-  const { disconnect } = useDisconnect()
 
   const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
   const [ availableNetworks, setAvailableNetworks ] = useState([])
@@ -368,7 +363,8 @@ export default function TabsFile({
               size="small"
               onClick={show}
             >
-                {isConnected ?address : "Connect"}
+                {isConnected ? (<span className={styles.connected} />) : (<span className={styles.disconnected} />)}
+                {isConnected ? address : "Connect"}
               </Button>
           </div>
             );
