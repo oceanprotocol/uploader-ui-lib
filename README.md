@@ -1,6 +1,6 @@
 [![banner](https://raw.githubusercontent.com/oceanprotocol/art/master/github/repo-banner%402x.png)](https://oceanprotocol.com)
 
-<h1 align="center">Ocean DBS UI Library</h1>
+<h1 align="center">Ocean Uploader UI Library</h1>
 
 **Table of Contents**
 
@@ -27,8 +27,8 @@ Prerequisites:
 To start local development:
 
 ```bash
-git clone git@github.com:oceanprotocol/dbs-ui-lib.git
-cd dbs-ui-lib
+git clone git@github.com:oceanprotocol/uploader-ui-lib.git
+cd uploader-ui-lib
 
 # when using nvm to manage Node.js versions
 nvm use
@@ -49,10 +49,10 @@ Run `export NODE_OPTIONS=--openssl-legacy-provider` before building.
 
 ## 🚀 Usage
 
-Import and use the DBS UI components in your app:
+Import and use the Uploader UI components in your app:
 
 ```bash
-import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
+import { DBSUploader } from '@oceanprotocol/uploader-ui-lib';
 
 <DBSUploader 
    dbs_url={process.env.DBS_URL}
@@ -62,16 +62,16 @@ import { DBSUploader } from '@oceanprotocol/dbs-ui-lib';
 />
 ```
 
-To enable the functionality of the DBSUploader, the following setting variables need to be set:
+To enable the functionality of Ocean Uploader, the following setting variables need to be set:
 
 | Variable                | Description                                           |
 |-------------------------|-------------------------------------------------------|
-| `dbs_url`               | URL for DBS service communication                    |
-| `dbs_account`           | Account info for DBS authentication                  |
+| `dbs_url`               | URL for Uploader service communication                    |
+| `dbs_account`           | Account info for Uploader authentication                  |
 | `infuraId`              | Project ID for Ethereum access via Infura            |
 | `walletConnectProjectId`| Project ID for WalletConnect integration             |
 
-These variables are needed to interact with the DBS service, provide authentication credentials, access the Ethereum network through Infura, and enable integration with WalletConnect. 
+These variables are needed to interact with the Uploader service, provide authentication credentials, access the Ethereum network through Infura, and enable integration with WalletConnect. 
 
 ## 👩‍🎤 Storybook
 
