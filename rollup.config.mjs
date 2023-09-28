@@ -1,6 +1,6 @@
 import typescript from 'rollup-plugin-typescript2';
 import svgr from '@svgr/rollup'
-import packageJson from './package.json';
+import packageJson from './package.json' assert { type: 'json' };
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from 'rollup-plugin-postcss';
 import {terser} from '@rollup/plugin-terser';
