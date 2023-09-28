@@ -122,6 +122,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "ethers": "^6.7.1",
     "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-node-polyfills": "^0.2.1"
   }
