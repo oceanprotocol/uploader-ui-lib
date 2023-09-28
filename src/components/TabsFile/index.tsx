@@ -357,44 +357,24 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
-    <ConnectKitButton.Custom>
-      {({ isConnected, isConnecting, show, hide, address, ensName, chain }) => {
-        return (
-          <button onClick={show} >
-            {isConnected ? address : "Custom Connect"}
-          </button>
-        );
-      }}
-    </ConnectKitButton.Custom>
+    
       <div className={styles.headerContainer}>
-        {
-          isConnected &&
-          <div className={`${styles.connection}`}>
-            <Button
+        <ConnectKitButton.Custom>
+          {({ isConnected, show, address }) => {
+            return (
+              <div className={`${styles.connection}`}>
+                <Button
               style="primary"
               size="small"
-              onClick={() => disconnect()}
+              onClick={show}
             >
-              <span className={styles.disconnected}></span>
-              Disconnect
-            </Button>
+                {isConnected ?address : "Connect"}
+              </Button>
           </div>
-        }
-
-        {
-          !isConnected &&
-          <div className={`${styles.connection}`}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => connect()}
-            >
-              <span className={styles.connected}></span>
-              Connect
-            </Button>
-          </div>
-        }
-
+            );
+          }}
+      </ConnectKitButton.Custom>
+       
         {
           availableNetworks && availableNetworks.length > 0 && 
           <Networks 
