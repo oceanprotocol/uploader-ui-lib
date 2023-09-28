@@ -9,6 +9,7 @@ import json from "@rollup/plugin-json";
 import dts from "rollup-plugin-dts";
 import postcssImport from 'postcss-import';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
+import resolve from '@rollup/plugin-node-resolve';
 
 export default [
   {
@@ -18,6 +19,7 @@ export default [
       {file: packageJson.module, format: 'es', sourcemap: true, inlineDynamicImports: true}
     ],
     plugins: [
+      resolve(),
       peerDepsExternal(),
       commonjs(),
       nodePolyfills(),
