@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useSigner } from 'wagmi'
+import { useEthersSigner } from '../../@utils/useEthersSigner'
 
 import '../../stylesGlobal/styles.css'
 import './index.module.css'
@@ -10,10 +10,10 @@ import {UploaderClient} from '@oceanprotocol/uploader';
 const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   const [ DBSsettings, setDBSsettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
-  const {data: signer} = useSigner()
+  const signer = useEthersSigner()
 
   // TODO: fix any type
-  const client = new UploaderClient(dbs_url, dbs_account, signer as any);
+  const client = new UploaderClient(dbs_url, dbs_account, signer);
   // Fetch storage info
   useEffect(() => {
     // Fetch storage info from DBS endpoint

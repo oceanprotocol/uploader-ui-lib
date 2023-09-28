@@ -1,7 +1,7 @@
 import React from 'react'
-import { WagmiConfig, createClient } from 'wagmi'
-import { mainnet, polygon, goerli, polygonMumbai } from 'wagmi/chains'
-import { ConnectKitProvider, getDefaultClient } from 'connectkit'
+import { WagmiConfig, createConfig } from 'wagmi'
+import { polygon } from 'wagmi/chains'
+import { ConnectKitProvider, getDefaultConfig } from 'connectkit'
 import DBSComponent from '../DBSComponent'
 
 // ConnectKit CSS overrides
@@ -30,19 +30,19 @@ type web3Params = {
 const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }: web3Params) => {
   
   // Initialize the Wagmi client
-  const wagmiClient = createClient(
-    getDefaultClient({
-      appName: 'Ocean DBS UI',
+  const wagmiConfig = createConfig(
+    getDefaultConfig({
+      appName: 'Ocean Uploader UI',
       infuraId: infuraId,
-      chains: [mainnet, polygon, goerli, polygonMumbai],
+      chains: [polygon],
       walletConnectProjectId: walletConnectProjectId || ''
     })
   )
   
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiConfig}>
         <ConnectKitProvider
-            options={{ initialChainId: 0 }}
+            options={{ initialChainId: 137 }}
             customTheme={connectKitTheme}
         >
             <DBSComponent dbs_url={dbs_url} dbs_account={dbs_account}/>

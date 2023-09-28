@@ -4,9 +4,9 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
+import { ConnectKitButton } from "connectkit";
 import { switchNetwork } from '@wagmi/core'
-import { InjectedConnector } from 'wagmi/connectors/injected'
 import Button from '../Button'
 import {
   GetLinkResult,
@@ -19,6 +19,7 @@ import { formatEther } from "@ethersproject/units";
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
+import { truncateAddress } from '../../@utils/truncateAddress'
 
 export default function TabsFile({
   items,
@@ -37,10 +38,6 @@ export default function TabsFile({
   
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  })
-  const { disconnect } = useDisconnect()
 
   const [ isNetworkSupported, setIsNetworkSupported ] = useState(false)
   const [ availableNetworks, setAvailableNetworks ] = useState([])
@@ -356,35 +353,25 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
+    
       <div className={styles.headerContainer}>
-        {
-          isConnected &&
-          <div className={`${styles.connection}`}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => disconnect()}
-            >
-              <span className={styles.disconnected}></span>
-              Disconnect
-            </Button>
-          </div>
-        }
-
-        {
-          !isConnected &&
-          <div className={`${styles.connection}`}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => connect()}
-            >
-              <span className={styles.connected}></span>
-              Connect
-            </Button>
-          </div>
-        }
-
+        <ConnectKitButton.Custom>
+            {({ isConnected, show, address }) => {
+              return (
+                <div className={`${styles.connection}`}>
+                  <Button
+                style="primary"
+                size="small"
+                onClick={show}
+              >
+                  {isConnected ? (<span className={styles.connected} />) : (<span className={styles.disconnected} />)}
+                  {isConnected && address ? truncateAddress(address) : "Connect"}
+                </Button>
+            </div>
+              );
+            }}
+        </ConnectKitButton.Custom>
+       
         {
           availableNetworks && availableNetworks.length > 0 && 
           <Networks 
