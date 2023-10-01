@@ -62,7 +62,7 @@
     "ts-jest": "^27.1.5",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^5.2.2",
-    "webpack": "^5.82.1"
+    "webpack": "^5.88.2"
   },
   "dependencies": {
     "classnames": "^2.3.2",
