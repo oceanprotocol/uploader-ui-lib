@@ -33,7 +33,7 @@
     "@storybook/react-webpack5": "^7.4.5",
     "@svgr/rollup": "^8.1.0",
     "@svgr/webpack": "^8.0.1",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.1.3",
     "@tippyjs/react": "^4.2.6",
     "@types/react": "^17.0.59",
     "ajv": "^8.12.0",
