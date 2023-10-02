@@ -60,7 +60,7 @@
     "stream-http": "^3.2.0",
     "style-loader": "^3.3.2",
     "ts-jest": "^27.1.5",
-    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.2.2",
     "webpack": "^5.88.2"
   },
