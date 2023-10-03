@@ -3,6 +3,7 @@ import Button from '../Button'
 import styles from './index.module.css'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import Loader from '../Loader';
+import { useAccount } from 'wagmi'
 import { getStatusMessage } from '../../@utils/statusCode'
 import { getLink } from '../../@utils/linkAsset'
 import Pagination from './pagination';
@@ -25,8 +26,10 @@ const HistoryList = ({
   historyTotalPages: number
   changeHistoryPage: any
 }): ReactElement => {
+  const { isConnected } = useAccount()
+  
   const [currentPage, setCurrentPage] = useState(1);
-  const [files, setFiles] = React.useState<any[]>([]);
+  const [files, setFiles] = React.useState<any[]>([]); 
 
   const ITEMS_PER_PAGE = 25;
 
@@ -75,9 +78,17 @@ const HistoryList = ({
                 </td>
               </tr>
             ))}
+            {
+              currentFiles.length === 0 &&
+              <tr>
+                <td colSpan={5}>
+                  <p className={styles.emptyList}>There's no files uploaded!</p>
+                </td>
+              </tr>
+            }
           </tbody>
           {
-            !historyUnlocked &&
+            isConnected && !historyUnlocked &&
             <Button
               className={styles.unlockButton}
               style="primary"
