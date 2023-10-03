@@ -315,6 +315,9 @@ export default function TabsFile({
       case 'quote':
         setSubmitText('Get Quote');
         break;
+      case 'wrapMatic':
+        setSubmitText('Wrap Matic');
+        break;
       case 'upload':
         setSubmitText('Upload File');
         break;
