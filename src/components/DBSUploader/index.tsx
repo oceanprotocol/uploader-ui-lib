@@ -1,6 +1,6 @@
 import React from 'react'
 import { WagmiConfig, createConfig } from 'wagmi'
-import { polygon } from 'wagmi/chains'
+import { polygon, polygonMumbai } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit'
 import DBSComponent from '../DBSComponent'
 
@@ -34,7 +34,7 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
     getDefaultConfig({
       appName: 'Ocean Uploader UI',
       infuraId: infuraId,
-      chains: [polygon],
+      chains: [polygon, polygonMumbai],
       walletConnectProjectId: walletConnectProjectId || ''
     })
   )

@@ -1,10 +1,11 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
-import dts from "rollup-plugin-dts";
+import {dts} from "rollup-plugin-dts";
 import terser from '@rollup/plugin-terser';
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import css from "rollup-plugin-import-css";
+import postcss from 'rollup-plugin-postcss';
+import postcssImport from 'postcss-import';
 import svgr from '@svgr/rollup'
 import json from "@rollup/plugin-json";
 
@@ -27,7 +28,12 @@ export default [
     ],
     inlineDynamicImports: true,
     plugins: [
-      css(),
+      postcss({
+        sourceMap: true,
+        extract: true,
+        minimize: true,
+        plugins: [postcssImport()]
+      }),
       peerDepsExternal(),
       resolve(),
       commonjs(),
@@ -41,6 +47,6 @@ export default [
   {
     input: "src/index.ts",
     output: [{ file: "dist/types.d.ts", format: "es" }],
-    plugins: [dts.default()],
+    plugins: [dts()],
   },
 ];
