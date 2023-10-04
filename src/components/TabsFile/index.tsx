@@ -55,20 +55,22 @@ export default function TabsFile({
     'function balanceOf(address owner) view returns (uint256)',
     'function deposit() public payable'
   ];
-  const { data: balanceData } = useContractRead({
-    address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-    abi: minWmaticAbi,
-    functionName: 'balanceOf',
-    args: [address]
-  })
-  console.log('checkBalance data:', balanceData)
-
+  if(address){
+    console.log('checking for the address, address')
+    const { data: balanceData } = useContractRead({
+      address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+      abi: minWmaticAbi,
+      functionName: 'balanceOf',
+      args: [address]
+    })
+    console.log('checkBalance data:', balanceData)  
+  }
   const { config } = usePrepareContractWrite({
     address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     abi: [minWmaticAbi],
     functionName: 'deposit',
   })
-  const { write } = useContractWrite(config)
+  const { write: wmaticDeposit } = useContractWrite(config)
   
   // Mocked data quote
   const [quote, setQuote] = useState<any>();
@@ -196,6 +198,9 @@ export default function TabsFile({
       })
       console.log('Quote result:', quoteResult) 
       setQuote(quoteResult); 
+      
+      // Check if user has wrapped matic in their wallet
+      setStep('wrapMatic');
       
       
       setStep('upload');
@@ -445,6 +450,13 @@ export default function TabsFile({
                     />
                   }
                 />
+              }
+
+              {
+                step === 'wrapMatic' &&
+                <button disabled={!wmaticDeposit} onClick={() => wmaticDeposit?.()}>
+                  Wrap Matic
+                </button>
               }
 
               {
