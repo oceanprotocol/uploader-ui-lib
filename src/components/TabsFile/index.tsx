@@ -4,7 +4,7 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useNetwork, useContractRead } from 'wagmi'
+import { useAccount, useNetwork, useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi'
 import { ConnectKitButton } from "connectkit";
 import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
@@ -51,16 +51,24 @@ export default function TabsFile({
 
   const [historyLoading, setHistoryLoading] = useState(false);
   // Check if user has wrapped matic in their wallet
-  const minERC20Abi = [
-    'function balanceOf(address owner) view returns (uint256)'
+  const minWmaticAbi = [
+    'function balanceOf(address owner) view returns (uint256)',
+    'function deposit() public payable'
   ];
   const { data: balanceData } = useContractRead({
     address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-    abi: minERC20Abi,
+    abi: minWmaticAbi,
     functionName: 'balanceOf',
     args: [address]
   })
   console.log('checkBalance data:', balanceData)
+
+  const { config } = usePrepareContractWrite({
+    address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    abi: [minWmaticAbi],
+    functionName: 'deposit',
+  })
+  const { write } = useContractWrite(config)
   
   // Mocked data quote
   const [quote, setQuote] = useState<any>();
