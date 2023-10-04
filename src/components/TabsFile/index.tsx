@@ -50,6 +50,17 @@ export default function TabsFile({
   const [errorMessage, setErrorMessage] = useState('');
 
   const [historyLoading, setHistoryLoading] = useState(false);
+  // Check if user has wrapped matic in their wallet
+  const minERC20Abi = [
+    'function balanceOf(address owner) view returns (uint256)'
+  ];
+  const { data: balanceData } = useContractRead({
+    address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+    abi: minERC20Abi,
+    functionName: 'balanceOf',
+    args: [address]
+  })
+  console.log('checkBalance data:', balanceData)
   
   // Mocked data quote
   const [quote, setQuote] = useState<any>();
@@ -177,17 +188,7 @@ export default function TabsFile({
       })
       console.log('Quote result:', quoteResult) 
       setQuote(quoteResult); 
-      // Check if user has wrapped matic in their wallet
-      const minERC20Abi = [
-        'function balanceOf(address owner) view returns (uint256)'
-      ];
-      const { data } = useContractRead({
-          address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-          abi: minERC20Abi,
-          functionName: 'balanceOf',
-          args: [address]
-        })
-        console.log('checkBalance data:', data)
+      
       
       setStep('upload');
     } catch (error) {
