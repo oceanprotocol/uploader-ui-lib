@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
-import { InputField } from '@components/FileUploadSingle'
+import { InputField } from '../FileUploadSingle'
 
 const cx = classNames.bind(styles)
 

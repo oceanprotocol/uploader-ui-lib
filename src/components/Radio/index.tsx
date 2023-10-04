@@ -22,13 +22,13 @@ export default function InputRadio({
           <div className={styles.radioWrap} key={index}>
             <input
               {...props}
-              className={styles[props.type]}
+              className={styles[props.type || '']}
               id={slugify(option)}
             />
             <label
               className={cx({
                 [styles.radioLabel]: true,
-                [inputSize]: inputSize
+                [inputSize || 'small']: inputSize
               })}
               htmlFor={slugify(option)}
             >
