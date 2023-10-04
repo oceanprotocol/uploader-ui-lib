@@ -4,7 +4,7 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork, useContractRead } from 'wagmi'
 import { ConnectKitButton } from "connectkit";
 import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
@@ -20,7 +20,6 @@ import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
 import { truncateAddress } from '../../@utils/truncateAddress'
-import { checkBalance } from '../../@utils/checkBalance'
 
 export default function TabsFile({
   items,
@@ -179,8 +178,16 @@ export default function TabsFile({
       console.log('Quote result:', quoteResult) 
       setQuote(quoteResult); 
       // Check if user has wrapped matic in their wallet
-      const userERC20Balance = await checkBalance();
-      console.log('userERC20Balance: ', userERC20Balance);
+      const minERC20Abi = [
+        'function balanceOf(address owner) view returns (uint256)'
+      ];
+      const { data } = useContractRead({
+          address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+          abi: minERC20Abi,
+          functionName: 'balanceOf',
+          args: [address]
+        })
+        console.log('checkBalance data:', data)
       
       setStep('upload');
     } catch (error) {
