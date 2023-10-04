@@ -20,7 +20,7 @@ import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
 import { truncateAddress } from '../../@utils/truncateAddress'
-import { checkBalance } from '../..@utils/checkBalance'
+import { checkBalance } from '../../@utils/checkBalance'
 
 export default function TabsFile({
   items,
