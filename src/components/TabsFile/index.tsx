@@ -508,7 +508,7 @@ export default function TabsFile({
                 name={item.type} 
                 key={`file_uploader_${items[tabIndex].type}_${index}`} 
                 error={isNetworkSupported === false || errorUpload}
-                errorMessage={!isNetworkSupported ? "Network not supported" : errorMessage}
+                errorMessage={!isNetworkSupported ? isConnected ? "Network not supported" : "Connect to network" : errorMessage}
                 handleUpload={handleUpload}
                 isLoading={uploadIsLoading}
                 isButtonDisabled={!isConnected || !file || !isNetworkSupported}
