@@ -20,6 +20,7 @@ import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
 import { truncateAddress } from '../../@utils/truncateAddress'
+import { checkBalance } from '../..@utils/checkBalance'
 
 export default function TabsFile({
   items,
@@ -177,6 +178,10 @@ export default function TabsFile({
       })
       console.log('Quote result:', quoteResult) 
       setQuote(quoteResult); 
+      // Check if user has wrapped matic in their wallet
+      const userERC20Balance = await checkBalance();
+      console.log('userERC20Balance: ', userERC20Balance);
+      
       setStep('upload');
     } catch (error) {
       console.log(error);
