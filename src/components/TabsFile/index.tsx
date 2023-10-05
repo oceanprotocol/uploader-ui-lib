@@ -56,7 +56,7 @@ export default function TabsFile({
     'function deposit() public payable'
   ];
   if(address){
-    console.log('checking for the address, address')
+    console.log('checking for the address', address)
     const { data: balanceData } = useContractRead({
       address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
       abi: minWmaticAbi,
