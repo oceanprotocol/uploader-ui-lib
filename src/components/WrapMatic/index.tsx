@@ -1,8 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import InputGroup from '../Input/InputGroup'
-import DefaultInput from '../Input'
 import Button from '../Button'
-import Loader from '../Loader'
 import styles from './index.module.css'
 import {
   usePrepareContractWrite,
