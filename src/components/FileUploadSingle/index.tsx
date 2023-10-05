@@ -26,6 +26,7 @@ export interface InputField {
 
 function FileUploadSingle({ ...props }: InputField) {
   const [hideButton] = useState(false)
+  console.log('InputField is loading', props.isLoading)
 
   return (
     <>

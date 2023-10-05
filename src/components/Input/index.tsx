@@ -7,7 +7,6 @@ const cx = classNames.bind(styles)
 
 const DefaultInput = ({ size, className, file, ...props }: InputField) => {
   const ref = useRef() as any
-  console.log('default input file', file)
 
   useEffect(() => {
     if (!file) {
