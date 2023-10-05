@@ -1,9 +1,9 @@
-import React, { ReactNode }  from 'react';
-import { ChangeEvent, useState } from 'react';
-import InputGroup from '../Input/InputGroup';
-import DefaultInput from '../Input';
-import Button from '../Button';
-import Loader from '../Loader';
+import React, { ReactNode } from 'react'
+import { ChangeEvent, useState } from 'react'
+import InputGroup from '../Input/InputGroup'
+import DefaultInput from '../Input'
+import Button from '../Button'
+import Loader from '../Loader'
 import styles from './index.module.css'
 
 export interface InputField {
@@ -26,11 +26,8 @@ export interface InputField {
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-function FileUploadSingle({
-  ...props
-}: InputField) {
-  
-  const [hideButton] = useState(false);
+function FileUploadSingle({ ...props }: InputField) {
+  const [hideButton] = useState(false)
 
   return (
     <>
@@ -62,7 +59,7 @@ function FileUploadSingle({
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default FileUploadSingle;
+export default FileUploadSingle

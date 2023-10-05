@@ -40,12 +40,12 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   return (
     <div className="DBSComponent">
       <h1>Ocean Uploader</h1>  
-      { DBSsettings.length === 0 && loading && <div>Loading...</div> }
-      { DBSsettings.length > 0 && 
+      { DBSsettings?.length === 0 && loading && <div>Loading...</div> }
+      { DBSsettings?.length > 0 && 
         <TabsFile items={DBSsettings as dbs_setting[]} dbsClient={client} />
       }
       {
-        DBSsettings.length === 0 && !loading && (
+        DBSsettings?.length === 0 && !loading && (
           <p>DBS Not available</p>
         )
       }
