@@ -2,7 +2,7 @@ import React from 'react'
 import { WagmiConfig, createConfig } from 'wagmi'
 import { polygon, polygonMumbai } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit'
-import DBSComponent from '../DBSComponent'
+import UploaderConnection from '../UploaderConnection'
 
 // ConnectKit CSS overrides
 // https://docs.family.co/connectkit/theming#theme-variables
@@ -23,11 +23,11 @@ export const connectKitTheme = {
 type web3Params = {
     infuraId: string
     walletConnectProjectId: string
-    dbs_url: string
-    dbs_account: string
+    uploader_url: string
+    uploader_account: string
 }
 
-const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }: web3Params) => {
+const Uploader = ({ infuraId, walletConnectProjectId, uploader_url, uploader_account }: web3Params) => {
   
   // Initialize the Wagmi client
   const wagmiConfig = createConfig(
@@ -45,10 +45,10 @@ const DBSUploader = ({ infuraId, walletConnectProjectId, dbs_url, dbs_account }:
             options={{ initialChainId: 137 }}
             customTheme={connectKitTheme}
         >
-            <DBSComponent dbs_url={dbs_url} dbs_account={dbs_account}/>
+            <UploaderConnection uploader_url={uploader_url} uploader_account={uploader_account}/>
       </ConnectKitProvider>
     </WagmiConfig>
   )
 }
 
-export default DBSUploader
+export default Uploader

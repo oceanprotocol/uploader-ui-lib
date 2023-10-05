@@ -7,8 +7,8 @@ module.exports = {
   addons: ['@storybook/addon-essentials', 'storybook-css-modules-preset'],
   env: (config) => ({
     ...config,
-    DBS_URL: process.env.DBS_URL,
-    DBS_ACCOUNT: process.env.DBS_ACCOUNT,
+    uploader_url: process.env.UPLOADER_URL, 
+    uploader_account: process.env.UPLOADER_ACCOUNT,
     PUBLIC_INFURA_PROJECT_ID: process.env.PUBLIC_INFURA_PROJECT_ID,
     PUBLIC_WALLETCONNECT_PROJECT_ID: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID,
   }),
