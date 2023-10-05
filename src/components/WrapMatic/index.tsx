@@ -1,11 +1,14 @@
-import React, { ChangeEvent } from 'react'
-import { useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import InputGroup from '../Input/InputGroup'
 import DefaultInput from '../Input'
 import Button from '../Button'
 import Loader from '../Loader'
 import styles from './index.module.css'
-import { usePrepareContractWrite, useContractWrite } from 'wagmi'
+import {
+  usePrepareContractWrite,
+  useContractWrite,
+  useWaitForTransaction
+} from 'wagmi'
 import wMaticAbi from './wMaticAbi.json'
 
 interface WrapMaticProps {
@@ -14,6 +17,7 @@ interface WrapMaticProps {
   name?: string
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
   handleUpload: () => void
+  file?: File
 }
 
 export default function WrapMatic(props: WrapMaticProps) {
@@ -26,39 +30,46 @@ export default function WrapMatic(props: WrapMaticProps) {
   })
   const {
     write: wmaticDeposit,
+    data,
     error: wmaticError,
     isError: wmaticIsError,
-    isLoading: wmaticLoading,
-    isSuccess: wmaticSuccess
+    isLoading
   } = useContractWrite(config)
 
-  console.log('wmaticSuccess', wmaticSuccess)
-  console.log('wmaticError', wmaticError)
-  console.log('wmaticIsError', wmaticIsError)
-  console.log('wmaticLoading', wmaticLoading)
+  const {
+    data: receipt,
+    isLoading: isPending,
+    isSuccess
+  } = useWaitForTransaction({ hash: data?.hash })
+
+  console.log('name', props.file)
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('isSuccess', isSuccess)
+      console.log('isPending', isPending)
+      props.setStep('upload')
+    }
+  }, [isSuccess])
 
   return (
     <>
-      <InputGroup>
-        <DefaultInput
-          onChange={props.handleFileChange}
-          {...props}
-          name={props.name}
-        />
-        {!hideButton && !wmaticSuccess && (
-          <Button
-            style="primary"
-            size="small"
-            disabled={!wmaticDeposit}
-            onClick={() => {
-              wmaticDeposit?.()
-              props.setStep('upload')
-            }}
-          >
-            {wmaticLoading ? <Loader /> : 'Wrap Matic'}
-          </Button>
-        )}
-      </InputGroup>
+      {!hideButton && !isSuccess && (
+        <Button
+          style="primary"
+          size="small"
+          disabled={!wmaticDeposit}
+          onClick={() => {
+            wmaticDeposit?.()
+          }}
+        >
+          {isLoading
+            ? 'Check Wallet...'
+            : isPending
+            ? 'Transaction Pending...'
+            : 'Wrap Matic'}
+        </Button>
+      )}
 
       {wmaticIsError && (
         <div className={styles.error}>

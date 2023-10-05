@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react'
 import { ChangeEvent, useState } from 'react'
-import InputGroup from '../Input/InputGroup'
-import DefaultInput from '../Input'
 import Button from '../Button'
 import Loader from '../Loader'
 import styles from './index.module.css'
@@ -31,27 +29,19 @@ function FileUploadSingle({ ...props }: InputField) {
 
   return (
     <>
-      <InputGroup>
-        <DefaultInput
-          onChange={props.handleFileChange}
-          {...props}
-          name={props.name}
-        />
-
-        {!hideButton && (
-          <Button
-            style="primary"
-            size="small"
-            onClick={(e: React.SyntheticEvent) => {
-              e.preventDefault()
-              props.handleUpload()
-            }}
-            disabled={props.isButtonDisabled}
-          >
-            {props.isLoading ? <Loader /> : props.submitText}
-          </Button>
-        )}
-      </InputGroup>
+      {!hideButton && (
+        <Button
+          style="primary"
+          size="small"
+          onClick={(e: React.SyntheticEvent) => {
+            e.preventDefault()
+            props.handleUpload()
+          }}
+          disabled={props.isButtonDisabled}
+        >
+          {props.isLoading ? <Loader /> : props.submitText}
+        </Button>
+      )}
 
       {props.error && (
         <div className={styles.error}>

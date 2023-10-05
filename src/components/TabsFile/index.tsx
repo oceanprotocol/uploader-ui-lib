@@ -22,6 +22,8 @@ import { getStatusMessage } from '@utils/statusCode'
 import { truncateAddress } from '@utils/truncateAddress'
 import wMaticAbi from '../WrapMatic/wMaticAbi.json'
 import WrapMatic from '../WrapMatic'
+import InputGroup from '../Input/InputGroup'
+import DefaultInput from '../Input'
 
 export default function TabsFile({
   items,
@@ -90,6 +92,7 @@ export default function TabsFile({
   const [historyUnlocked, setHistoryUnlocked] = useState(false)
 
   const [step, setStep] = useState('quote')
+  console.log('STEP: ', step)
 
   const [file, setFile] = useState<File>()
   const [submitText, setSubmitText] = useState('Get Quote')
@@ -370,6 +373,7 @@ export default function TabsFile({
   }
 
   useEffect(() => {
+    console.log('UseEffect STEP: ', step)
     switch (step) {
       case 'quote':
         setSubmitText('Get Quote')
@@ -545,38 +549,46 @@ export default function TabsFile({
                     {ddoLink}
                   </Button>
                 )}
-                {step === 'wrapMatic' ? (
-                  <WrapMatic
-                    setStep={setStep}
-                    amount={BigInt(quote.tokenAmount)}
-                    name={item.type}
+                <InputGroup>
+                  <DefaultInput
                     handleFileChange={handleFileChange}
                     handleUpload={handleUpload}
-                  />
-                ) : (
-                  <FileUploadSingle
-                    {...item}
                     name={item.type}
-                    key={`file_uploader_${items[tabIndex].type}_${index}`}
-                    error={isNetworkSupported === false || errorUpload}
-                    errorMessage={
-                      !isNetworkSupported
-                        ? isConnected
-                          ? 'Network not supported'
-                          : 'Connect to network'
-                        : errorMessage
-                    }
-                    handleUpload={handleUpload}
-                    isLoading={uploadIsLoading}
-                    isButtonDisabled={
-                      !isConnected || !file || !isNetworkSupported
-                    }
-                    inputDisabled={!isConnected || !isNetworkSupported}
-                    handleFileChange={handleFileChange}
-                    file={file}
-                    submitText={submitText}
                   />
-                )}
+                  {step === 'wrapMatic' ? (
+                    <WrapMatic
+                      setStep={setStep}
+                      amount={BigInt(quote.tokenAmount)}
+                      name={item.type}
+                      handleFileChange={handleFileChange}
+                      handleUpload={handleUpload}
+                      file={file}
+                    />
+                  ) : (
+                    <FileUploadSingle
+                      {...item}
+                      name={item.type}
+                      key={`file_uploader_${items[tabIndex].type}_${index}`}
+                      error={isNetworkSupported === false || errorUpload}
+                      errorMessage={
+                        !isNetworkSupported
+                          ? isConnected
+                            ? 'Network not supported'
+                            : 'Connect to network'
+                          : errorMessage
+                      }
+                      handleUpload={handleUpload}
+                      isLoading={uploadIsLoading}
+                      isButtonDisabled={
+                        !isConnected || !file || !isNetworkSupported
+                      }
+                      inputDisabled={!isConnected || !isNetworkSupported}
+                      handleFileChange={handleFileChange}
+                      file={file}
+                      submitText={submitText}
+                    />
+                  )}
+                </InputGroup>
 
                 <br />
 
