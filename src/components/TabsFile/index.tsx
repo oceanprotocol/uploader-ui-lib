@@ -501,27 +501,28 @@ export default function TabsFile({
                   />
                 }
 
-                {step === 'upload' && !uploadStatusResponse && (
-                  <Button
-                    style="primary"
-                    className={styles.priceLabel}
-                    size="small"
-                    onClick={(e: React.SyntheticEvent) => {
-                      e.preventDefault()
-                    }}
-                    disabled={false}
-                  >
-                    {`${formatEther(`${quote.tokenAmount}`)} ${
-                      items[tabIndex].payment
-                        .filter(
-                          (item: any) => item.chainId === chain?.id.toString()
-                        )[0]
-                        .acceptedTokens.filter(
-                          (item: any) => item.value === paymentSelected
-                        )[0].title
-                    }`}
-                  </Button>
-                )}
+                {(step === 'upload' || step === 'wrapMatic') &&
+                  !uploadStatusResponse && (
+                    <Button
+                      style="primary"
+                      className={styles.priceLabel}
+                      size="small"
+                      onClick={(e: React.SyntheticEvent) => {
+                        e.preventDefault()
+                      }}
+                      disabled={false}
+                    >
+                      {`${formatEther(`${quote.tokenAmount}`)} ${
+                        items[tabIndex].payment
+                          .filter(
+                            (item: any) => item.chainId === chain?.id.toString()
+                          )[0]
+                          .acceptedTokens.filter(
+                            (item: any) => item.value === paymentSelected
+                          )[0].title
+                      }`}
+                    </Button>
+                  )}
 
                 {uploadStatusResponse && (
                   <Button
