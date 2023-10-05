@@ -1,14 +1,12 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from 'rollup-plugin-typescript2'
 import svgr from '@svgr/rollup'
-import packageJson from './package.json';
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import packageJson from './package.json' assert { type: "json" };
 import postcss from 'rollup-plugin-postcss';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import json from "@rollup/plugin-json";
 import {dts} from "rollup-plugin-dts";
 import postcssImport from 'postcss-import';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export default [
   {
@@ -18,9 +16,7 @@ export default [
       {file: packageJson.module, format: 'es', sourcemap: true, inlineDynamicImports: true}
     ],
     plugins: [
-      peerDepsExternal(),
       commonjs(),
-      nodePolyfills(),
       typescript({ tsconfig: "./tsconfig.json" }),
       json(),
       postcss({

@@ -1,23 +1,35 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "jsx": "react",
-    "module": "ESNext",
-    "declaration": true,
-    "declarationDir": "types",
-    "sourceMap": true,
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "outDir": "dist",
+    "module": "esnext",
     "moduleResolution": "node",
-    "emitDeclarationOnly": true,
+    "declaration": true,
+    "sourceMap": true,
+    // set to false if your library is only TypeScript
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "resolveJsonModule": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "jsx": "react",
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@stylesGlobal/*": ["./src/stylesGlobal/*"],
+      "@images/*": ["./src/@images/*"],
+      "@utils/*": ["./src/@utils/*"],
+    }
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "src/**/*.test.tsx",
-    "src/**/*.stories.tsx"
-  ]
+  "include": ["custom.d.ts", "**/*"],
+  "exclude": ["node_modules", "*.js", "storybook-static"]
 }
