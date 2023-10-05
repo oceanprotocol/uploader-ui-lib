@@ -57,7 +57,10 @@ module.exports = {
       crypto: false,
       os: false,
       stream: false,
-      assert: false
+      assert: false,
+      zlib: false,
+      net: false,
+      tls: false
     });
     config.resolve.fallback = fallback;
     config.plugins = (config.plugins || []).concat([new webpack.ProvidePlugin({

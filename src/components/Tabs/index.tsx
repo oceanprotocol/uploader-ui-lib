@@ -33,7 +33,7 @@ export default function Tabs({
               className={styles.tab}
               key={index}
               onClick={
-                handleTabChange ? () => handleTabChange(item.title) : null
+                handleTabChange ? () => handleTabChange(item.title) : undefined
               }
               disabled={item.disabled}
             >
