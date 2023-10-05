@@ -14,7 +14,7 @@
     // set to false if your library is only TypeScript
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "strict": true,
@@ -31,5 +31,5 @@
     }
   },
   "include": ["custom.d.ts", "**/*"],
-  "exclude": ["node_modules", "*.js"]
+  "exclude": ["node_modules", "*.js", "storybook-static"]
 }
