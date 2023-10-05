@@ -325,7 +325,6 @@ export default function TabsFile({
   }
 
   const handleUpload = async () => {
-    console.log('1 upload is loading', uploadIsLoading)
     if (!file) {
       return
     }
@@ -333,7 +332,6 @@ export default function TabsFile({
     switch (step) {
       case 'quote':
         setUploadIsLoading(true)
-        console.log('2 upload is loading', uploadIsLoading)
         // Fetch a quote
         await getQuote({
           type: items[tabIndex].type,
@@ -349,7 +347,6 @@ export default function TabsFile({
         break
       case 'upload':
         setUploadIsLoading(true)
-        console.log('3 upload is loading', uploadIsLoading)
         // Upload File
         await getUpload({
           quoteId: quote.quoteId,
@@ -361,7 +358,6 @@ export default function TabsFile({
         break
       case 'ddoLink':
         setUploadIsLoading(true)
-        console.log('4 upload is loading', uploadIsLoading)
         // Get DDO Link
         await getDDOlink(quote.quoteId)
         break
