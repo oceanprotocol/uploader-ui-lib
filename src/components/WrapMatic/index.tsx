@@ -33,11 +33,9 @@ export default function WrapMatic(props: WrapMaticProps) {
     isLoading
   } = useContractWrite(config)
 
-  const {
-    data: receipt,
-    isLoading: isPending,
-    isSuccess
-  } = useWaitForTransaction({ hash: data?.hash })
+  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
+    hash: data?.hash
+  })
 
   console.log('name', props.file)
 
