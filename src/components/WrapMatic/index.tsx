@@ -4,7 +4,8 @@ import styles from './index.module.css'
 import {
   usePrepareContractWrite,
   useContractWrite,
-  useWaitForTransaction
+  useWaitForTransaction,
+  useNetwork
 } from 'wagmi'
 import wMaticAbi from './wMaticAbi.json'
 
@@ -19,8 +20,9 @@ interface WrapMaticProps {
 
 export default function WrapMatic(props: WrapMaticProps) {
   const [hideButton] = useState(false)
+  const { chain } = useNetwork()
   const { config } = usePrepareContractWrite({
-    address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    address: chain?.id === 80001 ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889' : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     abi: wMaticAbi,
     functionName: 'deposit',
     value: props.amount
