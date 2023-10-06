@@ -1,3 +1,3 @@
-import DBSComponent from './DBSComponent'
+import UploaderConnection from './UploaderConnection'
 
-export { DBSComponent }
+export { UploaderConnection }

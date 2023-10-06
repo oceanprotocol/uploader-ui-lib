@@ -18,11 +18,12 @@ import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
+import { TabsProps } from '../../@types/TabsFile'
 
 export default function TabsFile({
   items,
   className,
-  dbsClient
+  uploaderClient
 }: TabsProps): ReactElement {
   const [values, setFieldValue] = useState() as any
   const initialState = () => {
@@ -180,15 +181,8 @@ export default function TabsFile({
     fileInfo
   }: GetQuoteArgs) => {
     try {
-      console.log('quoting: ', {
-        type,
-        duration,
-        payment,
-        userAddress,
-        filePath,
-        fileInfo
-      })
-      const quoteResult: GetQuoteResult = await dbsClient.getQuote({
+      console.log('quoting: ', { type, duration, payment, userAddress, filePath, fileInfo });
+      const quoteResult: GetQuoteResult = await uploaderClient.getQuote({
         type,
         duration,
         payment,
@@ -209,8 +203,10 @@ export default function TabsFile({
 
   async function getStatus(quoteId: string) {
     try {
-      console.log('get status: ', { quoteId })
-      const statusResult: GetStatusResult = await dbsClient.getStatus(quoteId)
+      console.log('get status: ', { quoteId });
+      const statusResult: GetStatusResult = await uploaderClient.getStatus(
+        quoteId
+      )
       console.log('status result:', statusResult)
       return statusResult.status
     } catch (error) {
@@ -253,8 +249,8 @@ export default function TabsFile({
     type
   }: any) => {
     try {
-      console.log('uploading: ', { quoteId, payment, quoteFee, files, type })
-      const quoteAndUploadResult: any = await dbsClient.uploadBrowser(
+      console.log('uploading: ', { quoteId, payment, quoteFee, files, type});
+      const quoteAndUploadResult: any = await uploaderClient.uploadBrowser(
         quoteId,
         payment,
         String(quoteFee),
@@ -280,8 +276,8 @@ export default function TabsFile({
 
   const getDDOlink = async (quoteId: any) => {
     try {
-      console.log('get DDO link: ', quoteId)
-      const linkResult: GetLinkResult[] = await dbsClient.getLink(quoteId)
+      console.log('get DDO link: ', quoteId);
+      const linkResult: GetLinkResult[] = await uploaderClient.getLink(quoteId)
       console.log('ddo link result:', linkResult)
       setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '')
       setUploadIsLoading(false)
@@ -367,11 +363,7 @@ export default function TabsFile({
   ) => {
     setHistoryLoading(true)
     try {
-      const historyList = await dbsClient.getHistory(
-        pageNumber,
-        pageSize,
-        service
-      )
+      const historyList = await uploaderClient.getHistory(pageNumber, pageSize, service)
       console.log('history result: ', historyList)
       setTotalPagesHistory(historyList?.maxPages)
       setHistoryList(historyList?.data)

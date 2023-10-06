@@ -136,6 +136,56 @@ export default function App () {
 
 ```
 
+** under development
+
+## NextJS Setup for Ocean Protocol Uploader UI Library
+
+To configure NextJS for the integration of Ocean's Uploader UI library, modify your `next.config.js` file to include these fallbacks:
+
+```javascript
+module.exports = {
+  webpack: (config) => {
+    config.resolve.fallback = { 
+      fs: false,
+      process: false,
+      net: false,
+      tls: false
+    };
+    return config;
+  },
+};
+```
+** add these fallbacks to avoid any issue related to webpack 5 Polyfills imcompatibility: https://github.com/webpack/changelog-v5#automatic-nodejs-polyfills-removed
+
+install dependencies:
+
+```javascript
+> npm install @oceanprotocol/uploader-ui-lib
+```
+
+Import the library's CSS into your project:
+```javascript
+> import '@oceanprotocol/uploader-ui-lib/dist/index.es.css';
+```
+
+Dynamically import the Uploader component and ensure it is not processed during server-side rendering (SSR) using the next/dynamic function:
+
+```javascript
+import dynamic from 'next/dynamic';
+...
+
+const Uploader = dynamic(() => import('@oceanprotocol/uploader-ui-lib').then((module) => module.Uploader), { ssr: false });
+```
+
+When incorporating the Uploader component into your application, make sure to set 'use client' on top in your app's component. This ensures that the component operates on the client side, bypassing SSR when rendering:
+
+```javascript
+'use client'
+import dynamic from 'next/dynamic';
+```
+
+This comprehensive setup ensures the proper integration and functioning of the Ocean Protocol's Uploader UI library within a NextJS application.
+
 ## 👩‍🎤 Storybook
 
 Storybook helps us build UI components in isolation from our app's business logic, data, and context. That makes it easy to develop hard-to-reach states and save these UI states as stories to revisit during development, testing, or QA.

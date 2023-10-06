@@ -9,13 +9,13 @@ interface payment {
     acceptedTokens: acceptedTokens[]
 }
 
-interface dbs_setting {
+interface uploader_setting {
     type: string,
     description: string
     payment: payment[]
 }
 
-interface dbsParams {
-    dbs_url: string
-    dbs_account: string
+interface uploaderParams {
+    uploader_url: string
+    uploader_account: string
 }

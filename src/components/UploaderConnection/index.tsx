@@ -2,21 +2,21 @@ import React, { useEffect } from 'react'
 import { useEthersSigner } from '../../@utils/useEthersSigner'
 
 import '../../stylesGlobal/styles.css'
-import './index.module.css'
+import styles from './index.module.css'
 import TabsFile from '../TabsFile'
 
 import {UploaderClient} from '@oceanprotocol/uploader';
 
-const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
-  const [ DBSsettings, setDBSsettings ] = React.useState([])
+const UploaderConnection = ({ uploader_url, uploader_account }: uploaderParams) => {
+  const [ uploaderSettings, setUploaderSettings ] = React.useState([])
   const [ loading, setLoading ] = React.useState(true)
   const signer = useEthersSigner()
 
   // TODO: fix any type
-  const client = new UploaderClient(dbs_url, dbs_account, signer);
+  const client = new UploaderClient(uploader_url, uploader_account, signer);
   // Fetch storage info
   useEffect(() => {
-    // Fetch storage info from DBS endpoint
+    // Fetch storage info from Uploader endpoint
     const getStorageInfo = async () => {
       try {
         const storageInfo = await client.getStorageInfo();
@@ -29,8 +29,8 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
     }
     // Fetch storage info
     getStorageInfo().then((storageInfo: any) => {
-      // TODO: fix error on DBS.js when endpoint is empty / unavailable / wrong
-      setDBSsettings(storageInfo)
+      // TODO: fix error on Uploader.js when endpoint is empty / unavailable / wrong
+      setUploaderSettings(storageInfo)
       setLoading(false)
     }).catch((err) => {
       console.log(err);
@@ -38,19 +38,18 @@ const DBSComponent = ({ dbs_url, dbs_account }: dbsParams) => {
   }, [signer])
   
   return (
-    <div className="DBSComponent">
-      <h1>Ocean Uploader</h1>  
-      { DBSsettings.length === 0 && loading && <div>Loading...</div> }
-      { DBSsettings.length > 0 && 
-        <TabsFile items={DBSsettings as dbs_setting[]} dbsClient={client} />
+    <div className={styles.UploaderConnection}>
+      { uploaderSettings.length === 0 && loading && <div>Loading...</div> }
+      { uploaderSettings.length > 0 && 
+        <TabsFile items={uploaderSettings as uploader_setting[]} uploaderClient={client} />
       }
       {
-        DBSsettings.length === 0 && !loading && (
-          <p>DBS Not available</p>
+        uploaderSettings.length === 0 && !loading && (
+          <p>Uploader Not available</p>
         )
       }
     </div>
   )
 }
 
-export default DBSComponent
+export default UploaderConnection
