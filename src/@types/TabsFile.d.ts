@@ -1,6 +1,7 @@
+import { UploaderClient } from "@oceanprotocol/uploader"
 
 interface TabsProps {
-    items: dbs_setting[]
+    items: uploader_setting[]
     className?: string
-    dbsClient: DBSClient
+    uploaderClient: UploaderClient
 }

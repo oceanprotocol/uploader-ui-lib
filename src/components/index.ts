@@ -1,3 +1,3 @@
-import DBSUploader from './DBSUploader'
+import Uploader from './Uploader'
 
-export { DBSUploader }
+export { Uploader }

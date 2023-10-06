@@ -50,7 +50,6 @@ const HistoryList = ({
             <tr>
               <th>Quote ID</th>
               <th>Status Message</th>
-              <th>Status Code</th>
               <th>DDO Link</th>
               <th>{'Preview'}</th>
             </tr>
@@ -60,7 +59,6 @@ const HistoryList = ({
               <tr key={`table_uploads_${items[tabIndex].type}_${index}`}>
                 <td>{addEllipsesToText(file.quoteId, 15)}</td>
                 <td>{getStatusMessage(file.status, items[tabIndex].type)}</td>
-                <td>{file.status}</td>
                 <td>{file?.transactionHash || file?.cid}</td>
                 <td>
                   <Button
