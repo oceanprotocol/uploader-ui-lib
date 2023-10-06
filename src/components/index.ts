@@ -1,3 +1,3 @@
-import DBSUploader from './DBSUploader'
+import DBSComponent from './DBSComponent'
 
-export { DBSUploader }
+export { DBSComponent }
