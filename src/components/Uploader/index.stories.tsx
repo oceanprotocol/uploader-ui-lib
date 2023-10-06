@@ -16,9 +16,9 @@ export default {
 const Template: StoryFn<typeof Uploader> = (args) => <Uploader {...args} />;
 
 export const UploaderArgs = Template.bind({});
-UploaderArgs.args = {
-    uploader_url: process.env.UPLOADER_URL, 
-    uploader_account: process.env.UPLOADER_ACCOUNT,
+UploaderArgs.args = { 
+    uploader_url: process.env.DBS_URL, 
+    uploader_account: process.env.DBS_ACCOUNT,
     infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
     walletConnectProjectId: process.env.PUBLIC_WALLETCONNECT_PROJECT_ID,
 };
