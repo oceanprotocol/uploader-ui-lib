@@ -218,7 +218,7 @@ export default function TabsFile({
       // Check if user has wrapped matic in their wallet
       console.log('Check if user has wrapped matic in their wallet')
       console.log('balanceData', balanceData)
-      const wmaticBalance = BigInt(balanceData as number)
+      const wmaticBalance = BigInt((balanceData as number) || 0)
       const quotePrice = BigInt(quoteResult.tokenAmount)
       if (wmaticBalance < quotePrice) {
         console.log('User does not have enough wMatic')
