@@ -1,24 +1,24 @@
-
-
-.error p, .success p {
-    color: var(--brand-white);
-    display: inline-block;
-    font-size: var(--font-size-mini);
-    line-height: 1.2;
-    font-weight: var(--font-weight-bold);
-    border-radius: var(--border-radius);
-    padding: 0.2rem 0.4rem;
-    position: absolute;
-    right: 0;
-    z-index: 1;
+.error p,
+.success p {
+  color: var(--brand-white);
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius);
+  padding: 0.2rem 0.4rem;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  top: calc(var(--spacer) * 3);
 }
 
 .error p {
-    border-color: var(--brand-alert-red);
-    background: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+  background: var(--brand-alert-red);
 }
-  
+
 .success p {
-    border-color: var(--brand-alert-green);
-    background: var(--brand-alert-green);
+  border-color: var(--brand-alert-green);
+  background: var(--brand-alert-green);
 }
