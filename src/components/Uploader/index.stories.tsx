@@ -16,6 +16,8 @@ export default {
 const Template: StoryFn<typeof Uploader> = (args) => <Uploader {...args} />;
 
 export const UploaderArgs = Template.bind({});
+console.log('Uploader starting in: ', process.env.UPLOADER_URL, process.env.UPLOADER_ACCOUNT);
+
 UploaderArgs.args = { 
     uploader_url: process.env.UPLOADER_URL, 
     uploader_account: process.env.UPLOADER_ACCOUNT,
