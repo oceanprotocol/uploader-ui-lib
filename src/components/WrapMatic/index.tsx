@@ -21,8 +21,12 @@ interface WrapMaticProps {
 export default function WrapMatic(props: WrapMaticProps) {
   const [hideButton] = useState(false)
   const { chain } = useNetwork()
+  console.log('chain?.id ', chain?.id)
   const { config } = usePrepareContractWrite({
-    address: chain?.id === 80001 ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889' : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    address:
+      chain?.id === 80001
+        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     abi: wMaticAbi,
     functionName: 'deposit',
     value: props.amount
