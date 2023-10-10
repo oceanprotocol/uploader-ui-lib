@@ -37,7 +37,7 @@ npm install
 # in case of dependency errors, rather use:
 # npm install --legacy-peer-deps
 
-npm run build:watch 
+npm run build:watch
 # to build the library and watch for changes.
 ```
 
@@ -45,34 +45,96 @@ Run `npm run build` from the root folder to build the library. This creates `dis
 would be published to npm.
 
 # if you encounter this error: Error: error:0308010C:digital envelope routines::unsupported
+
 Run `export NODE_OPTIONS=--openssl-legacy-provider` before building.
 
 ## 🚀 Usage
 
-Import and use the Uploader UI components in your app**:
+Integrating Uploader UI into your application is straightforward. The package facilitates seamless uploads but requires a wallet connector library to function optimally. Compatible wallet connection choices include [ConnectKit](https://docs.family.co/), [Web3Modal](https://web3modal.com/), [Dynamic](https://dynamic.xyz/) and [RainbowKit](https://www.rainbowkit.com/docs/installation).
+
+**Step 1:** Install the necessary packages. For instance, if you're using ConnectKit, the installation command would be:
 
 ```bash
-import { Uploader } from '@oceanprotocol/uploader-ui-lib';
-import '@oceanprotocol/uploader-ui-lib/dist/index.es.css';
-
-<Uploader 
-   uploader_url={process.env.UPLOADER_URL}
-   uploader_account={process.env.UPLOADER_ACCOUNT}
-   infuraId={process.env.PUBLIC_INFURA_PROJECT_ID}
-   walletConnectProjectId={process.env.PUBLIC_WALLETCONNECT_PROJECT_ID}
-/>
+npm install connectkit @oceanprotocol/uploader-ui-lib
 ```
 
-To enable the functionality of Ocean Uploader, the following setting variables need to be set:
+**Step 2:** Incorporate the DBSComponent from the uploader-ui-lib into your app. It's crucial to ensure the component is nested within both the WagmiConfig and ConnectKit providers. Here's a basic implementation:
 
-| Variable                | Description                                           |
-|-------------------------|-------------------------------------------------------|
-| `uploader_url`               | URL for Uploader service communication                    |
-| `uploader_account`           | Account info for Uploader authentication                  |
-| `infuraId`              | Project ID for Ethereum access via Infura            |
-| `walletConnectProjectId`| Project ID for WalletConnect integration             |
+```bash
+import React from 'react'
+import { WagmiConfig, createConfig } from 'wagmi'
+import { polygon } from 'wagmi/chains'
+import {
+  ConnectKitProvider,
+  getDefaultConfig,
+  ConnectKitButton
+} from 'connectkit'
+import DBSComponent from 'uploader-ui-lib'
 
-These variables are needed to interact with the Uploader service, provide authentication credentials, access the Ethereum network through Infura, and enable integration with WalletConnect. 
+export default function App () {
+  // Initialize the Wagmi client
+  const wagmiConfig = createConfig(
+    getDefaultConfig({
+      appName: 'Ocean Uploader UI',
+      infuraId: 'Your infura ID',
+      chains: [polygon],
+      walletConnectProjectId: 'Your wallet connect project ID'
+    })
+  )
+
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <ConnectKitProvider>
+        {/* Your App */}
+        <ConnectKitButton />
+        <DBSComponent
+          dbs_url="https://dbs.oceanprotocol.com"
+          dbs_account="0x21F2B4d705aC448c9Ff96694Dd9e5901F79f1Ab2"
+        />
+      </ConnectKitProvider>
+    </WagmiConfig>
+  )
+}
+
+```
+
+By following the steps above, you can smoothly incorporate the Uploader UI into your application while ensuring the essential providers wrap the necessary components.
+
+Alternatively, the example below shows how you could use uploader-ui-lib with RainbowKit:
+
+```bash
+import React from 'react'
+import { WagmiConfig, createConfig } from 'wagmi'
+import { polygon } from 'wagmi/chains'
+import { RainbowKitProvider, ConnectButton } from '@rainbow-me/rainbowkit';
+import DBSComponent from 'uploader-ui-lib'
+
+export default function App () {
+  // Initialize the Wagmi client
+  const wagmiConfig = createConfig(
+    getDefaultConfig({
+      appName: 'Ocean Uploader UI',
+      infuraId: 'Your infura ID',
+      chains: [polygon],
+      walletConnectProjectId: 'Your wallet connect project ID'
+    })
+  )
+
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider>
+        {/* Your App */}
+        <ConnectButton />
+        <DBSComponent
+          dbs_url="https://dbs.oceanprotocol.com"
+          dbs_account="0x21F2B4d705aC448c9Ff96694Dd9e5901F79f1Ab2"
+        />
+      </RainbowKitProvider>
+    </WagmiConfig>
+  )
+}
+
+```
 
 ** under development
 
