@@ -1,3 +1,3 @@
-import Uploader from './Uploader'
+import UploaderConnection from './UploaderConnection'
 
-export { Uploader }
+export { UploaderConnection }

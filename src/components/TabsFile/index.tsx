@@ -5,7 +5,6 @@ import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useNetwork, useContractRead } from 'wagmi'
-import { ConnectKitButton } from 'connectkit'
 import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
 import {
@@ -19,7 +18,6 @@ import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
-import { truncateAddress } from '../../@utils/truncateAddress'
 import wMaticAbi from '../WrapMatic/wMaticAbi.json'
 import WrapMatic from '../WrapMatic'
 import InputGroup from '../Input/InputGroup'
@@ -57,7 +55,6 @@ export default function TabsFile({
 
   const [historyLoading, setHistoryLoading] = useState(false)
 
-  console.log('2 - chain?.id ', chain?.id)
   const { data: balanceData } = useContractRead({
     address:
       chain?.id === 80001
@@ -97,7 +94,6 @@ export default function TabsFile({
   const [historyUnlocked, setHistoryUnlocked] = useState(false)
 
   const [step, setStep] = useState('quote')
-  console.log('STEP: ', step)
 
   const [file, setFile] = useState<File>()
   const [submitText, setSubmitText] = useState('Get Quote')
@@ -436,25 +432,6 @@ export default function TabsFile({
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       <div className={styles.headerContainer}>
-        <ConnectKitButton.Custom>
-          {({ isConnected, show, address }) => {
-            return (
-              <div className={`${styles.connection}`}>
-                <Button style="primary" size="small" onClick={show}>
-                  {isConnected ? (
-                    <span className={styles.connected} />
-                  ) : (
-                    <span className={styles.disconnected} />
-                  )}
-                  {isConnected && address
-                    ? truncateAddress(address)
-                    : 'Connect'}
-                </Button>
-              </div>
-            )
-          }}
-        </ConnectKitButton.Custom>
-
         {availableNetworks && availableNetworks?.length > 0 && (
           <Networks
             chainIds={availableNetworks}
