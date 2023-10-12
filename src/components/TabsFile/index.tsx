@@ -65,6 +65,9 @@ export default function TabsFile({
     args: [address]
   })
 
+  console.log('Check if user has wrapped matic in their wallet')
+  const wmaticBalance = BigInt((balanceData as number) || 0)
+  console.log('balance wmatic: ', balanceData)
   // Mocked data quote
   const [quote, setQuote] = useState<any>()
   const [uploadStatusResponse, setUploadStatusResponse] = useState<any>('')
@@ -109,6 +112,7 @@ export default function TabsFile({
     setTabIndex(initialState)
     setStep('quote')
     setSubmitText('Get Quote')
+    setQuote('')
     setFile(undefined)
     setDDOLink('')
     setUploadStatusResponse('')
@@ -216,9 +220,6 @@ export default function TabsFile({
       setQuote(quoteResult)
 
       // Check if user has wrapped matic in their wallet
-      console.log('Check if user has wrapped matic in their wallet')
-      console.log('balanceData', balanceData)
-      const wmaticBalance = BigInt((balanceData as number) || 0)
       const quotePrice = BigInt(quoteResult.tokenAmount)
       if (wmaticBalance < quotePrice) {
         console.log('User does not have enough wMatic')
@@ -304,7 +305,7 @@ export default function TabsFile({
       console.log('Upload Error: ', error)
       setErrorUpload(true)
       setErrorMessage('File uploaded failed!')
-      resetTabs()
+      // resetTabs()
     }
   }
 
@@ -429,6 +430,10 @@ export default function TabsFile({
     setHistoryList(mockedDataHistory)
   }, [items[tabIndex].type])
 
+  useEffect(() => {
+    resetTabs()
+  }, [address])
+
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       <div className={styles.headerContainer}>
@@ -501,7 +506,7 @@ export default function TabsFile({
                           .filter(
                             (item: any) => item.chainId === chain?.id.toString()
                           )[0]
-                          .acceptedTokens.filter(
+                          ?.acceptedTokens.filter(
                             (item: any) => item.value === paymentSelected
                           )[0].title
                       }`}
@@ -560,7 +565,7 @@ export default function TabsFile({
                         !isNetworkSupported
                           ? isConnected
                             ? 'Network not supported'
-                            : 'Connect to network'
+                            : 'Connect wallet'
                           : errorMessage
                       }
                       handleUpload={handleUpload}

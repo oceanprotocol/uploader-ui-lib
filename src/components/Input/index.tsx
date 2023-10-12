@@ -2,17 +2,19 @@ import React, { useEffect, useRef } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import { InputField } from '../FileUploadSingle'
+import { useAccount } from 'wagmi'
 
 const cx = classNames.bind(styles)
 
 const DefaultInput = ({ size, className, file, ...props }: InputField) => {
+  const { address } = useAccount()
   const ref = useRef() as any
 
   useEffect(() => {
     if (!file) {
       ref.current.value = ''
     }
-  }, [file])
+  }, [file, address])
 
   return (
     <input
