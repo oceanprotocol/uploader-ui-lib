@@ -508,7 +508,7 @@ export default function TabsFile({
                           )[0]
                           ?.acceptedTokens.filter(
                             (item: any) => item.value === paymentSelected
-                          )[0].title
+                          )[0]?.title
                       }`}
                     </Button>
                   )}
