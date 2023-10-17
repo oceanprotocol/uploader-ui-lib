@@ -274,6 +274,7 @@ export default function TabsFile({
       }
       await new Promise((resolve) => setTimeout(resolve, 2000))
     }
+    if (!keepLoading) return
   }
 
   const getUpload = async ({
@@ -299,7 +300,11 @@ export default function TabsFile({
         completeUpload(quoteId)
       } else {
         setUploadIsLoading(false)
-        throw new Error(quoteAndUploadResult?.data || 'File uploaded failed!')
+        throw new Error(
+          quoteAndUploadResult?.data ||
+            quoteAndUploadResult?.response?.data ||
+            'File uploaded failed!'
+        )
       }
     } catch (error) {
       console.log('Upload Error: ', error)
@@ -571,7 +576,10 @@ export default function TabsFile({
                       handleUpload={handleUpload}
                       isLoading={uploadIsLoading}
                       isButtonDisabled={
-                        !isConnected || !file || !isNetworkSupported
+                        !isConnected ||
+                        !file ||
+                        !isNetworkSupported ||
+                        !!ddoLink
                       }
                       inputDisabled={!isConnected || !isNetworkSupported}
                       handleFileChange={handleFileChange}
