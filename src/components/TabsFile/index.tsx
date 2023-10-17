@@ -4,7 +4,7 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork, useContractRead } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
 import {
@@ -18,6 +18,10 @@ import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
+import wMaticAbi from '../WrapMatic/wMaticAbi.json'
+import WrapMatic from '../WrapMatic'
+import InputGroup from '../Input/InputGroup'
+import DefaultInput from '../Input'
 import { TabsProps } from '../../@types/TabsFile'
 
 export default function TabsFile({
@@ -27,6 +31,7 @@ export default function TabsFile({
 }: TabsProps): ReactElement {
   const [values, setFieldValue] = useState() as any
   const initialState = () => {
+    if (!items) return 0
     const index = items.findIndex((tab: any) => {
       if (!values?.type) return 0
       return tab.type === values.type
@@ -50,6 +55,19 @@ export default function TabsFile({
 
   const [historyLoading, setHistoryLoading] = useState(false)
 
+  const { data: balanceData } = useContractRead({
+    address:
+      chain?.id === 80001
+        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    abi: wMaticAbi,
+    functionName: 'balanceOf',
+    args: [address]
+  })
+
+  console.log('Check if user has wrapped matic in their wallet')
+  const wmaticBalance = BigInt((balanceData as number) || 0)
+  console.log('balance wmatic: ', balanceData)
   // Mocked data quote
   const [quote, setQuote] = useState<any>()
   const [uploadStatusResponse, setUploadStatusResponse] = useState<any>('')
@@ -94,6 +112,7 @@ export default function TabsFile({
     setTabIndex(initialState)
     setStep('quote')
     setSubmitText('Get Quote')
+    setQuote('')
     setFile(undefined)
     setDDOLink('')
     setUploadStatusResponse('')
@@ -181,7 +200,14 @@ export default function TabsFile({
     fileInfo
   }: GetQuoteArgs) => {
     try {
-      console.log('quoting: ', { type, duration, payment, userAddress, filePath, fileInfo });
+      console.log('quoting: ', {
+        type,
+        duration,
+        payment,
+        userAddress,
+        filePath,
+        fileInfo
+      })
       const quoteResult: GetQuoteResult = await uploaderClient.getQuote({
         type,
         duration,
@@ -192,7 +218,16 @@ export default function TabsFile({
       })
       console.log('Quote result:', quoteResult)
       setQuote(quoteResult)
-      setStep('upload')
+
+      // Check if user has wrapped matic in their wallet
+      const quotePrice = BigInt(quoteResult.tokenAmount)
+      if (wmaticBalance < quotePrice) {
+        console.log('User does not have enough wMatic')
+        setStep('wrapMatic')
+      } else {
+        console.log('User has enough wMatic')
+        setStep('upload')
+      }
     } catch (error) {
       console.log(error)
       setErrorUpload(true)
@@ -203,7 +238,7 @@ export default function TabsFile({
 
   async function getStatus(quoteId: string) {
     try {
-      console.log('get status: ', { quoteId });
+      console.log('get status: ', { quoteId })
       const statusResult: GetStatusResult = await uploaderClient.getStatus(
         quoteId
       )
@@ -249,7 +284,7 @@ export default function TabsFile({
     type
   }: any) => {
     try {
-      console.log('uploading: ', { quoteId, payment, quoteFee, files, type});
+      console.log('uploading: ', { quoteId, payment, quoteFee, files, type })
       const quoteAndUploadResult: any = await uploaderClient.uploadBrowser(
         quoteId,
         payment,
@@ -270,13 +305,13 @@ export default function TabsFile({
       console.log('Upload Error: ', error)
       setErrorUpload(true)
       setErrorMessage('File uploaded failed!')
-      resetTabs()
+      // resetTabs()
     }
   }
 
   const getDDOlink = async (quoteId: any) => {
     try {
-      console.log('get DDO link: ', quoteId);
+      console.log('get DDO link: ', quoteId)
       const linkResult: GetLinkResult[] = await uploaderClient.getLink(quoteId)
       console.log('ddo link result:', linkResult)
       setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '')
@@ -294,13 +329,13 @@ export default function TabsFile({
   }
 
   const handleUpload = async () => {
-    setUploadIsLoading(true)
     if (!file) {
       return
     }
 
     switch (step) {
       case 'quote':
+        setUploadIsLoading(true)
         // Fetch a quote
         await getQuote({
           type: items[tabIndex].type,
@@ -315,6 +350,7 @@ export default function TabsFile({
         })
         break
       case 'upload':
+        setUploadIsLoading(true)
         // Upload File
         await getUpload({
           quoteId: quote.quoteId,
@@ -325,6 +361,7 @@ export default function TabsFile({
         })
         break
       case 'ddoLink':
+        setUploadIsLoading(true)
         // Get DDO Link
         await getDDOlink(quote.quoteId)
         break
@@ -341,9 +378,13 @@ export default function TabsFile({
   }
 
   useEffect(() => {
+    console.log('UseEffect STEP: ', step)
     switch (step) {
       case 'quote':
         setSubmitText('Get Quote')
+        break
+      case 'wrapMatic':
+        setSubmitText('Wrap Matic')
         break
       case 'upload':
         setSubmitText('Upload File')
@@ -363,7 +404,11 @@ export default function TabsFile({
   ) => {
     setHistoryLoading(true)
     try {
-      const historyList = await uploaderClient.getHistory(pageNumber, pageSize, service)
+      const historyList = await uploaderClient.getHistory(
+        pageNumber,
+        pageSize,
+        service
+      )
       console.log('history result: ', historyList)
       setTotalPagesHistory(historyList?.maxPages)
       setHistoryList(historyList?.data)
@@ -385,10 +430,14 @@ export default function TabsFile({
     setHistoryList(mockedDataHistory)
   }, [items[tabIndex].type])
 
+  useEffect(() => {
+    resetTabs()
+  }, [address])
+
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
       <div className={styles.headerContainer}>
-        {availableNetworks && availableNetworks.length > 0 && (
+        {availableNetworks && availableNetworks?.length > 0 && (
           <Networks
             chainIds={availableNetworks}
             paymentSelected={paymentSelected}
@@ -405,7 +454,7 @@ export default function TabsFile({
 
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
-          {items.length > 0 &&
+          {items?.length > 0 &&
             items.map((item, index) => {
               return (
                 <Tab
@@ -426,7 +475,7 @@ export default function TabsFile({
         </TabList>
       </div>
       <div className={styles.tabContent}>
-        {items.length > 0 &&
+        {items?.length > 0 &&
           items.map((item, index) => {
             return (
               <TabPanel
@@ -441,27 +490,28 @@ export default function TabsFile({
                   />
                 }
 
-                {step === 'upload' && !uploadStatusResponse && (
-                  <Button
-                    style="primary"
-                    className={styles.priceLabel}
-                    size="small"
-                    onClick={(e: React.SyntheticEvent) => {
-                      e.preventDefault()
-                    }}
-                    disabled={false}
-                  >
-                    {`${formatEther(`${quote.tokenAmount}`)} ${
-                      items[tabIndex].payment
-                        .filter(
-                          (item: any) => item.chainId === chain?.id.toString()
-                        )[0]
-                        .acceptedTokens.filter(
-                          (item: any) => item.value === paymentSelected
-                        )[0].title
-                    }`}
-                  </Button>
-                )}
+                {(step === 'upload' || step === 'wrapMatic') &&
+                  !uploadStatusResponse && (
+                    <Button
+                      style="primary"
+                      className={styles.priceLabel}
+                      size="small"
+                      onClick={(e: React.SyntheticEvent) => {
+                        e.preventDefault()
+                      }}
+                      disabled={false}
+                    >
+                      {`${formatEther(`${quote.tokenAmount}`)} ${
+                        items[tabIndex].payment
+                          .filter(
+                            (item: any) => item.chainId === chain?.id.toString()
+                          )[0]
+                          ?.acceptedTokens.filter(
+                            (item: any) => item.value === paymentSelected
+                          )[0]?.title
+                      }`}
+                    </Button>
+                  )}
 
                 {uploadStatusResponse && (
                   <Button
@@ -490,29 +540,46 @@ export default function TabsFile({
                     {ddoLink}
                   </Button>
                 )}
-
-                <FileUploadSingle
-                  {...item}
-                  name={item.type}
-                  key={`file_uploader_${items[tabIndex].type}_${index}`}
-                  error={isNetworkSupported === false || errorUpload}
-                  errorMessage={
-                    !isNetworkSupported
-                      ? isConnected
-                        ? 'Network not supported'
-                        : 'Connect to network'
-                      : errorMessage
-                  }
-                  handleUpload={handleUpload}
-                  isLoading={uploadIsLoading}
-                  isButtonDisabled={
-                    !isConnected || !file || !isNetworkSupported
-                  }
-                  inputDisabled={!isConnected || !isNetworkSupported}
-                  handleFileChange={handleFileChange}
-                  file={file}
-                  submitText={submitText}
-                />
+                <InputGroup>
+                  <DefaultInput
+                    handleFileChange={handleFileChange}
+                    handleUpload={handleUpload}
+                    name={item.type}
+                  />
+                  {step === 'wrapMatic' ? (
+                    <WrapMatic
+                      setStep={setStep}
+                      amount={BigInt(quote.tokenAmount)}
+                      name={item.type}
+                      handleFileChange={handleFileChange}
+                      handleUpload={handleUpload}
+                      file={file}
+                    />
+                  ) : (
+                    <FileUploadSingle
+                      {...item}
+                      name={item.type}
+                      key={`file_uploader_${items[tabIndex].type}_${index}`}
+                      error={isNetworkSupported === false || errorUpload}
+                      errorMessage={
+                        !isNetworkSupported
+                          ? isConnected
+                            ? 'Network not supported'
+                            : 'Connect wallet'
+                          : errorMessage
+                      }
+                      handleUpload={handleUpload}
+                      isLoading={uploadIsLoading}
+                      isButtonDisabled={
+                        !isConnected || !file || !isNetworkSupported
+                      }
+                      inputDisabled={!isConnected || !isNetworkSupported}
+                      handleFileChange={handleFileChange}
+                      file={file}
+                      submitText={submitText}
+                    />
+                  )}
+                </InputGroup>
 
                 <br />
 

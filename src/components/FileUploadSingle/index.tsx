@@ -1,9 +1,7 @@
-import React, { ReactNode }  from 'react';
-import { ChangeEvent, useState } from 'react';
-import InputGroup from '../Input/InputGroup';
-import DefaultInput from '../Input';
-import Button from '../Button';
-import Loader from '../Loader';
+import React, { ReactNode } from 'react'
+import { ChangeEvent, useState } from 'react'
+import Button from '../Button'
+import Loader from '../Loader'
 import styles from './index.module.css'
 
 export interface InputField {
@@ -26,35 +24,25 @@ export interface InputField {
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-function FileUploadSingle({
-  ...props
-}: InputField) {
-  
-  const [hideButton] = useState(false);
+function FileUploadSingle({ ...props }: InputField) {
+  const [hideButton] = useState(false)
+  console.log('InputField is loading', props.isLoading)
 
   return (
     <>
-      <InputGroup>
-        <DefaultInput
-          onChange={props.handleFileChange}
-          {...props}
-          name={props.name}
-        />
-
-        {!hideButton && (
-          <Button
-            style="primary"
-            size="small"
-            onClick={(e: React.SyntheticEvent) => {
-              e.preventDefault()
-              props.handleUpload()
-            }}
-            disabled={props.isButtonDisabled}
-          >
-            {props.isLoading ? <Loader /> : props.submitText}
-          </Button>
-        )}
-      </InputGroup>
+      {!hideButton && (
+        <Button
+          style="primary"
+          size="small"
+          onClick={(e: React.SyntheticEvent) => {
+            e.preventDefault()
+            props.handleUpload()
+          }}
+          disabled={props.isButtonDisabled}
+        >
+          {props.isLoading ? <Loader /> : props.submitText}
+        </Button>
+      )}
 
       {props.error && (
         <div className={styles.error}>
@@ -62,7 +50,7 @@ function FileUploadSingle({
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default FileUploadSingle;
+export default FileUploadSingle
