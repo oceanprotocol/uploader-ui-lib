@@ -73,6 +73,7 @@ export default function TabsFile({
   const [uploadStatusResponse, setUploadStatusResponse] = useState<any>('')
   const [ddoLink, setDDOLink] = useState('')
 
+  console.log('quote tokenAmount', quote)
   const mockedDataHistory = [
     {
       quoteId: '93254d6a389ca6eb07ff548810b27eb1',
@@ -218,6 +219,8 @@ export default function TabsFile({
       })
       console.log('Quote result:', quoteResult)
       setQuote(quoteResult)
+      console.log('quoteResult.tokenAmount', quoteResult.tokenAmount)
+      console.log('quote tokenAmount', quote)
 
       // Check if user has wrapped matic in their wallet
       const quotePrice = BigInt(quoteResult.tokenAmount)
@@ -286,10 +289,12 @@ export default function TabsFile({
   }: any) => {
     try {
       console.log('uploading: ', { quoteId, payment, quoteFee, files, type })
+      console.log('String(quoteFee)', String(quoteFee))
+      const newQuoteFee = BigInt(quoteFee) + BigInt(3000000000000000)
       const quoteAndUploadResult: any = await uploaderClient.uploadBrowser(
         quoteId,
         payment,
-        String(quoteFee),
+        String(newQuoteFee),
         files as FileList,
         type
       )
@@ -357,6 +362,7 @@ export default function TabsFile({
       case 'upload':
         setUploadIsLoading(true)
         // Upload File
+        console.log('String(quote.tokenAmount)', String(quote.tokenAmount))
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
