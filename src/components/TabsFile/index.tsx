@@ -221,6 +221,8 @@ export default function TabsFile({
 
       // Check if user has wrapped matic in their wallet
       const quotePrice = BigInt(quoteResult.tokenAmount)
+      console.log('quote price: ', quotePrice)
+
       if (wmaticBalance < quotePrice) {
         console.log('User does not have enough wMatic')
         setStep('wrapMatic')
@@ -297,7 +299,12 @@ export default function TabsFile({
       if (quoteAndUploadResult?.status === 200) {
         // setUploadResponse(quoteAndUploadResult);
         // CHECK status until it's 400 (upload completed)
-        completeUpload(quoteId)
+        try {
+          completeUpload(quoteId)
+        } catch (error) {
+          setErrorUpload(true)
+          setErrorMessage('File uploaded failed!')
+        }
       } else {
         setUploadIsLoading(false)
         throw new Error(
