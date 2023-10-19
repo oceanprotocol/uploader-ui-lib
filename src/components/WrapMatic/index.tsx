@@ -7,7 +7,8 @@ import {
   useWaitForTransaction,
   useNetwork,
   useAccount,
-  useBalance
+  useBalance,
+  useContractRead
 } from 'wagmi'
 import wMaticAbi from './wMaticAbi.json'
 
@@ -29,6 +30,16 @@ export default function WrapMatic(props: WrapMaticProps) {
 
   const { data: balanceWallet } = useBalance({
     address: address
+  })
+
+  const { data: wmaticBalanceData } = useContractRead({
+    address:
+      chain?.id === 80001
+        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    abi: wMaticAbi,
+    functionName: 'balanceOf',
+    args: [address]
   })
 
   const { config } = usePrepareContractWrite({
@@ -56,7 +67,11 @@ export default function WrapMatic(props: WrapMaticProps) {
     if (isSuccess) {
       console.log('isSuccess', isSuccess)
       console.log('isPending', isPending)
-      props.setStep('upload')
+      console.log('Check if user has wrapped matic in their wallet')
+      const wmaticBalance = BigInt((wmaticBalanceData as number) || 0)
+      if (wmaticBalance >= props.amount) {
+        props.setStep('upload')
+      }
     }
   }, [isSuccess])
 
