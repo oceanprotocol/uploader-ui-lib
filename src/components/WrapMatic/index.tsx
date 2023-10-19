@@ -7,8 +7,7 @@ import {
   useWaitForTransaction,
   useNetwork,
   useAccount,
-  useBalance,
-  useContractRead
+  useBalance
 } from 'wagmi'
 import wMaticAbi from './wMaticAbi.json'
 
