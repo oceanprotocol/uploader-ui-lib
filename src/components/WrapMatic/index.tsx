@@ -24,6 +24,7 @@ interface WrapMaticProps {
 export default function WrapMatic(props: WrapMaticProps) {
   const [hideButton] = useState(false)
   const [error, setError] = useState(false)
+  const [wmatic, setWmatic] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const { chain } = useNetwork()
   const { address } = useAccount()
@@ -70,10 +71,11 @@ export default function WrapMatic(props: WrapMaticProps) {
       console.log('Check if user has wrapped matic in their wallet')
       const wmaticBalance = BigInt((wmaticBalanceData as number) || 0)
       if (wmaticBalance >= props.amount) {
+        setWmatic(true)
         props.setStep('upload')
       }
     }
-  }, [isSuccess])
+  }, [isSuccess, wmaticBalanceData])
 
   useEffect(() => {
     if (!balanceWallet?.value || balanceWallet.value < props.amount) {
@@ -88,7 +90,7 @@ export default function WrapMatic(props: WrapMaticProps) {
 
   return (
     <>
-      {!hideButton && !isSuccess && (
+      {!hideButton && !wmatic && (
         <Button
           style="primary"
           size="small"
@@ -104,6 +106,8 @@ export default function WrapMatic(props: WrapMaticProps) {
             ? 'Check Wallet...'
             : isPending
             ? 'TX Pending...'
+            : isSuccess
+            ? '...'
             : 'Wrap Matic'}
         </Button>
       )}
