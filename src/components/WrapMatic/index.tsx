@@ -24,23 +24,12 @@ interface WrapMaticProps {
 export default function WrapMatic(props: WrapMaticProps) {
   const [hideButton] = useState(false)
   const [error, setError] = useState(false)
-  const [wmatic, setWmatic] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const { chain } = useNetwork()
   const { address } = useAccount()
 
   const { data: balanceWallet } = useBalance({
     address: address
-  })
-
-  const { data: wmaticBalanceData } = useContractRead({
-    address:
-      chain?.id === 80001
-        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
-        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-    abi: wMaticAbi,
-    functionName: 'balanceOf',
-    args: [address]
   })
 
   const { config } = usePrepareContractWrite({
@@ -68,14 +57,9 @@ export default function WrapMatic(props: WrapMaticProps) {
     if (isSuccess) {
       console.log('isSuccess', isSuccess)
       console.log('isPending', isPending)
-      console.log('Check if user has wrapped matic in their wallet')
-      const wmaticBalance = BigInt((wmaticBalanceData as number) || 0)
-      if (wmaticBalance >= props.amount) {
-        setWmatic(true)
-        props.setStep('upload')
-      }
+      props.setStep('upload')
     }
-  }, [isSuccess, wmaticBalanceData])
+  }, [isSuccess])
 
   useEffect(() => {
     if (!balanceWallet?.value || balanceWallet.value < props.amount) {
@@ -90,7 +74,7 @@ export default function WrapMatic(props: WrapMaticProps) {
 
   return (
     <>
-      {!hideButton && !wmatic && (
+      {!hideButton && !isSuccess && (
         <Button
           style="primary"
           size="small"
@@ -106,8 +90,6 @@ export default function WrapMatic(props: WrapMaticProps) {
             ? 'Check Wallet...'
             : isPending
             ? 'TX Pending...'
-            : isSuccess
-            ? '...'
             : 'Wrap Matic'}
         </Button>
       )}
