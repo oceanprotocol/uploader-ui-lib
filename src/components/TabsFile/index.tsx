@@ -70,6 +70,7 @@ export default function TabsFile({
   console.log('balance wmatic: ', balanceData)
   // Mocked data quote
   const [quote, setQuote] = useState<any>()
+  const [quoteWithBuffer, setQuoteWithBuffer] = useState<string>()
   const [uploadStatusResponse, setUploadStatusResponse] = useState<any>('')
   const [ddoLink, setDDOLink] = useState('')
 
@@ -222,9 +223,14 @@ export default function TabsFile({
       console.log('quoteResult.tokenAmount', quoteResult.tokenAmount)
       console.log('quote tokenAmount', quote)
 
+      // Add buffer to the quote amount
+      const newQuoteFee =
+        BigInt(quoteResult.tokenAmount) + BigInt(50000000000000000)
+
+      setQuoteWithBuffer(String(newQuoteFee))
+
       // Check if user has wrapped matic in their wallet
-      const quotePrice = BigInt(quoteResult.tokenAmount)
-      if (wmaticBalance < quotePrice) {
+      if (wmaticBalance < newQuoteFee) {
         console.log('User does not have enough wMatic')
         setStep('wrapMatic')
       } else {
@@ -290,11 +296,10 @@ export default function TabsFile({
     try {
       console.log('uploading: ', { quoteId, payment, quoteFee, files, type })
       console.log('String(quoteFee)', String(quoteFee))
-      const newQuoteFee = BigInt(quoteFee) + BigInt(3000000000000000)
       const quoteAndUploadResult: any = await uploaderClient.uploadBrowser(
         quoteId,
         payment,
-        String(newQuoteFee),
+        String(quoteFee),
         files as FileList,
         type
       )
@@ -366,7 +371,7 @@ export default function TabsFile({
         await getUpload({
           quoteId: quote.quoteId,
           payment: quote.tokenAddress,
-          quoteFee: String(quote.tokenAmount),
+          quoteFee: String(quoteWithBuffer),
           files: [file] as unknown as FileList,
           type: items[tabIndex].type
         })
@@ -512,7 +517,7 @@ export default function TabsFile({
                       }}
                       disabled={false}
                     >
-                      {`${formatEther(`${quote.tokenAmount}`)} ${
+                      {`${formatEther(`${quoteWithBuffer}`)} ${
                         items[tabIndex].payment
                           .filter(
                             (item: any) => item.chainId === chain?.id.toString()
@@ -560,7 +565,7 @@ export default function TabsFile({
                   {step === 'wrapMatic' ? (
                     <WrapMatic
                       setStep={setStep}
-                      amount={BigInt(quote.tokenAmount)}
+                      amount={BigInt(quoteWithBuffer as string)}
                       name={item.type}
                       handleFileChange={handleFileChange}
                       handleUpload={handleUpload}
