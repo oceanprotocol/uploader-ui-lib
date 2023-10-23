@@ -136,7 +136,7 @@ export default function App () {
 
 ```
 
-** under development
+\*\* under development
 
 ## NextJS Setup for Ocean Protocol Uploader UI Library
 
@@ -145,17 +145,18 @@ To configure NextJS for the integration of Ocean's Uploader UI library, modify y
 ```javascript
 module.exports = {
   webpack: (config) => {
-    config.resolve.fallback = { 
+    config.resolve.fallback = {
       fs: false,
       process: false,
       net: false,
       tls: false
-    };
-    return config;
-  },
-};
+    }
+    return config
+  }
+}
 ```
-** add these fallbacks to avoid any issue related to webpack 5 Polyfills imcompatibility: https://github.com/webpack/changelog-v5#automatic-nodejs-polyfills-removed
+
+\*\* add these fallbacks to avoid any issue related to webpack 5 Polyfills imcompatibility: https://github.com/webpack/changelog-v5#automatic-nodejs-polyfills-removed
 
 install dependencies:
 
@@ -164,6 +165,7 @@ install dependencies:
 ```
 
 Import the library's CSS into your project:
+
 ```javascript
 > import '@oceanprotocol/uploader-ui-lib/dist/index.es.css';
 ```
@@ -181,7 +183,7 @@ When incorporating the Uploader component into your application, make sure to se
 
 ```javascript
 'use client'
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
 ```
 
 This comprehensive setup ensures the proper integration and functioning of the Ocean Protocol's Uploader UI library within a NextJS application.
@@ -263,6 +265,26 @@ We welcome contributions in form of bug reports, feature requests, code changes,
 - [**Ways to Contribute →**](https://docs.oceanprotocol.com/contribute)
 - [Code of Conduct →](https://docs.oceanprotocol.com/contribute/code-of-conduct)
 - [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/contribute#report-vulnerabilities)
+
+## ⬆️ Releases
+
+Releases are managed semi-automatically. They are always manually triggered from a developer's machine with release scripts.
+
+For the GitHub releases steps a GitHub personal access token, exported as `GITHUB_TOKEN` is required. [Setup](https://github.com/release-it/release-it#github-releases)
+
+```bash
+export GITHUB_TOKEN="ghp_abc123abc123abc123abc123abc123abc123"
+npm run release
+```
+
+The task does the following:
+
+- bumps the project version in `package.json`, `package-lock.json`
+- auto-generates and updates the CHANGELOG.md file from commit messages
+- creates a Git tag
+- commits and pushes everything
+- creates a GitHub release with commit messages as description
+- Git tag push will trigger a GitHub Action workflow to do a npm release
 
 ## 🏛 License
 
