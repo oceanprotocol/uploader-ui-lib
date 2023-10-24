@@ -27,13 +27,9 @@ export default function WrapMatic(props: WrapMaticProps) {
   const { chain } = useNetwork()
   const { address } = useAccount()
 
-  if (!address) return null
-  console.log('address', address)
-
   const { data: balanceWallet, isSuccess: balanceSuccess } = useBalance({
     address: address
   })
-  console.log('balance Wallet', balanceWallet)
 
   const { config } = usePrepareContractWrite({
     address:
