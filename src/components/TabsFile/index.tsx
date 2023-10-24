@@ -219,6 +219,7 @@ export default function TabsFile({
         fileInfo
       })
       console.log('Quote result:', quoteResult)
+      setUploadStatusResponse('')
       setQuote(quoteResult)
       console.log('quoteResult.tokenAmount', quoteResult.tokenAmount)
       console.log('quote tokenAmount', quote)
@@ -228,7 +229,6 @@ export default function TabsFile({
         BigInt(quoteResult.tokenAmount) + BigInt(50000000000000000)
 
       setQuoteWithBuffer(String(newQuoteFee))
-
       // Check if user has wrapped matic in their wallet
       if (wmaticBalance < newQuoteFee) {
         console.log('User does not have enough wMatic')
@@ -279,6 +279,8 @@ export default function TabsFile({
       // check if there's any failure
       if (status == 200 || status == 401 || status == 404) {
         keepLoading = false
+        setStep('quote')
+        setUploadIsLoading(false)
         throw new Error('File uploaded failed!')
       }
       await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -307,7 +309,12 @@ export default function TabsFile({
       if (quoteAndUploadResult?.status === 200) {
         // setUploadResponse(quoteAndUploadResult);
         // CHECK status until it's 400 (upload completed)
-        completeUpload(quoteId)
+        try {
+          completeUpload(quoteId)
+        } catch (error) {
+          setErrorUpload(true)
+          setErrorMessage('File uploaded failed!')
+        }
       } else {
         setUploadIsLoading(false)
         throw new Error(
