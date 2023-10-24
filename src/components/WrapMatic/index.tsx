@@ -27,9 +27,13 @@ export default function WrapMatic(props: WrapMaticProps) {
   const { chain } = useNetwork()
   const { address } = useAccount()
 
-  const { data: balanceWallet } = useBalance({
+  if (!address) return null
+  console.log('address', address)
+
+  const { data: balanceWallet, isSuccess: balanceSuccess } = useBalance({
     address: address
   })
+  console.log('balance Wallet', balanceWallet)
 
   const { config } = usePrepareContractWrite({
     address:
@@ -62,7 +66,17 @@ export default function WrapMatic(props: WrapMaticProps) {
   }, [isSuccess])
 
   useEffect(() => {
-    if (!balanceWallet?.value || balanceWallet.value < props.amount) {
+    if (
+      balanceSuccess &&
+      balanceWallet?.value &&
+      balanceWallet?.value > props.amount
+    ) {
+      setError(false)
+      setErrorMessage('')
+    } else if (
+      balanceSuccess &&
+      (!balanceWallet?.value || balanceWallet.value < props.amount)
+    ) {
       setError(true)
       setErrorMessage('Not enough matic!')
     } else if (wmaticIsError) {
