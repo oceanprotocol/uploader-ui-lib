@@ -232,8 +232,6 @@ export default function TabsFile({
       // Check if user has wrapped matic in their wallet
       if (wmaticBalance < newQuoteFee) {
         console.log('User does not have enough wMatic')
-        setErrorUpload(true)
-        setErrorMessage('Not enough wMatic!')
         setStep('wrapMatic')
       } else {
         console.log('User has enough wMatic')
