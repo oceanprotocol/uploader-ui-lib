@@ -5,7 +5,6 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useNetwork,
   useAccount,
   useBalance
 } from 'wagmi'
