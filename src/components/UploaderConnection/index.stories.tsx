@@ -26,7 +26,9 @@ const Template: StoryFn<typeof UploaderConnection> = (args) => {
     getDefaultConfig({
       appName: 'Ocean Uploader UI',
       infuraId: process.env.PUBLIC_INFURA_PROJECT_ID,
-      chains: [polygon, polygonMumbai],
+      chains: process.env.ENABLE_DEVELOPMENT
+        ? [polygon, polygonMumbai]
+        : [polygon],
       walletConnectProjectId: 'Your wallet connect project ID'
     })
   )
