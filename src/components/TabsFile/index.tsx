@@ -233,7 +233,9 @@ export default function TabsFile({
       const formatedBalance =
         Number(tokenBalance) / 10 ** (tokenInfo?.decimals || 18)
       const formatedQuote = Number(newQuoteFee) / 10 ** 18 // quote is always 18 decimals
-      if (formatedBalance > formatedQuote) {
+      console.log(formatedBalance, formatedQuote)
+
+      if (formatedBalance < formatedQuote) {
         console.log('User does not have tokens')
         setStep('wrapMatic')
       } else {
