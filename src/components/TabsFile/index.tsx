@@ -22,7 +22,7 @@ import WrapMatic from '../WrapMatic'
 import InputGroup from '../Input/InputGroup'
 import DefaultInput from '../Input'
 import { TabsProps } from '../../@types/TabsFile'
-
+import wMaticAbi from '../WrapMatic/wMaticAbi.json'
 export default function TabsFile({
   items,
   className,
@@ -57,14 +57,20 @@ export default function TabsFile({
   const { data: balanceData } = useContractRead({
     address: paymentSelected as `0x${string}`,
     functionName: 'balanceOf',
+    abi: wMaticAbi,
     args: [address]
   })
+
+  console.log(balanceData, paymentSelected, address)
+  useEffect(() => {
+    console.log(balanceData)
+  }, [balanceData])
 
   const { data: tokenInfo } = useToken({
     address: paymentSelected as `0x${string}`
   })
 
-  console.log('Check if user has wrapped matic in their wallet')
+  console.log('Check if user has enought tokens in their wallet')
   const tokenBalance = BigInt((balanceData as number) || 0)
   console.log('balance token: ', balanceData)
   // Mocked data quote
