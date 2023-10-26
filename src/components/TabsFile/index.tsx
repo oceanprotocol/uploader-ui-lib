@@ -14,7 +14,7 @@ import {
   GetStatusResult
 } from '@oceanprotocol/uploader'
 import Networks from '../Networks'
-import { formatEther } from '@ethersproject/units'
+import { formatEther, parseEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
@@ -61,18 +61,13 @@ export default function TabsFile({
     args: [address]
   })
 
-  console.log(balanceData, paymentSelected, address)
-  useEffect(() => {
-    console.log(balanceData)
-  }, [balanceData])
-
   const { data: tokenInfo } = useToken({
     address: paymentSelected as `0x${string}`
   })
 
   console.log('Check if user has enought tokens in their wallet')
   const tokenBalance = BigInt((balanceData as number) || 0)
-  console.log('balance token: ', balanceData)
+
   // Mocked data quote
   const [quote, setQuote] = useState<any>()
   const [quoteWithBuffer, setQuoteWithBuffer] = useState<string>()
@@ -230,15 +225,15 @@ export default function TabsFile({
       console.log('quote tokenAmount', quote)
 
       // Add buffer to the quote amount
-      const newQuoteFee =
-        BigInt(quoteResult.tokenAmount) + BigInt(50000000000000000)
+      const newQuoteFee = BigInt(quoteResult.tokenAmount)
 
       setQuoteWithBuffer(String(newQuoteFee))
       // Check if user has wrapped matic in their wallet
       // ensure we can handle tokens with different decimals
+      const formatedQuote = Number(newQuoteFee) / 10 ** 18 // quote is always 18 decimals
       const formatedBalance =
         Number(tokenBalance) / 10 ** (tokenInfo?.decimals || 18)
-      const formatedQuote = Number(newQuoteFee) / 10 ** 18 // quote is always 18 decimals
+      // FOR TESTING: const normalizedBalance = parseEther(formatedBalance.toString()).toString()
       if (formatedBalance < formatedQuote) {
         console.log('User does not have tokens')
         setStep('wrapMatic')
