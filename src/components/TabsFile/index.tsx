@@ -14,7 +14,7 @@ import {
   GetStatusResult
 } from '@oceanprotocol/uploader'
 import Networks from '../Networks'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
