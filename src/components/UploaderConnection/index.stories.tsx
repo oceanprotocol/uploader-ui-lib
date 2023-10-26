@@ -21,7 +21,7 @@ export default {
 } as Meta<typeof UploaderConnection>
 
 const Template: StoryFn<typeof UploaderConnection> = (args) => {
-  // Initialize the Wagmi client
+  // initialize the Wagmi client
   const wagmiConfig = createConfig(
     getDefaultConfig({
       appName: 'Ocean Uploader UI',
