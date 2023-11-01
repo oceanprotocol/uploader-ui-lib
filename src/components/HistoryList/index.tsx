@@ -119,6 +119,7 @@ const HistoryList = ({
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
+          onRefresh={getHistoryList}
           onPageChange={(page: number) => {
             setCurrentPage(page)
           }}
