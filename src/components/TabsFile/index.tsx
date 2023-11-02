@@ -274,7 +274,24 @@ export default function TabsFile({
       if (status == 400) {
         keepLoading = false
         setStep('ddoLink')
-        setUploadIsLoading(false)
+        await getDDOlink(quote.quoteId).then((linkResult) => {
+          // add to history list
+          const recordAdded = {
+            type: items[tabIndex].type,
+            quoteId: quoteId,
+            userAddress: address,
+            status: status,
+            chainId: selectedNetwork,
+            tokenAddress: quote.tokenAddress,
+            tokenAmount: quote.tokenAmount,
+            transactionHash: linkResult
+              ? linkResult[0].transactionHash || linkResult[0].CID
+              : ''
+          }
+          if (historyUnlocked) {
+            historyList.unshift(recordAdded)
+          }
+        })
       }
       // check if there's any failure
       if (status == 200 || status == 401 || status == 404) {
@@ -338,6 +355,7 @@ export default function TabsFile({
       console.log('ddo link result:', linkResult)
       setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '')
       setUploadIsLoading(false)
+      return linkResult
     } catch (error) {
       console.log(error)
       setErrorUpload(true)
