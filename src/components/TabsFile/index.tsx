@@ -334,7 +334,12 @@ export default function TabsFile({
       console.log('get DDO link: ', quoteId)
       const linkResult: GetLinkResult[] = await uploaderClient.getLink(quoteId)
       console.log('ddo link result:', linkResult)
-      setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || linkResult[0].cid || '')
+      setDDOLink(
+        linkResult[0].transactionHash ||
+          linkResult[0].CID ||
+          linkResult[0].cid ||
+          ''
+      )
       setUploadIsLoading(false)
     } catch (error) {
       console.log(error)
@@ -522,14 +527,20 @@ export default function TabsFile({
                       }}
                       disabled={false}
                     >
-                      {`${formatEther(`${quoteWithBuffer}`)} ${
-                        items[tabIndex].payment
-                          .filter(
-                            (item: any) => item.chainId === chain?.id.toString()
-                          )[0]
-                          ?.acceptedTokens.filter(
-                            (item: any) => item.value === paymentSelected
-                          )[0]?.title
+                      {`${
+                        quoteWithBuffer === '0' ||
+                        parseFloat(formatEther(`${quoteWithBuffer}`)) === 0
+                          ? 'Free'
+                          : `${formatEther(`${quoteWithBuffer}`)} ${
+                              items[tabIndex].payment
+                                .filter(
+                                  (item: any) =>
+                                    item.chainId === chain?.id.toString()
+                                )[0]
+                                ?.acceptedTokens.filter(
+                                  (item: any) => item.value === paymentSelected
+                                )[0]?.title
+                            }`
                       }`}
                     </Button>
                   )}
