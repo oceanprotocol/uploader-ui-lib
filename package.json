@@ -111,5 +111,19 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "release-it": {
+    "hooks": {
+      "after:bump": "npm run build"
+    },
+    "git": {
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": false
+    }
   }
 }
