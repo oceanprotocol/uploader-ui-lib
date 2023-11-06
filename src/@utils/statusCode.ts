@@ -12,7 +12,7 @@ export function getStatusMessage(statusCode: number, storage: string) {
         401: 'Upload failure'
       }
       break
-    case 'arweave':
+    default:
       statusMessages = {
         0: 'No such quote',
         1: 'Waiting for files to be uploaded by the user',
@@ -27,17 +27,6 @@ export function getStatusMessage(statusCode: number, storage: string) {
         401: 'Upload failure modes',
         402: 'File length exceeds quote',
         404: 'Upload failed!'
-      }
-      break
-    case 'ipfs':
-      statusMessages = {
-        0: 'No such quote',
-        99: 'Waiting for files to be uploaded by the user',
-        199: 'Inadequate Balance or token Allowance given',
-        300: 'Uploading files to storage',
-        399: 'CID migrated to lighthouse node, creating filecoin deal',
-        400: 'Deal created on filecoin network',
-        401: 'Upload failure'
       }
       break
   }
