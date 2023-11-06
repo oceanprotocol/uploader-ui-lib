@@ -224,9 +224,7 @@ export default function TabsFile({
       console.log('quoteResult.tokenAmount', quoteResult.tokenAmount)
       console.log('quote tokenAmount', quote)
 
-      // Add buffer to the quote amount
-      const newQuoteFee =
-        BigInt(quoteResult.tokenAmount) + BigInt(50000000000000000)
+      const newQuoteFee = BigInt(quoteResult.tokenAmount)
 
       setQuoteWithBuffer(String(newQuoteFee))
       // Check if user has wrapped matic in their wallet
