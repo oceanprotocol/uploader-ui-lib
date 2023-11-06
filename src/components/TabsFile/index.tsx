@@ -334,7 +334,7 @@ export default function TabsFile({
       console.log('get DDO link: ', quoteId)
       const linkResult: GetLinkResult[] = await uploaderClient.getLink(quoteId)
       console.log('ddo link result:', linkResult)
-      setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || '')
+      setDDOLink(linkResult[0].transactionHash || linkResult[0].CID || linkResult[0].cid || '')
       setUploadIsLoading(false)
     } catch (error) {
       console.log(error)
