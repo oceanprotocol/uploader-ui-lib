@@ -51,7 +51,7 @@
   "dependencies": {
     "@ethersproject/units": "^5.7.0",
     "@oceanprotocol/typographies": "^0.1.0",
-    "@oceanprotocol/uploader": "^0.0.2-alpha.34",
+    "@oceanprotocol/uploader": "^0.0.3",
     "@tippyjs/react": "^4.2.6",
     "@types/react": "^17.0.59",
     "ajv": "^8.12.0",
