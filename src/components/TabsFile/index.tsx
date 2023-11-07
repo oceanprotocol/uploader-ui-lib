@@ -488,23 +488,21 @@ export default function TabsFile({
         <TabList className={styles.tabList}>
           {items?.length > 0 &&
             items.map((item, index) => {
-              if (item.type !== 'filecoin') {
-                return (
-                  <Tab
-                    className={`${styles.tab} ${
-                      isHidden ? styles.tabHidden : null
-                    }`}
-                    key={`tab_${items[tabIndex].type}_${index}`}
-                    onClick={
-                      handleTabChange
-                        ? () => handleTabChange(item.type)
-                        : undefined
-                    }
-                  >
-                    {addEllipsesToText(item.type, 10)}
-                  </Tab>
-                )
-              }
+              return (
+                <Tab
+                  className={`${styles.tab} ${
+                    isHidden ? styles.tabHidden : null
+                  }`}
+                  key={`tab_${items[tabIndex].type}_${index}`}
+                  onClick={
+                    handleTabChange
+                      ? () => handleTabChange(item.type)
+                      : undefined
+                  }
+                >
+                  {addEllipsesToText(item.type, 10)}
+                </Tab>
+              )
             })}
         </TabList>
       </div>
