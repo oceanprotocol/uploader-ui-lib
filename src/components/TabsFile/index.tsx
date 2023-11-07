@@ -210,6 +210,12 @@ export default function TabsFile({
         filePath,
         fileInfo
       })
+      if (type === 'ipfs' && fileInfo && fileInfo[0]?.length > 10000000) {
+        setErrorUpload(true)
+        setErrorMessage('File too big. IPFS uploads limited to 10mb')
+        setUploadIsLoading(false)
+        return
+      }
       const quoteResult: GetQuoteResult = await uploaderClient.getQuote({
         type,
         duration,
@@ -482,21 +488,23 @@ export default function TabsFile({
         <TabList className={styles.tabList}>
           {items?.length > 0 &&
             items.map((item, index) => {
-              return (
-                <Tab
-                  className={`${styles.tab} ${
-                    isHidden ? styles.tabHidden : null
-                  }`}
-                  key={`tab_${items[tabIndex].type}_${index}`}
-                  onClick={
-                    handleTabChange
-                      ? () => handleTabChange(item.type)
-                      : undefined
-                  }
-                >
-                  {addEllipsesToText(item.type, 10)}
-                </Tab>
-              )
+              if (item.type !== 'filecoin') {
+                return (
+                  <Tab
+                    className={`${styles.tab} ${
+                      isHidden ? styles.tabHidden : null
+                    }`}
+                    key={`tab_${items[tabIndex].type}_${index}`}
+                    onClick={
+                      handleTabChange
+                        ? () => handleTabChange(item.type)
+                        : undefined
+                    }
+                  >
+                    {addEllipsesToText(item.type, 10)}
+                  </Tab>
+                )
+              }
             })}
         </TabList>
       </div>
@@ -509,13 +517,11 @@ export default function TabsFile({
                 className={styles.tabPanel}
               >
                 {item.description}
-
                 {
                   <Tooltip
                     content={<Markdown text={`${item.description}`} />}
                   />
                 }
-
                 {(step === 'upload' || step === 'wrapMatic') &&
                   !uploadStatusResponse && (
                     <Button
@@ -544,7 +550,6 @@ export default function TabsFile({
                       }`}
                     </Button>
                   )}
-
                 {uploadStatusResponse && (
                   <Button
                     style="primary"
@@ -558,7 +563,6 @@ export default function TabsFile({
                     {uploadStatusResponse}
                   </Button>
                 )}
-
                 {step === 'ddoLink' && ddoLink && (
                   <Button
                     style="primary"
@@ -615,9 +619,7 @@ export default function TabsFile({
                     />
                   )}
                 </InputGroup>
-
                 <br />
-
                 <HistoryList
                   items={items}
                   tabIndex={index}
