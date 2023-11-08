@@ -3,6 +3,9 @@ export function getNetworkDisplayName(chainId: number): string {
   if (!chainId) return 'Unknown'
 
   switch (chainId) {
+    case 1:
+      displayName = 'Ethereum'
+      break
     case 137:
       displayName = 'Polygon'
       break
@@ -22,7 +25,7 @@ export function getNetworkDisplayName(chainId: number): string {
       displayName = 'GAIA-X'
       break
     default:
-      displayName = "Unrecognized"
+      displayName = 'Unrecognized'
       break
   }
 
