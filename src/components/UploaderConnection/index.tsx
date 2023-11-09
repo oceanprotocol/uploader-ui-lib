@@ -22,7 +22,12 @@ const UploaderConnection = ({
     // Fetch storage info from Uploader endpoint
     const getStorageInfo = async () => {
       try {
-        const storageInfo = await client.getStorageInfo()
+        let storageInfo = await client.getStorageInfo()
+        storageInfo = storageInfo.sort((a, b) => {
+          if (a.type < b.type) {
+            return -1
+          } else return 1
+        })
         return storageInfo
       } catch (error) {
         console.log(error)
