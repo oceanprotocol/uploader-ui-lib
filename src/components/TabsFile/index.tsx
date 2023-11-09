@@ -468,22 +468,6 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
-      <div className={styles.headerContainer}>
-        {availableNetworks && availableNetworks?.length > 0 && (
-          <Networks
-            chainIds={availableNetworks}
-            paymentSelected={paymentSelected}
-            payments={
-              items[tabIndex].payment.find(
-                (item: any) => item.chainId === chain?.id.toString()
-              )?.acceptedTokens
-            }
-            handleChangeNetwork={handleChangeNetwork}
-            handleChangePayment={handleChangePayment}
-          />
-        )}
-      </div>
-
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items?.length > 0 &&
