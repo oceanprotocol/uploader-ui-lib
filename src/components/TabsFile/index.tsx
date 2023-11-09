@@ -13,7 +13,6 @@ import {
   GetQuoteResult,
   GetStatusResult
 } from '@oceanprotocol/uploader'
-import Networks from '../Networks'
 import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
@@ -44,7 +43,6 @@ export default function TabsFile({
   const { address, isConnected } = useAccount()
 
   const [isNetworkSupported, setIsNetworkSupported] = useState(false)
-  const [availableNetworks, setAvailableNetworks] = useState([])
 
   const [paymentSelected, setPaymentSelected] = useState('')
   const [selectedNetwork, setSelectedNetwork] = useState(chain?.id || 0)
@@ -143,7 +141,6 @@ export default function TabsFile({
       (item: any) => parseInt(item.chainId)
     )
     // TODO: fix any type
-    setAvailableNetworks(availableNetworksByService as any)
     const isNetworkSupported =
       availableNetworksByService?.includes(chain?.id || 0) || false
     setIsNetworkSupported(isNetworkSupported)
