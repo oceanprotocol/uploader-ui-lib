@@ -58,7 +58,7 @@ Integrating Uploader UI into your application is straightforward. The package fa
 npm install connectkit @oceanprotocol/uploader-ui-lib
 ```
 
-**Step 2:** Incorporate the DBSComponent from the uploader-ui-lib into your app. It's crucial to ensure the component is nested within both the WagmiConfig and ConnectKit providers. Here's a basic implementation:
+**Step 2:** Incorporate the UploaderConnection from the uploader-ui-lib into your app. It's crucial to ensure the component is nested within both the WagmiConfig and ConnectKit providers. Here's a basic implementation:
 
 ```bash
 import React from 'react'
@@ -69,7 +69,7 @@ import {
   getDefaultConfig,
   ConnectKitButton
 } from 'connectkit'
-import DBSComponent from 'uploader-ui-lib'
+import UploaderConnection from 'uploader-ui-lib'
 
 export default function App () {
   // Initialize the Wagmi client
@@ -87,7 +87,7 @@ export default function App () {
       <ConnectKitProvider>
         {/* Your App */}
         <ConnectKitButton />
-        <DBSComponent
+        <UploaderConnection
           dbs_url="https://dbs.oceanprotocol.com"
           dbs_account="0x21F2B4d705aC448c9Ff96694Dd9e5901F79f1Ab2"
         />
@@ -107,7 +107,7 @@ import React from 'react'
 import { WagmiConfig, createConfig } from 'wagmi'
 import { polygon } from 'wagmi/chains'
 import { RainbowKitProvider, ConnectButton } from '@rainbow-me/rainbowkit';
-import DBSComponent from 'uploader-ui-lib'
+import UploaderConnection from 'uploader-ui-lib'
 
 export default function App () {
   // Initialize the Wagmi client
@@ -125,7 +125,7 @@ export default function App () {
       <RainbowKitProvider>
         {/* Your App */}
         <ConnectButton />
-        <DBSComponent
+        <UploaderConnection
           dbs_url="https://dbs.oceanprotocol.com"
           dbs_account="0x21F2B4d705aC448c9Ff96694Dd9e5901F79f1Ab2"
         />

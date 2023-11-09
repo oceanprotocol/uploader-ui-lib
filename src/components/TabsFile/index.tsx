@@ -4,7 +4,7 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
-import { useAccount, useNetwork, useContractRead } from 'wagmi'
+import { useAccount, useNetwork, useContractRead, useToken } from 'wagmi'
 import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
 import {
@@ -18,12 +18,11 @@ import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
 import { getStatusMessage } from '../../@utils/statusCode'
-import wMaticAbi from '../WrapMatic/wMaticAbi.json'
 import WrapMatic from '../WrapMatic'
 import InputGroup from '../Input/InputGroup'
 import DefaultInput from '../Input'
 import { TabsProps } from '../../@types/TabsFile'
-
+import wMaticAbi from '../WrapMatic/wMaticAbi.json'
 export default function TabsFile({
   items,
   className,
@@ -56,18 +55,19 @@ export default function TabsFile({
   const [historyLoading, setHistoryLoading] = useState(false)
 
   const { data: balanceData } = useContractRead({
-    address:
-      chain?.id === 80001
-        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
-        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-    abi: wMaticAbi,
+    address: paymentSelected as `0x${string}`,
     functionName: 'balanceOf',
+    abi: wMaticAbi,
     args: [address]
   })
 
-  console.log('Check if user has wrapped matic in their wallet')
-  const wmaticBalance = BigInt((balanceData as number) || 0)
-  console.log('balance wmatic: ', balanceData)
+  const { data: tokenInfo } = useToken({
+    address: paymentSelected as `0x${string}`
+  })
+
+  console.log('Check if user has enought tokens in their wallet')
+  const tokenBalance = BigInt((balanceData as number) || 0)
+
   // Mocked data quote
   const [quote, setQuote] = useState<any>()
   const [quoteWithBuffer, setQuoteWithBuffer] = useState<string>()
@@ -234,11 +234,16 @@ export default function TabsFile({
 
       setQuoteWithBuffer(String(newQuoteFee))
       // Check if user has wrapped matic in their wallet
-      if (wmaticBalance < newQuoteFee) {
-        console.log('User does not have enough wMatic')
+      // ensure we can handle tokens with different decimals
+      const formatedQuote = Number(newQuoteFee) / 10 ** 18 // quote is always 18 decimals
+      const formatedBalance =
+        Number(tokenBalance) / 10 ** (tokenInfo?.decimals || 18)
+      // FOR TESTING: const normalizedBalance = parseEther(formatedBalance.toString()).toString()
+      if (formatedBalance < formatedQuote) {
+        console.log('User does not have tokens')
         setStep('wrapMatic')
       } else {
-        console.log('User has enough wMatic')
+        console.log('User has enough tokens')
         setStep('upload')
       }
     } catch (error) {
@@ -585,6 +590,7 @@ export default function TabsFile({
                       setStep={setStep}
                       amount={BigInt(quoteWithBuffer as string)}
                       name={item.type}
+                      payment={paymentSelected as `0x${string}`}
                       handleFileChange={handleFileChange}
                       handleUpload={handleUpload}
                       file={file}

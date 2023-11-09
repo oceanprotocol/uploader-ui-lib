@@ -5,7 +5,6 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useNetwork,
   useAccount,
   useBalance
 } from 'wagmi'
@@ -15,6 +14,7 @@ interface WrapMaticProps {
   setStep: (step: string) => void
   amount: bigint
   name?: string
+  payment?: `0x${string}`
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
   handleUpload: () => void
   file?: File
@@ -24,7 +24,6 @@ export default function WrapMatic(props: WrapMaticProps) {
   const [hideButton] = useState(false)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const { chain } = useNetwork()
   const { address } = useAccount()
 
   const { data: balanceWallet, isSuccess: balanceSuccess } = useBalance({
@@ -32,10 +31,7 @@ export default function WrapMatic(props: WrapMaticProps) {
   })
 
   const { config } = usePrepareContractWrite({
-    address:
-      chain?.id === 80001
-        ? '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
-        : '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    address: props.payment as `0x${string}`,
     abi: wMaticAbi,
     functionName: 'deposit',
     value: props.amount
