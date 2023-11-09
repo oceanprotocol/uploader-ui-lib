@@ -5,7 +5,6 @@ import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useNetwork, useContractRead } from 'wagmi'
-import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
 import {
   GetLinkResult,
@@ -13,7 +12,6 @@ import {
   GetQuoteResult,
   GetStatusResult
 } from '@oceanprotocol/uploader'
-import Networks from '../Networks'
 import { formatEther } from '@ethersproject/units'
 import HistoryList from '../HistoryList'
 import { addEllipsesToText } from '../../@utils/textFormat'
@@ -44,7 +42,6 @@ export default function TabsFile({
   const { address, isConnected } = useAccount()
 
   const [isNetworkSupported, setIsNetworkSupported] = useState(false)
-  const [availableNetworks, setAvailableNetworks] = useState([])
 
   const [paymentSelected, setPaymentSelected] = useState('')
   const [selectedNetwork, setSelectedNetwork] = useState(chain?.id || 0)
@@ -143,7 +140,6 @@ export default function TabsFile({
       (item: any) => parseInt(item.chainId)
     )
     // TODO: fix any type
-    setAvailableNetworks(availableNetworksByService as any)
     const isNetworkSupported =
       availableNetworksByService?.includes(chain?.id || 0) || false
     setIsNetworkSupported(isNetworkSupported)
@@ -166,32 +162,6 @@ export default function TabsFile({
       setErrorMessage('')
     }, 3000)
   }, [errorUpload])
-
-  const switchNetworks = async (chainId: number) => {
-    try {
-      const network = await switchNetwork({ chainId })
-      return network
-    } catch (error) {
-      console.log(error)
-      throw new Error('Error switching network')
-    }
-  }
-
-  const handleChangeNetwork = async (event: any) => {
-    event.preventDefault()
-    await switchNetworks(parseInt(event.target.value))
-      .then(() => {
-        setSelectedNetwork(parseInt(event.target.value))
-      })
-      .catch((error) => {
-        setSelectedNetwork(selectedNetwork)
-        console.log(error)
-      })
-  }
-
-  const handleChangePayment = (event: { target: { value: any } }) => {
-    setPaymentSelected(event.target.value)
-  }
 
   const getQuote = async ({
     type,
@@ -468,22 +438,6 @@ export default function TabsFile({
 
   return (
     <ReactTabs className={`${className || ''}`} defaultIndex={tabIndex}>
-      <div className={styles.headerContainer}>
-        {availableNetworks && availableNetworks?.length > 0 && (
-          <Networks
-            chainIds={availableNetworks}
-            paymentSelected={paymentSelected}
-            payments={
-              items[tabIndex].payment.find(
-                (item: any) => item.chainId === chain?.id.toString()
-              )?.acceptedTokens
-            }
-            handleChangeNetwork={handleChangeNetwork}
-            handleChangePayment={handleChangePayment}
-          />
-        )}
-      </div>
-
       <div className={styles.tabListContainer}>
         <TabList className={styles.tabList}>
           {items?.length > 0 &&
