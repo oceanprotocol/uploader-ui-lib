@@ -5,7 +5,6 @@ import Tooltip from '../Tooltip'
 import styles from './index.module.css'
 import FileUploadSingle from '../FileUploadSingle'
 import { useAccount, useNetwork, useContractRead } from 'wagmi'
-import { switchNetwork } from '@wagmi/core'
 import Button from '../Button'
 import {
   GetLinkResult,
@@ -163,32 +162,6 @@ export default function TabsFile({
       setErrorMessage('')
     }, 3000)
   }, [errorUpload])
-
-  const switchNetworks = async (chainId: number) => {
-    try {
-      const network = await switchNetwork({ chainId })
-      return network
-    } catch (error) {
-      console.log(error)
-      throw new Error('Error switching network')
-    }
-  }
-
-  const handleChangeNetwork = async (event: any) => {
-    event.preventDefault()
-    await switchNetworks(parseInt(event.target.value))
-      .then(() => {
-        setSelectedNetwork(parseInt(event.target.value))
-      })
-      .catch((error) => {
-        setSelectedNetwork(selectedNetwork)
-        console.log(error)
-      })
-  }
-
-  const handleChangePayment = (event: { target: { value: any } }) => {
-    setPaymentSelected(event.target.value)
-  }
 
   const getQuote = async ({
     type,
