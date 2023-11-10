@@ -5,7 +5,7 @@ export function getLink(provider: string, item: string) {
       link = `https://gateway.ipfs.io/ipfs/${item}`
       break
     case 'ipfs':
-      link = `https://gateway.pinata.cloud/ipfs/${item}`
+      link = `https://ipfs.oceanprotocol.com/ipfs/${item}`
       break
     case 'arweave':
       link = `https://arweave.net/${item}`
